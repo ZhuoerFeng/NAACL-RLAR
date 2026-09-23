@@ -1,0 +1,83 @@
+\section{Preliminaries}
+
+\subsection{Task Definition} \label{sec:task_definition}
+
+We investigate the problem of reinforcement learning in LLM post-training stage for complex, mixed-domain text generation tasks. The core objective is to train a single policy model that achieves high performance across multiple task domains without sacrificing the quality of any individual task.
+Let \(\{ D_1, D_2, \dots, D_n \}\) denote datasets from \(n\) different domains, each corresponding to one type of task (e.g., translation, summarization, question answering).  
+We define a mixed-domain distribution \(D = \{ D_1, D_2, \dots, D_n \}\).
+Our goal is to train a policy model \(A\) that maximizes expected performance over \(D\) under a multi-task reinforcement learning framework:  
+\[
+\max_{A} \; \mathbb{E}_{d \sim D} \left[ R(A(d)) \right],
+\]  
+where \(R(A(d))\) denotes the reward of policy inference on sample \(d\). The reward is computed from test-time metrics, such as success rate, accuracy, LLM-judge score, and other task-specific metrics. 
+We study the blended domains where real LLM post-training usually focuses: \textbf{mathematical reasoning}, \textbf{code and programming}, \textbf{translation}, and \textbf{general conversation} tasks. We show information about the datasets used in our experiments in Table~\ref{tab:dataset_stat}.
+
+
+\subsection{LLM post-training with online RL} \label{sec:rl_algo}
+
+
+In reinforcement learning from human feedback (RLHF), the \textbf{Proximal Policy Optimization} algorithm~\citep{ppo} is frequently employed for policy optimization.  
+The typical workflow begins with a \textit{warm-start training} phase in which a \textbf{Value Model} (often a reward model) is learned. Training triplets \((x, y_{+}, y_{-})\) are sampled from human preference data, with \(y_{+}\) being preferred over \(y_-\). Let \(r_{\theta}(x, y)\) be the reward assigned by the model given prompt \(x\) and response \(y\); the learning objective function can be expressed as:
+\begin{equation*}
+    \mathcal{L}(\theta) = -\frac{1}{N} \,\mathbb{E}_{(x,y_+, y_-) \sim D } \bigg[ \log \sigma \big( \Delta r_{\theta} \big) \bigg],
+\end{equation*}
+where \(\sigma(\cdot)\) is the logistic sigmoid function and \(\Delta r_{\theta} = r_{\theta}(x, y_+) - r_{\theta}(x, y_-)\)  .
+
+We adopt a more training-efficient framework. The \textbf{Group Relative Policy Optimization} (GRPO)~\citep{grpo} modifies the advantage estimation to reduce the dependence on a learnable value model for estimating the advantage baseline. Instead, GRPO computes the normalized advantage within a group of sampled outputs \(\hat{A}_{i} = \frac{r_i - \mathrm{mean}(r)}{\mathrm{std}(r)}  \), 
+where \(r=\{ r_i \}_{i=1}^G\) are the rewards assigned to \(G\) candidate outputs for the same prompt, \(\mathrm{mean}(r)\) and \(\mathrm{std}(r)\) are computed over the group. Also, the Kullback-Leibler Divergence term is removed from the per-step reward and is instead applied directly to the overall optimization objective:
+\begin{align}
+\max_{\phi} \; \;
+& \mathbb{E}_{\substack{x \sim D, \\ \{y_i\}_{i=1}^G \sim \pi_{\mathrm{old}}(y_i|x)}} 
+\Bigg[
+   \frac{1}{G} \sum_{i=1}^G
+   \min \Bigg\{
+      \frac{\pi_{\theta}(y_i|x)}{\pi_{\mathrm{old}}(y_i|x)} ,  \;
+      \nonumber \\[-0.5em]
+& 
+      \mathrm{clip}\!\left(
+         \frac{\pi_{\theta}(y_i|x)}{\pi_{\mathrm{old}}(y_i|x)},
+         1 - \epsilon, \;
+         1 + \epsilon
+      \right) 
+   \Bigg\} \hat{A}_{i},
+\Bigg] 
+- \beta \, \mathbb{D}_{\mathrm{KL}}\!\left[ \pi_{\phi} \;\|\; \pi_{\mathrm{ref}} \right].
+\end{align}
+
+% % 插入一个表格，让读者一目了然
+\begin{table}[t]
+    \centering
+    \caption{Summary of domains considered across Math, Code, Translation, and General Conversation.}
+    \label{tab:dataset_stat}
+    \small % Slightly smaller font to ensure fit if necessary
+    \resizebox{0.8\textwidth}{!}{ %
+    \begin{tabular}{llccccl}
+    \toprule
+    \textbf{Domain} & \textbf{Dataset} & \textbf{Train Size} & \textbf{Test Size} & \textbf{OOD} & \textbf{Evaluation Metric} \\
+    \midrule
+    \multirow{3}{*}{\textbf{Math}} 
+        & \textsc{GSM8k}          & 1,500 & 1,319 & \xmark & \multirow{3}{*}{Numeric Match} \\
+        & \textsc{Hendrycks-Math} & 1,500 & 500   & \xmark &  \\
+        & \textsc{AIME-24/25}        & 0     & 60    & \cmark &  \\
+    \midrule
+    \multirow{2}{*}{\textbf{Code}} 
+        & \textsc{LeetCode-Dataset}       & 2,585 & 223   & \xmark & \multirow{2}{*}{Unit Test Execution} \\
+        & \textsc{MBPP}           & 0     & 974   & \cmark &  \\
+    \midrule
+    \multirow{2}{*}{\textbf{Translation}} 
+        & \textsc{Flores-200}     & 3,000 & 300   & \xmark & \multirow{2}{*}{Hybrid (LLM-Judge + BLEU)} \\
+        & \textsc{WMT-24}         & 0     & 500   & \cmark &  \\
+    \midrule
+    \textbf{General} 
+        & \textsc{UltraChat}      & 2,500 & 200   & \xmark & Model-based (LLM-as-a-Judge) \\
+    \bottomrule
+    \end{tabular}
+    }
+    \vspace{-4mm}
+\end{table}
+
+
+
+
+% This formulation reduces sensitivity to reward model estimation errors by leveraging relative comparisons within output groups.
+

@@ -1,0 +1,24 @@
+
+\section{Limitations}
+
+We primarily validate \method{} on heterogeneous tasks in text forms. Due to budget constraints, we did not extend the scope to multi-modal or audio tasks such as text-to-image generation. We believe this is a promising direction for future work. There is still room for further analysis on the scalability of the \method{} framework.
+
+In practice, some repository READMEs may become outdated when reporting (such as claiming to be state-of-the-art at the time of writing). Though not directly caused by the design, \method{} is potentially vulnerable to README hacking, as our assumption is that most of these repository READMEs are trustworthy. We leave the development of more robust retrieval modules for future work.
+
+
+Lastly, we focus on language models that are modeled as text classifiers. This is quite similar to practices in the industry, mainly aiming to save the computational cost of reward calculation. For generative reward models, our framework can support development on this basis; however, given the constraints of our experimental setup, we consider this to be outside the scope of the present work. 
+
+
+
+\section{Broader Impacts and Ethical Considerations}
+\label{sec:impact_ethic}
+
+
+Our research aims to provide positive societal impacts by improving the reliability of reward system design for the reinforcement learning framework in LLM post-training. However, we acknowledge potential negative societal impacts. Like many tuning methods, our approach could theoretically be repurposed for malicious uses, such as exposing malicious reward model checkpoints to \method{} and thereby planting intended deficiencies in the policy LLM.
+Furthermore, if \method{} is deployed without careful calibration, it might inherit or amplify biases present in the training data, leading to unfair outcomes for marginalized tasks. We encourage future research to focus on bias mitigation and robustness evaluation before deploying such methods in production environments.
+
+This research conforms in every respect with the NeurIPS Code of Ethics. We have carefully considered the dual-use nature of our work. Because our released code poses a potential risk of misusing public model checkpoint repositories such as HuggingFace and ModelScope, we have implemented the following safeguards.
+\paragraph{Originality and Attribution:} The core originality of this work lies in the design and implementation of the \method{} framework. The training outcomes and performance improvements presented in this paper are the combined result of the \method{} architecture and the foundational capabilities of the pre-trained checkpoints we utilized. We explicitly attribute these capabilities to the original authors of the checkpoints, all of which have been appropriately cited. To further ensure transparency, we have documented our execution logs and provided them in Appendix \ref{apd:generated_tools}.
+\paragraph{Safeguards and Infrastructure Protection:} To prevent potential misuse of our codebase and protect public infrastructure, we have included explicit usage guidelines in our repository and licensing terms. Crucially, we have disabled automated checkpoint downloading features by default. This design choice prevents our codebase from being exploited to generate excessive or unnecessary network requests (unintentional DDoS) against external model hosting platforms. Furthermore, the external repositories hosting these checkpoints require authenticated user login to utilize their client APIs. This reliance on authentication provides an additional, robust layer of security to prevent the abuse of public network and storage resources.
+
+

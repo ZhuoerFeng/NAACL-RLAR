@@ -1,0 +1,59 @@
+# ===== LaTeX build artifacts =====
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.bcf
+*.run.xml
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.loa
+*.lol
+*.thm
+*.tdo
+*.brf
+*.spl
+*.figlist
+*.makefile
+*.auxlock
+*-blx.bib
+build.log
+
+# Compiled PDF (Overleaf regenerates it; keep source only)
+neurips_2026.pdf
+
+# ===== Local scripts with credentials (never commit API keys) =====
+cc_start.sh
+
+# ===== Editor / OS =====
+.DS_Store
+._*
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.texpadtmp/
+
+# ===== Claude Code local state =====
+.claude/

@@ -1,0 +1,115 @@
+\section{Generated Tools} \label{apd:generated_tools}
+
+
+
+% \usepackage[margin=1in]{geometry}
+
+% \begin{document}
+
+% \renewcommand{\arraystretch}{1.2} % optional: more row height
+
+
+{\footnotesize\setlength{\tabcolsep}{3pt}%
+\begin{longtable}{|l|l|l|l|}
+\caption{A list of the generated reward function tool names by our code-agent.} \label{tab:tool_name_list} \\ \hline 
+\textbf{Type} & \textbf{Metric} & \textbf{Type} & \textbf{Metric} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Type} & \textbf{Metric} & \textbf{Type} & \textbf{Metric} \\
+\hline
+\endhead
+
+% --- Table rows ---
+rule\_based & \texttt{Forbidden\_Words} & rule\_based & \texttt{Stepwise\_Completeness} \\
+rule\_based & \texttt{Prompt\_Adherence} & rule\_based & \texttt{Length} \\
+rule\_based & \texttt{Numeric\_Accuracy} & rule\_based & \texttt{Exact\_Template\_Match} \\
+rule\_based & \texttt{Novelty\_Penalty} & rule\_based & \texttt{Contradiction\_Detection} \\
+rule\_based & \texttt{Disallowed\_Phrase\_Penalty} & rule\_based & \texttt{Exact\_Output\_Match} \\
+rule\_based & \texttt{No\_Unsupported\_Claims} & rule\_based & \texttt{Reference\_Match} \\
+rule\_based & \texttt{Exact\_Answer\_Match} & rule\_based & \texttt{Named\_Entity\_Preservation} \\
+rule\_based & \texttt{Unit\_Consistency} & rule\_based & \texttt{Keyword\_Presence} \\
+rule\_based & \texttt{Minimal\_Edit\_Distance} & rule\_based & \texttt{Thesis\_Inclusion} \\
+rule\_based & \texttt{Mandatory\_Content\_Inclusion} & rule\_based & \texttt{Scientific\_Claims\_Match} \\
+rule\_based & \texttt{Pronounceability} & rule\_based & \texttt{Position\_Sensitivity} \\
+rule\_based & \texttt{Section\_Coverage} & rule\_based & \texttt{Entity\_Presence} \\
+rule\_based & \texttt{Answer\_Type\_Match} & rule\_based & \texttt{Stepwise\_Correctness} \\
+rule\_based & \texttt{Terminology\_Accuracy} & rule\_based & \texttt{Diversity\_Score} \\
+rule\_based & \texttt{Forbidden\_Content} & rule\_based & \texttt{Fact\_Match} \\
+rule\_based & \texttt{Forbidden\_Phrase\_Detection} & rule\_based & \texttt{No\_Information\_Leakage} \\
+rule\_based & \texttt{Annotation\_Completeness} & rule\_based & \texttt{Grammar\_and\_Spelling\_Accuracy} \\
+rule\_based & \texttt{Clarity\_Constraint} & rule\_based & \texttt{Answer\_Presence} \\
+rule\_based & \texttt{No\_Overlap\_with\_Input} & rule\_based & \texttt{No\_Syntax\_Errors} \\
+rule\_based & \texttt{Numeric\_Tolerance} & rule\_based & \texttt{Edit\_Distance} \\
+rule\_based & \texttt{Keyword\_Coverage} & rule\_based & \texttt{No\_Repetition} \\
+rule\_based & \texttt{Length\_Ratio} & rule\_based & \texttt{One-Hot\_Accuracy} \\
+rule\_based & \texttt{Novelty} & rule\_based & \texttt{Exact\_Match} \\
+rule\_based & \texttt{Pattern\_Compliance} & rule\_based & \texttt{Step\_Match} \\
+rule\_based & \texttt{Syntax\_Validity} & rule\_based & \texttt{Format\_Compliance} \\
+rule\_based & \texttt{Allowed\_Vocabulary} & rule\_based & \texttt{Entity\_Overlap} \\
+rule\_based & \texttt{Explicit\_Irrelevance} & rule\_based & \texttt{Accuracy} \\
+rule\_based & \texttt{Coverage\_of\_Key\_Points} & rule\_based & \texttt{Section\_Presence} \\
+rule\_based & \texttt{Clarity} & rule\_based & \texttt{Test\_Case\_Pass\_Rate} \\
+rule\_based & \texttt{Dictionary\_Filtering} & rule\_based & \texttt{Length\_Expansion} \\
+rule\_based & \texttt{Content\_Inclusion} & rule\_based & \texttt{Error\_Pattern\_Removal} \\
+rule\_based & \texttt{Plagiarism\_Check} & rule\_based & \texttt{Functionality\_Test} \\
+rule\_based & \texttt{Politeness\_Constraint} & rule\_based & \texttt{Formatting\_Compliance} \\
+rule\_based & \texttt{Exact\_Test\_Case\_Pass} & rule\_based & \texttt{Key\_Information\_Coverage} \\
+rule\_based & \texttt{Genre-Adherence} & rule\_based & \texttt{Passes\_Unit\_Tests} \\
+rule\_based & \texttt{Exact\_Step\_Match} & rule\_based & \texttt{Exact\_Keyword\_Match} \\
+rule\_based & \texttt{Required\_Field\_Inclusion} & rule\_based & \texttt{Attribute\_Coverage} \\
+rule\_based & \texttt{Valid\_Vocabulary} & rule\_based & \texttt{Medical\_Term\_Coverage} \\
+rule\_based & \texttt{Keyword\_Absence} & rule\_based & \texttt{Required\_Component\_Presence} \\
+rule\_based & \texttt{Final\_Answer\_Correctness} & rule\_based & \texttt{Keyword\_Inclusion} \\
+rule\_based & \texttt{Structure\_Compliance} & rule\_based & \texttt{Step\_Consistency} \\
+rule\_based & \texttt{Readability} & rule\_based & \texttt{No-Answer\_Accuracy} \\
+rule\_based & \texttt{Length\_Constraint} & rule\_based & \texttt{Error\_Reduction} \\
+rule\_based & \texttt{Answer\_Type\_Mismatch} & rule\_based & \texttt{Thesis\_Presence} \\
+rule\_based & \texttt{Case-Insensitive\_Match} & rule\_based & \texttt{Topic\_Divergence} \\
+rule\_based & \texttt{Exact\_Numeric\_Match} & rule\_based & \texttt{Originality-Penalty} \\
+rule\_based & \texttt{Keyword\_Exclusion} & rule\_based & \texttt{Structure} \\
+rule\_based & \texttt{Format\_Consistency} & rule\_based & \texttt{Required\_Elements} \\
+rule\_based & \texttt{Reference\_Citation} & rule\_based & \texttt{Instruction\_Match} \\
+rule\_based & \texttt{Key\_Concepts\_Inclusion} & rule\_based & \texttt{Stepwise\_Solution\_Match} \\
+rule\_based & \texttt{Fact\_Consistency} & rule\_based & \texttt{Step\_Count\_Constraint} \\
+nlp\_metric & \texttt{F1\_Score} & nlp\_metric & \texttt{METEOR} \\
+nlp\_metric & \texttt{ROUGE} & nlp\_metric & \texttt{GLEU} \\
+nlp\_metric & \texttt{BERTScore} & nlp\_metric & \texttt{M\^{}2\_Score} \\
+nlp\_metric & \texttt{chrF} & nlp\_metric & \texttt{ROUGE-L} \\
+nlp\_metric & \texttt{Levenshtein\_Distance} & nlp\_metric & \texttt{BLEU} \\
+nlp\_metric & \texttt{Distinct-n} & nlp\_metric & \texttt{CodeBLEU} \\
+model\_based & \texttt{Content\_Novelty\_Score} & model\_based & \texttt{Negative\_Relevance\_Score} \\
+model\_based & \texttt{Topic\_Classifier} & model\_based & \texttt{Perplexity} \\
+\hline
+\end{longtable}}
+
+\clearpage
+
+
+
+
+
+\begin{table}[t]
+    \centering
+    \caption{Successfully Top@9 deployed LLM-based reward models.}
+    \label{tab:llm-rm}
+    % \resizebox{\linewidth}{!}{
+    \begin{tabular}{l|l}
+    \hline
+\textbf{Source} & \textbf{Repo Name} \\ \midrule
+\citep{skyworkreward}   & Skywork/Skywork-Reward-V2-Llama-3.1-8B \\
+\citep{skyworkreward}         & Skywork/Skywork-Reward-V2-Qwen3-8B \\
+\citep{skyworkreward}         & Skywork/Skywork-Reward-V2-Llama-3.2-3B \\
+\citep{skyworkreward}         & Skywork/Skywork-Reward-V2-Qwen3-4B \\
+\citep{seedX} & ByteDance-Seed/Seed-X-RM-7B\\
+                            & OpenAssistant/reward-model-deberta-v3-base \\
+\citep{yang2024gpt2helpful}         & Ray2333/gpt2-large-helpful-reward\_model \\
+\citep{nicholas22rewardreward}         & nicholasKluge/RewardModel \\
+\citep{cai2024internlm2}         & internlm/internlm2-1\_8b-reward \\
+\citep{malik2025rewardbench2advancingreward}         & allenai/Llama-3.1-8B-Base-RM-RB2 \\ \bottomrule
+    \end{tabular}
+    % }
+\end{table}
+
+

@@ -1,0 +1,408 @@
+\section{Prompt Details} \label{apd:prompts}
+
+\subsection{Prompt for Task Decomposition}  \label{apd:prompt_task_decpm}
+
+\begin{tcolorbox}[title = {Task\_Decomposition\_Prompt}, breakable, colframe=blue!50!black, colback=blue!10]
+\textbf{Input}: original\_task
+\tcblower
+
+Please break down the following generative task into a combination of several basic generative tasks:  
+
+Basic task list:
+1. Controlled generation: Generate coherent natural language text that meets certain given conditions. Best for simple, clear tasks; complex writing should be split into smaller steps like planning and cloze generation.
+
+2. Translation: Generate a corresponding text in another natural language from a text in one natural language.  
+
+3. Text summarization: Summarize the given text, retaining the main information.  
+
+4. Question answering: Provide appropriate answers based on background information and question requests provided by the user.  
+
+5. Paraphrasing: Modify the provided text into a different form of expression that meets the given rewriting requirements.  
+
+6. Cloze generation: Given a continuous piece of text with missing parts, generate appropriate text for the missing positions so that the original text becomes complete, coherent, and consistent.  
+
+7. Planning generation: Plan a high-level outline in order to accomplish a relatively complex generative task, such as creating a chapter list, designing character traits, designing scripts, or designing a timeline.  
+
+8. Code: Generate executable code that meets the specified requirements, or supplement or revise code according to the given requirements. The defining criterion for this task is that the output is primarily code.
+
+
+Decomposition goal:
+
+
+- Break down the complex generative task provided by the user into a list composed of the above basic tasks according to its logical steps.  
+- Steps should be arranged in execution order, and the description should start from the original input form and proceed until the task is completed.  
+
+- Each step must clearly specify the “basic task type” and the execution content of that step.  
+
+- If the task does not need to be broken down, provide a single-step basic task and rewrite its description into a clearer instruction that aligns with the type of task in the basic task list.
+
+
+Output format requirements:
+
+- List the decomposition results step-by-step (step number + basic task type name + specific execution description). 
+
+- Enclose the final result within $<$Result$>$ ... $<\backslash$Result $>$  tags.  
+
+Below is an example:  
+
+
+[Example Start]  
+
+
+Task to be decomposed: Please provide an English summary for the following Chinese document.
+
+Decomposition result:  
+
+1. Translation: Please translate the following Chinese document into an English document.  
+
+2. Text summarization: Please summarize the given English document, and ensure the summary does not exceed 200 words.  
+
+[Example End]  
+
+Now, perform the above decomposition process on the given question (or task description) below, and write the final decomposition result within $<$Result$>$ ... $<\backslash$Result $>$  tags.
+
+\{original\_task\}
+
+\end{tcolorbox}
+
+
+
+
+
+\subsection{Prompt Details for Reward Model Choice}
+
+\subsubsection{Search API Tool} \label{apd:tool_snippet}
+
+\begin{lstlisting}[style=mypython]
+{
+    "type": "function",
+    "function": {
+        "name": "search_serper_engine",
+        "description": "Performs a Google search using the Serper API restricted to finding Hugging Face model checkpoints. Use this tool only to look up Hugging Face checkpoint URLs, model pages, or related information. Short queries work best. Reward model might be confusing with base models or chat models",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The search query for Hugging Face checkpoints, e.g., model names or keywords to locate on huggingface.co."
+                }
+            },
+            "required": ["query"]
+        }
+    }
+}
+\end{lstlisting}
+
+
+
+\subsubsection{Prompt for search results filtration}  
+\label{apd:filter_prompt}
+\begin{tcolorbox}[title = {Search Results Filtration}, breakable, colframe=blue!50!black, colback=blue!10]
+\textbf{Input}: \texttt{original\_task}
+\tcblower
+
+You are given a list of search engine results with position IDs. 
+
+Your task is to filter them according to the following rules:
+
+\begin{enumerate}
+    \item \textbf{Identify Reward Models:} 
+    \begin{itemize}
+        \item Keep only results that are \textbf{reward model} links.
+        \item Reward models often have model names containing keywords like \texttt{-Reward-} or \texttt{-RM-}.
+        \item Discard results for base models (\texttt{-Base}), instruct models (\texttt{-Instruct}), or chat models (\texttt{-Chat}).
+        \item If a model name has none of these hints, and it's unclear whether it is a reward model, discard it.
+    \end{itemize}
+
+    \item \textbf{Hugging Face Model Repositories Only:}
+    \begin{itemize}
+        \item Keep only links pointing to \textbf{Hugging Face model repositories}.
+        \item Discard datasets, research papers, blog posts, or other non-model content.
+    \end{itemize}
+
+    \item \textbf{Score Output Format only:}
+    \begin{itemize}
+        \item Regression models only, in other words, models that output a score (e.g., 0--1) rather than generating text.
+    \end{itemize}
+\end{enumerate}
+
+Directly discard those items that violate rule 1, 2, or 3 and keep the rest. Output the remaining items in a list using their original position IDs like \texttt{[0, 1, 3, 5, ...]}. If none of the items are left, output an empty list \texttt{[]}.
+
+\bigskip
+\{results\}
+
+\end{tcolorbox}
+
+
+
+
+\subsubsection{Prompt for search results Reranking}  
+\label{apd:rerank_prompt}
+
+
+\begin{tcolorbox}[title = {Search Results Reranking}, breakable, colframe=blue!50!black, colback=blue!10]
+\textbf{Input}: \texttt{original\_task}
+\tcblower
+
+You are given a list of search engine results with position IDs.  
+Your task is to filter and rank them according to the following rules:
+
+\begin{enumerate}
+    \item \textbf{Identify Reward Models:}  
+    \begin{itemize}
+        \item Keep only results that are \textbf{reward model} links.  
+        \item Reward models often have model names containing keywords like \texttt{-Reward-} or \texttt{-RM-}.  
+        \item Discard results for base models (\texttt{-Base}), instruct models (\texttt{-Instruct}), or chat models (\texttt{-Chat}).  
+        \item If a model name has none of these hints, and it's unclear whether it is a reward model, discard it.
+    \end{itemize}
+
+    \item \textbf{Hugging Face Model Repositories Only:}  
+    \begin{itemize}
+        \item Keep only links pointing to \textbf{Hugging Face model repositories}.  
+        \item Discard datasets, research papers, blog posts, or other non-model content.
+    \end{itemize}
+
+    \item \textbf{Score Output Format only:}
+    \begin{itemize}
+        \item Regression models only; in other words, models that output a score (e.g., 0--1) rather than generating text.
+    \end{itemize}
+\end{enumerate}
+
+Directly discard those items that violate rule 1, 2, or 3 and keep the rest. Output the remaining items in a list using their original position IDs, sorted by relevance, like \texttt{[0, 1, 3, 5, ...]}. If none of the items are left, output an empty list \texttt{[]}.
+
+\bigskip
+\{results\}
+
+\end{tcolorbox}
+
+
+
+
+\subsubsection{Prompt for search results LLM-based Reward Model Implementation}  
+\label{apd:implement_prompt}
+
+
+\begin{tcolorbox}[title = {Reward Tool Implementation}, breakable, colframe=blue!50!black, colback=blue!10]
+\textbf{Input}: original\_task
+\tcblower
+
+
+Implement a python script for launching a reward model according to the following informative scripts. The model local checkpoint is \{model\_local\_dir\}. The cuda device for the model is "\{cuda\_device\}". You should write a function, that support input parameter:
+- prompt: str, instruction or context conditions
+- response: str, the text need to be evaluated
+- reference: str, some reference answer/response for the above prompt
+
+Your implementation are free to use the packages mentioned in the scripts. Name the calculation function starting with "compute\_", such as "def compute\_XXX(...)" where XXX should be the reward model name or related abbreviation. Make sure the model checkpoint is loaded precisely once in the script. Format your output enclosed within "python $\backslash$ n xxxx $\backslash$n". Also, additionally print the calculation funciton after four sharp marks \#\#\#\#, such as "\#\#\#\# def compute\_xxx(...)" in the end of your output (outside the python script).
+
+\{scripts\}
+
+[your implementation]
+
+\end{tcolorbox}
+
+
+
+\subsection{Prompt for Code-Agent workflow}
+
+\subsubsection{Plan} \label{sec:code-agent-plan}
+
+
+\begin{tcolorbox}[promptbox, title={LIST\_TASK\_PROMPT}]
+\textbf{Input}: \texttt{\{task\}}
+\tcblower
+You are an expert in designing reward models and evaluation metrics for the \textbf{\{task\}} task.  
+Your goal is to list \textbf{3–5 possible reward model or evaluation metric choices} for this task, drawing from the following two categories:  
+
+\begin{enumerate}
+    \item \textbf{Rule-based} – Explicit rules (e.g., exact match with reference output, length constraints) used directly as rewards.  
+    \item \textbf{Metric-based} – Standard NLP metrics (e.g., BLEU, ROUGE, METEOR) used to evaluate and reward generated results.  
+\end{enumerate}
+
+\textbf{Output formatting requirements}:  
+\begin{itemize}
+    \item Place your results \textbf{after four hash marks (\texttt{\#\#\#\#})}.
+    \item For \textbf{each choice}, indicate its \textbf{category} and \textbf{name}, using the format:
+    \begin{quote}
+        \texttt{\#\#\#\# <Category>/<Name>: <Brief description>}
+    \end{quote}
+    \item Use a \textbf{new line} for each choice.
+\end{itemize}
+
+\textbf{Example}:  
+\begin{tcolorbox}[colback=white, colframe=gray!30, size=small]
+\texttt{\#\#\#\# Metric-based/BLEU: Measures the n-gram overlap between generated output and reference text.}\\
+\texttt{\#\#\#\# Rule-based/Length: Rewards outputs within the target length range for conciseness.}
+\end{tcolorbox}
+\end{tcolorbox}
+
+
+
+
+\subsubsection{Write} \label{sec:code-agent-write}
+
+\begin{tcolorbox}[title={\texttt{WRITE\_CODE\_PROPMT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Implement the following metric according to description using python. Write a function begin with \texttt{'compute\_xxx'}. The function accepts: \texttt{prompt}, \texttt{candidate\_response}, \texttt{reference\_response}. Return a scalar score.
+
+Output the python code in \texttt{```python ... ```}. List requirements in \texttt{requirements.txt} style.
+
+\medskip
+\texttt{[metric description]}
+\end{tcolorbox}
+
+
+
+
+\subsection{Prompts for WrapLLM and CodeVerify} \label{apd:prompt_wrap_code}
+
+
+% --- TASK_CLS_PROMPT ---
+\begin{tcolorbox}[title={\texttt{TASK\_CLS\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+You will be given a \texttt{question} and an \texttt{answer} from a language model interaction.  
+Your job is to determine the main type of task being performed. Examples include but are not limited to: translation, summarization, question answering, code generation, math solving, creative writing, RLHF alignment, explanation, classification, etc.  
+You do not need to list all possible task types — instead, use your judgment to give the most fitting label for this specific instance.  
+\textbf{Rules:}  
+\begin{enumerate}
+    \item Output only the task type as a concise label (maximum \textbf{three words}).
+    \item Do not include any extra text, punctuation, or explanation.
+    \item If uncertain, choose the closest-fitting description.
+\end{enumerate}
+
+Provide your output results after four sharp marks \texttt{\#\#\#\#}, such as \texttt{"\#\#\#\# Translation"}.
+
+\textbf{Input example:}  
+\begin{quote}
+\texttt{"question": "You are a helpful assistant that translates English sentences to French... [English Input]\textbackslash n Michael Gill formed The Murder Mile... [French Output]\textbackslash n",} \\
+\texttt{"answer": "Michael Gill a formé The Murder Mile..." }
+\end{quote}
+\textbf{Output:}  
+\texttt{\#\#\#\# English--French Translation}
+
+Now classify the given instance according to these rules.
+\end{tcolorbox}
+
+% --- TASK_DECOMP_PROMPT ---
+\begin{tcolorbox}[title={\texttt{TASK\_DECOMP\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Please break down the following generative task into a combination of several basic generative tasks:
+
+\textbf{Basic task list:}
+\begin{enumerate}
+    \item \textbf{Controlled generation:} Generate coherent natural language text that meets certain conditions.
+    \item \textbf{Translation:} Generate corresponding text in another natural language.
+    \item \textbf{Text summarization:} Summarize the given text.
+    \item \textbf{Question answering:} Provide appropriate answers based on background info.
+    \item \textbf{Paraphrasing:} Modify text into a different form of expression.
+    \item \textbf{Cloze generation:} Fill in missing parts of a text.
+    \item \textbf{Planning generation:} Plan a high-level outline (chapter lists, scripts).
+    \item \textbf{Code:} Generate or revise executable code.
+\end{enumerate}
+
+\textbf{Decomposition goal:}
+\begin{itemize}
+    \item Break down the complex task into a list of the above basic tasks.
+    \item Steps should be in execution order.
+    \item Each step must specify the ``basic task type'' and execution content.
+\end{itemize}
+
+\textbf{Output format requirements:}
+\begin{itemize}
+    \item List results step-by-step (step number + type + description).
+    \item Enclose the final result within \texttt{<Result> ... </Result>} tags.
+\end{itemize}
+
+\bigskip
+\texttt{\{original\_task\}}
+\end{tcolorbox}
+
+% --- LIST_TASK_PROMPT ---
+\begin{tcolorbox}[title={\texttt{LIST\_TASK\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+You are an expert in designing reward models and evaluation metrics for the \textbf{\texttt{\{task\}}} task.  
+Your goal is to list \textbf{3--5 possible reward model or evaluation metric choices}, drawing from:  
+\begin{enumerate}
+    \item \textbf{Rule-based} -- Explicit rules (e.g., exact match, length constraints).
+    \item \textbf{Metric-based} -- Standard NLP metrics (e.g., BLEU, ROUGE).
+\end{enumerate}
+
+\textbf{Output formatting requirements:}  
+\begin{itemize}
+    \item Place your results \textbf{after four hash marks (\texttt{\#\#\#\#})}.
+    \item Format: \texttt{\#\#\#\# <Category>/<Name>: <Brief description>}
+    \item Use a \textbf{new line} for each choice.
+\end{itemize}
+\end{tcolorbox}
+
+% --- WRITE_CODE_PROPMT ---
+\begin{tcolorbox}[title={\texttt{WRITE\_CODE\_PROPMT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Implement the following metric according to description using python. Write a function begin with \texttt{'compute\_xxx'}. The function accepts: \texttt{prompt}, \texttt{candidate\_response}, \texttt{reference\_response}. Return a scalar score.
+
+Output the python code in \texttt{```python ... ```}. List requirements in \texttt{requirements.txt} style.
+
+\medskip
+\texttt{[metric description]}
+\end{tcolorbox}
+
+% --- WRAP_TOOL_PROMPT ---
+\begin{tcolorbox}[title={\texttt{WRAP\_TOOL\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Write a short description of the following reward function. Briefly explain what it calculates and how to use it for NLP evaluation.
+
+\textbf{NAME:} \texttt{\{name\}} \\
+\textbf{CODE:} \\
+\texttt{```python} \\
+\texttt{\{code\}} \\
+\texttt{```}
+
+Write your description after \texttt{\#\#\#\#}, e.g., \texttt{"\#\#\#\# This function calculates..."}.
+\end{tcolorbox}
+
+% --- METRIC_DESIGN_PROMPT ---
+\begin{tcolorbox}[title={\texttt{METRIC\_DESIGN\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+You are an expert in designing evaluation metrics with python. Implement \texttt{\{metric\}}. 
+
+\textbf{Info:} \texttt{\{info\}}
+
+Write a function \texttt{def compute\_XXX(prompt, candidate\_response, reference\_response)} that returns the score. Enclose in \texttt{```python ... ```}.
+\end{tcolorbox}
+
+% --- REWARD_MODEL_DESIGN_PROMPT ---
+\begin{tcolorbox}[title={\texttt{REWARD\_MODEL\_DESIGN\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Expert in reward models. Write a script to calculate reward scores. 
+Function: \texttt{def compute\_XXX(prompt, response, reference)}. 
+Device: \texttt{"cuda:0"}. Load model precisely once.
+
+\textbf{README.md:} \texttt{\{readme\}} \\
+\textbf{Path:} \texttt{\{model\_path\}}
+\end{tcolorbox}
+
+% --- RERANK_PROMPT ---
+\begin{tcolorbox}[title={\texttt{RERANK\_PROMPT}}, breakable, colframe=blue!50!black, colback=blue!5]
+Filter search results based on:
+\begin{enumerate}
+    \item \textbf{Identify Reward Models:} Keep \texttt{-Reward-} or \texttt{-RM-}. Discard \texttt{-Base}, \texttt{-Instruct}, \texttt{-Chat}.
+    \item \textbf{Hugging Face Only:} Model repositories only. Discard datasets/papers.
+    \item \textbf{Score Output:} Regression models (e.g., 0--1).
+\end{enumerate}
+Output original IDs as a list: \texttt{[0, 1, 3]}.
+
+\medskip
+\texttt{\{results\}}
+\end{tcolorbox}
+
+% --- LLMRM_IMPLEMENT_CODE ---
+\begin{tcolorbox}[title={\texttt{LLMRM\_IMPLEMENT\_CODE}}, breakable, colframe=blue!50!black, colback=blue!5]
+Implement python script for reward model. \\
+\textbf{Checkpoint:} \texttt{\{model\_local\_dir\}} \\
+\textbf{Device:} \texttt{"\{cuda\_device\}"} \\
+\textbf{Function:} \texttt{def compute\_XXX(prompt, response, reference)}.
+
+Format: \texttt{```python ... ```}. Print function signature after \texttt{\#\#\#\#} at the end.
+
+\medskip
+\texttt{\{scripts\}}
+\end{tcolorbox}
+
+% --- SELECT_INFORMATIVE_FILES ---
+\begin{tcolorbox}[title={\texttt{SELECT\_INFORMATIVE\_FILES}}, breakable, colframe=blue!50!black, colback=blue!5]
+Identify informative files from HF repo: \\
+\texttt{\{file\_list\}}
+
+Output list: \texttt{["file1.py", "README.md"]}. No extra text.
+\end{tcolorbox}

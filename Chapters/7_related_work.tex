@@ -1,0 +1,22 @@
+\section{Related Work}
+
+
+\subsection{LLM RL Reward Designs}
+
+
+In industry, training \textbf{discriminative} reward models~\citep{ouyangrlhf, deepseekr1, skyworkreward} is widely regarded as the most reliable approach for constructing a human preference oracle within reinforcement learning (RL) frameworks for LLM optimization. In addition, \textbf{generative} rewards extend the aforementioned task from classification to generation, and have demonstrated feasibility in mathematical domains~\citep{generativerm}, RLHF-based settings~\citep{ke-etal-2024-critiquellm, wang2024pandalm, zhu2025judgelm, autoj}, and can be integrated with advances in LLM reasoning, such as CritiqueGRPO~\citep{critiqueGRPO}.
+With the rapid development of math reasoning and code generation, the design of \textbf{verifiable} rewards has attracted increasing attention. Binary rewards that can be verified through explicit rules have been shown to be more efficient in these domains~\citep{grpo, tulu3}. \citet{bleuberi} involve employing standard NLP metrics to guide instruction-following alignment as an extension of the aforementioned approach.
+
+\subsection{RL from AI Feedback}
+
+
+RLAIF~\citep{lee2024rlaif} explores the development of reward models without extensive manual labeling. Self-rewarding~\citep{selfreward} requires the policy model to evaluate and discriminate its own generations. The LLM-as-a-judge paradigm~\citep{mtbench} employs a strong LLM to evaluate another LLM via an evaluation prompt. RewardAgent~\citep{rewardagent} utilizes an LLM to combine pre-specified reward designs. These approaches inevitably embed strong human priors into reward design, either through the evaluation prompt or foundational reward specifications. In contrast to RewardAgent, \method{} extends both design flexibility and evaluation of the reward design framework within an RL algorithm where reward is explicitly formulated (specifically GRPO rather than DPO).
+
+% web agent
+
+\subsection{Dynamic Reward Assigning}
+
+
+
+Recent research in integrating LLMs with RL, particularly for reward shaping, primarily focuses on analyzing prior policy traces to iteratively refine the reward function. \citet{afonso2025selfcorrectingrewardshapinglanguage} and \citet{eager-2022} leverage LLM reasoning to guide reward weight pruning or analyze traces to determine appropriate reward shapes. Other methods, such as \citet{logicRL} and \citet{dynamic-rewarding-2024-emnlp}, explore techniques like curriculum scheduling and adjusting the reward schedule via prompt hints.
+\method{} diverges by harnessing the LLM's capability to search the web and generate code, directly \textbf{designing entirely new rewards} rather than being limited to weight adjustments. \method{} is also flexible for \textbf{cross-domain optimization} problems, where reward designs differ substantially across sub-domains, a challenge existing single-task-focused methods do not fully address.

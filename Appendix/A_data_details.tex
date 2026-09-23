@@ -1,0 +1,69 @@
+
+
+\section{Reproducibility Statement}
+
+We have included the heterogeneous data construction process in Section~\ref{sec:task_definition} and more details in the Appendix. We describe the RL training settings and experiment platforms in Appendix~\ref{apd:training_details} and Section~\ref{sec:experimental_setup}. The prompts involving the usage of LLM (primarily GPT-4.1) are provided in Appendix~\ref{apd:prompts}. The above materials should be sufficient to reproduce our work.
+
+
+
+\section{Data Process Details} \label{apd:data}
+
+\subsection{Detailed Introduction of Datasets}
+\noindent\textbf{Translation (En-Fr, Fr-En)}: This task requires the LLM to translate between English and French (in our case, English to French and French to English). We use the dataset \texttt{aircrypto/English-French-Translations-Train-Large}~\citep{hf_enfr} from HuggingFace, which provides high-quality, paired sentence-level samples.
+
+\noindent\textbf{Instruction Following}: Given specific requirements in the provided instructions, the LLM should respond accordingly. We use \texttt{tulu3-sft-reused-on-policy-8b}, part of the Tulu-3~\citep{tulu3} preference dataset, which contains generation pairs between different LLMs during the training of Llama‑3.1‑Tulu‑3‑8B.
+
+\noindent\textbf{Multi-turn}: LLMs respond to instructions with previous interaction histories. We pick \texttt{allenai-WildChat-1M-multiturn}~\citep{allenwilde}, a collection of 1M ChatGPT interaction logs from the wild. We select the English subset aimed at RLHF queries. 
+
+\noindent\textbf{Summarization}: This task requires the LLM to summarize long documents into short abstracts. We pick \texttt{ccdv/govreport-summarization, ccdv/pubmed-summarization, ccdv/arxiv-summarization}~\citep{cohan-etal-2018-discourse-summarizationdataset}, which include different types of documents from arXiv articles to government reports.
+
+\noindent\textbf{Math}: We pick OpenAI \textsc{gsm8k}~\citep{gsm8k}, a classic dataset of grade‑school math problems designed to evaluate multi‑step reasoning. We choose not to use more complex math-reasoning datasets because our focus in this work is primarily on LLM text-generation tasks. Advanced math reasoning often requires specialized methodologies, such as tree‑search reasoning, which makes it unsuitable for single-pass direct generation.
+
+\noindent\textbf{Conditional Generation}: The LLM should generate coherent text according to given constraints. In our setting, we task the LLM with filling in missing paragraphs in an essay or producing a complete essay based on an abstract outline. We use \texttt{qwedsacf/ivypanda-essays}~\citep{ivypanda}, a HuggingFace dataset repository containing long-form essays covering multiple disciplines sourced from the \textit{IvyPanda platform}\footnote{\texttt{https://ivypanda.com/}}.
+
+
+\subsection{Data Filtering Prompt} ~\label{apd:prompt_for_data_filter}
+
+\begin{tcolorbox}[promptbox, title={DATA\_FILTER\_PROMPT}]
+\textbf{Input}: \texttt{task\_samples}, \texttt{quality\_standards}
+\tcblower
+You are given a set of task samples, each consisting of:
+\begin{enumerate}
+    \item \textbf{User Query} – the task or request made to the model.
+    \item \textbf{Model Response} – the output given by the model.
+\end{enumerate}
+
+The samples may come from various task types, including: Translation, Summarization, Math problem solving, RLHF alignment, Conditional text generation, and Multi-turn dialogue.
+
+\textbf{Your Goal}: Identify and select only the samples that did not meet quality standards based on:
+
+\medskip
+\textbf{A. Query Quality Issues}:
+\begin{itemize}
+    \item Ill-formed or incomplete queries; Ambiguous or misleading instructions.
+    \item Irrelevant or off-topic requests; Grammatically broken or nonsensical input.
+\end{itemize}
+
+\textbf{B. Response Quality Issues}:
+\begin{itemize}
+    \item Incorrect or factually wrong answers; Incomplete responses.
+    \item Poor language quality or incoherent writing.
+    \item Hallucinations or made-up facts; Misinterpretation of the query.
+\end{itemize}
+
+\textbf{Instructions}:
+\begin{enumerate}
+    \item For each sample, examine both the query and response.
+    \item Mark the sample as \textbf{"Fail"} if either the query quality or the response quality is below standard.
+    \item Briefly explain why the sample fails, citing issues in query, response, or both.
+    \item Output only the failing samples, in the format:
+    \begin{tcolorbox}[colback=white, colframe=gray!20, size=minimal, left=2mm, top=1mm, bottom=1mm]
+        \texttt{[Sample ID]} \\
+        \texttt{Query: ...} \\
+        \texttt{Response: ...} \\
+        \texttt{Fail Reason: ...}
+    \end{tcolorbox}
+\end{enumerate}
+
+\textit{Be strict in applying the criteria — even if only one side (query or response) is substandard, the sample should be considered as failing.}
+\end{tcolorbox}

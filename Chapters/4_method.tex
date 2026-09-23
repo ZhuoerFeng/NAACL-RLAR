@@ -1,0 +1,107 @@
+\vspace{-6mm}
+\section{Methodology}
+
+
+To address the inherent limitations of a single reward function in handling heterogeneous task distributions, we propose \textbf{Reinforcement Learning with Agentic Reward}. Unlike static reward models, \method{} is a self-evolving framework that leverages the tool-use capabilities of LLMs to dynamically synthesize, verify, and invoke specialized reward tools.
+
+\subsection{Problem Formulation} \label{sec:formulation}
+We formalize the \method{} framework as a dynamic reward synthesis and calling problem. Given an input context triplet $(q, r, \hat{r})$ comprising a query, the candidate response, and the reference answer, our objective is to compute a precise scalar reward $s \in \mathbb{R}$ that reflects the response quality. 
+
+
+The framework operates on a \textbf{Reward Toolset (Library)} $\mathcal{F} = \{f_1, f_2, \dots, f_n\}$, where each $f_i: (q, r, \hat{r})\rightarrow s$ is an atomic reward tool  (e.g., an LLM-classifier-based reward model, a code-based checker, or a heuristic rule). Initially, $\mathcal{F}$ is populated with a general-purpose base reward model (e.g., Skywork-Llama). As the framework encounters more queries from diverse tasks, $\mathcal{F}$ expands through agentic synthesis: $\mathcal{F}_{t+1} = \mathcal{F}_t \cup \{f_{\text{new}}\}$.
+
+\subsection{Adaptive Reward Routing and Selection} \label{sec:routing}
+A core challenge in \method{} is determining whether the current toolset $\mathcal{F}$ can accurately evaluate a given \((q, r, \hat{r})\). We introduce a \textbf{Policy Router} $\pi_{agent}$, which serves as the decision-making core.
+
+\noindent\textbf{Completeness Assessment:} For each incoming $(q, r, \hat{r})$, $\pi_{agent}$ assesses the \textit{competency} of the existing library. We formalize this as a classification-of-intent task:
+\begin{equation}
+    a = \pi_{agent}(\text{state} = (q, r, \hat{r}), \mathcal{F})
+\end{equation}
+where $a \in \{\text{Select}, \text{Synthesize}\}$.
+
+\noindent\textbf{Tool Selection:} If $\mathcal{F}$ is complete ($a = \text{Select}$), a selection module $\phi_{select}$ identifies the optimal reward tool $f_t \in \mathcal{F}$ by matching the task metadata with tool descriptions.
+
+\noindent\textbf{Tool Synthesis:} If no suitable tool exists ($a = \text{Synthesize}$), it calls the Agentic Synthesis module to construct the missing reward tool.
+
+
+\subsection{Agentic Tool Synthesis} \label{sec:synthesis}
+
+When a tool is missing from the reward tool library \(\mathcal{F}\), \method{} invokes specialized agents to construct a new reward tool $f_{\text{new}}$. Considering different reward system types, we design \textbf{WrapLLM} and \textbf{CodeVerify} to fulfill this goal. 
+
+\subsubsection{WrapLLM}
+
+The LLM agent retrieves and encapsulates the most compatible lightweight (within 10B) reward model repository from the open-source model platform \textit{HuggingFace}. These are suited for tasks requiring semantic nuances, creativity, or value alignment. The agent follows an iterative retrieval workflow:
+(1) Generate a search query for the search engine;
+(2) Iteratively retrieve from the search engine;
+(3) Filter and rerank results for the most related reward model;
+(4) Download and implement the deployment and inference code;
+(5) Wrap (generating the function names, descriptions) into an API for tool calling. 
+The workflow transforms a reward model checkpoint into a callable tool for $\mathcal{F}$. % \wcx{Prompts are specified in Appendix.}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/main_fig.pdf}
+    \caption{The Reinforcement Learning with Agentic Reward (RLAR) Framework.}
+    \label{fig:main_fig}
+    % \vspace{-4mm}
+\end{figure}
+
+\subsubsection{CodeVerify}
+
+The agent follows a Plan-and-Execute strategy to generate deterministic verifiers for objective tasks such as mathematics and programming. It initially plans up to five possible schemes and implements the optimal one as a reward tool.
+The agent generates Python-based scripts that vary by task type. For example, retrieving the final answer from a formatted solution is suited for math; retrieving and arranging generated code and executing it with test cases is suited for code. Furthermore, for tasks such as translation, it implements a metric-based (e.g., ROUGE, BLEU, METEOR) reward tool.  The prompts for the above are provided in Appendix~\ref{apd:prompt_wrap_code}.
+
+% \wcx{The prompts are specified in Appendix().} 
+
+\subsection{Verification and Library Update} \label{sec:verification}
+
+
+To ensure the reliability of the synthesized tools, each $f_{\text{new}}$ must pass a module (\textbf{EvalTool}) before being committed to $\mathcal{F}$.
+For \textit{WrapLLM}, it examines the consistency between the model-as-a-tool description and its original documentation. For \textit{CodeVerify}, it performs analysis on code implementation and execution checks on synthesized scripts. Only tools that satisfy these verifications are committed to the library: $\mathcal{F} \leftarrow \mathcal{F} \cup \{f_{\text{new}}\}$.
+
+
+\subsection{Evaluating Reward Orchestration and Selection}
+
+
+Before deploying \method{} in full RL training, we first validate the core reward tool orchestration mechanism in a controlled setting. Since the effectiveness of the entire framework hinges on whether the agent can reliably identify the most suitable reward function for a given query, we isolate this capability and evaluate it on \textsc{RewardBench-v2}.
+
+\begin{table}
+    \centering
+    \caption{Comparison of Agentic Selection vs. Reward Merging on \textsc{RewardBench-v2}.}
+    \label{tab:rewardbench_results}
+    \small
+    \begin{tabular}{lcccccc}
+    \toprule
+    \textbf{Method} & \textbf{Avg} & \textbf{Precision IF} & \textbf{Math} & \textbf{Safety} & \textbf{Factuality} & \textbf{Focus} \\
+    \midrule
+    SOTA        & 87.19 & 57.14 & 60.00 & 97.12 & 85.29 & 99.13 \\  \midrule
+    \multicolumn{7}{l}{\textit {Agentic Selection within \method{} framework }} \\ 
+    Random           & 78.39 & 40.48 & 60.00 & 89.42 & 75.49 & 90.43 \\
+    GPT-4o    & 88.19 & 57.14 & 68.57 & 96.15 & 87.25 & 99.13 \\
+    GLM-4.6   & 88.69 & 57.14 & 68.57 & 96.15 & 88.24 & 100.0 \\
+    GPT-5.1          & \textbf{90.44} & \textbf{66.67} & \textbf{71.42} & 96.15 & \textbf{90.19} & \textbf{100.0} \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Logits Merging Methods }} \\ 
+    mean@2           & 87.44 & 61.90 & 68.57 & 95.19 & 83.33 & 99.13 \\
+    mean@10          & 77.89 & 47.62 & 57.14 & 84.62 & 76.47 & 90.43 \\
+    mean@50          & 51.51 & 40.48 & 48.57 & 66.35 & 48.04 & 46.09 \\
+    \midrule
+    Theoretical Best & 93.47 & 76.19 & 77.14 & 97.12 & 95.10 & 100.0 \\
+    \bottomrule
+    \end{tabular}
+    % }
+\end{table}
+
+
+\noindent\textbf{Setup.} We utilized a randomly and uniformly sampled subset of 400 instances from the \textsc{RewardBench-v2} test set. Each instance comprises one preferred (chosen) response and three non-preferred (rejected) responses for a given prompt.\footnote{The ``Tie'' category is excluded due to the test's input-output format uniformity.} For each instance, a reward model is required to score all four responses. An instance is considered a \textbf{pass} if the softmax-normalized reward score assigned to the preferred response exceeds a threshold of 0.5.
+
+We leveraged the evaluation records of the top 50 classification models from the official leaderboard. RLAR is tasked with predicting the reward model most likely to pass a given instance, utilizing the query, candidate responses, and the models' metadata. For evaluation simplicity, reward models are presented to the agent as encapsulated tools. We compared the following approaches: \textbf{Backbone LLM Scaling}: Evaluating the impact of different agentic capabilities using GPT-4o, GLM-4.6, and GPT-5.1. \textbf{Reward Logits Merging}: Assessing the effect of ensemble methods by calculating the average scores of the top-$k$ models' predictions on each candidate response (mean@$k$).
+
+% \noindent\textbf{Results and Discussion.} As shown in Table~\ref{tab:rewardbench_results}, simply merging reward model output logits (mean@$k$) does not effectively expand the performance ceiling; in fact, performance degrades significantly as more models are included (mean@50). In contrast, there is a clear positive correlation between the \textbf{agentic capability} of the backbone LLM and performance gains. These findings demonstrate that leveraging LLM reasoning to dynamically select reward models is a viable path for extending reward system design, approaching the theoretical performance limit of the available model pool.
+
+
+% \noindent\textbf{Results and Discussion.} As shown in Table~\ref{tab:rewardbench_results}, simply merging reward model output logits (mean@$k$) does not effectively expand the performance ceiling; in fact, performance degrades significantly as more models are included (mean@50). In contrast, there is a clear positive correlation between the \textbf{agentic capability} of the backbone LLM and performance gains. These findings confirm that the agentic routing mechanism can reliably identify suitable reward functions, approaching the theoretical performance limit of the available model pool. With this validation in hand, we proceed to evaluate \method{} in the full RL post-training pipeline.
+
+\noindent\textbf{Results and Discussion.} As shown in Table~\ref{tab:rewardbench_results}, simply merging reward model output logits (mean@$k$) does not effectively expand the performance ceiling; in fact, performance degrades significantly as more models are included (mean@50). In contrast, there is a clear positive correlation between the \textbf{agentic capability} of the backbone LLM and performance gains. This confirms the agentic routing mechanism reliably identifies suitable reward functions, approaching the model pool's theoretical limit. We thus evaluate \method{} in the full RL post-training pipeline.
+

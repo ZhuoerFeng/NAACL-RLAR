@@ -1,0 +1,284 @@
+\section{Experiment Training Details} 
+
+
+\subsection{Training Configuration} \label{sec:training_config}
+For the SFT setting, we tuned the base model on the training dataset for 2 epochs. All RL experiments were conducted using the GRPO~\citep{grpo} algorithm framework for 80 steps in total. Since Qwen3-8B is a reasoning model, we enforced a formatting constraint: the reward was set to zero if the reasoning chain failed to be properly encapsulated within `<think>' and `</think>' tags. We did not apply a length penalty during RL training, as generation length does not consistently correlate with task performance. More training details are provided in Appendix~\ref{apd:training_details}.
+
+All experiments were performed on a cluster of 8\(\times\)NVIDIA H100 GPUs (80GB), using a global batch size of 128 and mixed-precision (FP16) training. An auxiliary cluster of 8\(\times\)NVIDIA A100 GPUs (80GB) was dedicated to the deployment and inference of the reward models.
+
+
+
+% \subsection{Manual Designed Reward Function over Length}~\label{sec:manual-rm-fun}
+
+% We designed the following function for calculating reward scores over length. Suppose generation length is \(x\) and reference length is \(r\), we raise:
+% \begin{widetext}
+%     \begin{equation}\label{eq:length_rm}
+%     l(x, y) =
+%     \begin{cases}
+%     \dfrac{x}{r}, \quad 0 \le x \le 0.75r, \\[0.8em]
+%     \dfrac{0.25 \left[ f(x; r, 0.25r) - f(0.75r; r, 0.25r) \right] } { \left[ f(r; r, 0.25r) - f(0.75r; r, 0.25r) \right] }
+%      \\
+%       \quad \quad + 0.75, \quad  x > 0.75r ,
+%     \end{cases}
+%     \end{equation}
+% \end{widetext}
+
+% \begin{align}
+% f(t; \mu, \sigma) &=
+% \frac{1}{\sqrt{2\pi} \, \sigma}
+% \exp\left(
+%  -\frac{(t - \mu)^2}{2\sigma^2}
+% \right).
+% \end{align}
+
+% This can be regarded as stretching and shifting a Gaussian normal probabilistic distribution function, centered at \(r\) with standard deviation \(0.25r\), along the \(y\)-axis so that it passes through the two points \((0.75r, 0.75)\) and \((r, 1)\). Before \(\frac{3}{4}\) of reference length, there is a linear increment with more words.
+
+\subsection{Prompt for the LLM Judge}  
+\label{apd:judge_prompt}
+\begin{tcolorbox}[
+    title = {LLM-as-a-judge Prompt}, 
+    breakable, 
+    colframe=blue!50!black, 
+    colback=blue!10,
+    fonttitle=\bfseries
+]
+\textbf{Input}: \texttt{prompt}, \texttt{candidate}, \texttt{reference}
+\tcblower
+
+You are an expert evaluator of language model outputs. You will receive:
+
+\begin{enumerate}
+    \item \textbf{Prompt:} The original instruction/task given to the model.
+    \item \textbf{Candidate Response:} The model's output to be evaluated.
+    \item \textbf{Reference Response:} A high-quality gold-standard or reference output.
+\end{enumerate}
+
+\textbf{Your task}:
+\begin{itemize}
+    \item Evaluate the quality of the \textit{Candidate Response} compared to the \textit{Reference Response} and in relation to the given \textit{Prompt}.
+    \item Consider the task category (\textbf{translation}, \textbf{summarization}, \textbf{generation}, \textbf{infilling/cloze}, \textbf{conditional generation}, \textbf{math}, or \textbf{instruction following}) and adjust criteria accordingly.
+    \item Score on a scale from \textbf{0 to 10} according to the rubric below.
+    \item Output the score in the format \texttt{[[X]]} (where X is the integer) \textbf{once}, followed by a clear explanation.
+\end{itemize}
+
+\tcbline % 使用 tcolorbox 的分割线代替 ---
+
+\subsubsection*{Evaluation Dimensions by Task Category}
+\textit{(Use whichever are relevant to the given prompt)}
+
+\begin{itemize}
+    \item \textbf{Translation}: Accuracy, fidelity, fluency, grammar, style.
+    \item \textbf{Summarization}: Coverage, factual faithfulness, conciseness, coherence.
+    \item \textbf{Generation}: Relevance, originality, creativity, coherence, style.
+    \item \textbf{Infilling/Cloze}: Correctness of missing content, contextual fit, fluency.
+    \item \textbf{Math/Reasoning}: Correctness of logic, clarity, rigor of explanation.
+    \item \textbf{Instruction Following}: Alignment with intent, completeness.
+\end{itemize}
+
+\tcbline
+
+\subsubsection*{Scoring Rubric (0–10)}
+\begin{small}
+\begin{description}
+    \item[10:] \textbf{Perfect}. Fully correct, faithful, and clear. No errors.
+    \item[8--9:] \textbf{Very Good}. Minor style issues or tiny, overlookable omissions.
+    \item[6--7:] \textbf{Good/Fair}. Mostly correct but with notable small issues or some loss of clarity.
+    \item[4--5:] \textbf{Poor/Borderline}. Mix of correct/incorrect; noticeable gaps; low reliability.
+    \item[1--3:] \textbf{Very Poor}. Incoherent, irrelevant, or almost entirely wrong.
+    \item[0:] \textbf{No meaningful output} or completely unrelated.
+\end{description}
+\end{small}
+
+\tcbline
+
+\subsubsection*{Output Format}
+Respond with:
+\begin{tcolorbox}[colback=white, colframe=gray!30, size=minimal, left=2mm, top=2mm, bottom=2mm]
+\texttt{[[X]]} \\
+\texttt{Explanation:[Detailed explanation within 50 words, citing criteria.]}
+\end{tcolorbox}
+
+\tcbline
+
+\textbf{[Prompt]} \\
+\texttt{\{prompt\}}
+
+\medskip
+\textbf{[Candidate Response]} \\
+\texttt{\{candidate\}}
+
+\medskip
+\textbf{[Reference Response]} \\
+\texttt{\{reference\}}
+
+\end{tcolorbox}
+
+
+
+
+\subsection{Hyperparameters Details for RL Training} \label{apd:training_details}
+
+We use the volcano engine reinforcement learning for LLMs framework, \textsc{verl}~\citep{verlengine}. We validate the implementation of the framework and run all our RL experiments based on it. Below are the hyperparameters for all our experiments and we use the same set of hyperparameters for all experiments.
+
+\begin{table}[htbp]
+\centering
+\caption{Hyperparameter settings for GRPO training with Qwen3-8B.}
+\label{tab:hyperparams}
+\small
+\begin{tabularx}{\columnwidth}{Xr}
+\toprule
+\textbf{Category / Parameter} & \textbf{Value} \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Training \& Data}} \\
+Total Epochs & 5 \\
+Global Train Batch Size & 256 \\
+Max Prompt Length & 10,000 \\
+Max Response Length & 5,000 \\
+Truncation Strategy & 'error' \\
+Filter Overlong Prompts & True \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Algorithm (GRPO/PPO)}} \\
+Advantage Estimator & GRPO \\
+Learning Rate & $1 \times 10^{-6}$ \\
+PPO Mini-batch Size & 16 \\
+KL Coefficient & 0.0001 \\
+KL Loss Type & low\_var\_kl \\
+Entropy Coefficient & 0 \\
+KL in Reward & False \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Rollout (vLLM Engine)}} \\
+Rollout Samples ($n$) & 8 \\
+Max Batched Tokens & 65,536 \\
+GPU Memory Utilization & 0.7 \\
+Prompt/Response Length & 10k / 5k \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Parallelism \& Infrastructure}} \\
+Nodes / GPUs per Node & 1 / 8 \\
+Tensor Parallel (TP) Size & 2 \\
+Pipeline Parallel (PP) Size & 4 \\
+Gradient Checkpointing & True \\
+Micro Batch Size (Actor) & 1 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\begin{table}[t]
+\centering
+\caption{Hyperparameter settings for GRPO training with Llama-3.1-8B.}
+\label{tab:llama_hyperparams}
+
+\small
+\begin{tabularx}{\columnwidth}{Xr}
+\toprule
+\textbf{Category / Parameter} & \textbf{Value} \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Training \& Data}} \\
+Total Epochs & 5 \\
+Global Train Batch Size & 256 \\
+Max Prompt Length & 10,000 \\
+Max Response Length & 5,000 \\
+Truncation Strategy & 'error' \\
+Filter Overlong Prompts & True \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Algorithm (GRPO)}} \\
+Advantage Estimator & GRPO \\
+Learning Rate & $1 \times 10^{-6}$ \\
+PPO Mini-batch Size & 16 \\
+KL Coefficient & 0.0001 \\
+KL Loss Type & low\_var\_kl \\
+Entropy Coefficient & 0 \\
+KL in Reward & False \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Rollout (vLLM Engine)}} \\
+Rollout Samples ($n$) & 8 \\
+Max Batched Tokens & 65,536 \\
+GPU Memory Utilization & 0.7 \\
+Prompt/Response Length & 10k / 5k \\
+\midrule
+\rowcolor[gray]{0.9} \multicolumn{2}{l}{\textit{Parallelism \& Infrastructure}} \\
+Nodes / GPUs per Node & 1 / 8 \\
+Tensor Parallel (TP) Size & 2 \\
+Pipeline Parallel (PP) Size & 4 \\
+Gradient Checkpointing & True \\
+Micro Batch Size (Actor) & 1 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+% \begin{lstlisting}[style=mypython]
+% python3 -m verl.trainer.main_ppo --config-path=config \
+%     --config-name='ppo_megatron_trainer.yaml'\
+%     algorithm.adv_estimator=grpo \
+%     data.train_files=$rlvr_train_path \
+%     data.val_files=$rlvr_test_path \
+%     data.train_batch_size=128 \
+%     data.max_prompt_length=15000 \
+%     data.max_response_length=6000 \
+%     actor_rollout_ref.rollout.prompt_length=15000 \
+%     actor_rollout_ref.rollout.response_length=6000 \
+%     data.filter_overlong_prompts=True \
+%     data.truncation='error' \
+%     actor_rollout_ref.model.path=$base_model \
+%     actor_rollout_ref.actor.optim.lr=5e-6 \
+%     actor_rollout_ref.actor.ppo_mini_batch_size=64 \
+%     actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=2 \
+%     actor_rollout_ref.actor.megatron.pipeline_model_parallel_size=4 \
+%     actor_rollout_ref.actor.megatron.tensor_model_parallel_size=2 \
+%     actor_rollout_ref.actor.use_kl_loss=True \
+%     actor_rollout_ref.actor.kl_loss_coef=0.001 \
+%     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
+%     actor_rollout_ref.actor.entropy_coeff=0 \
+%     actor_rollout_ref.model.enable_gradient_checkpointing=True \
+%     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=8 \
+%     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
+%     actor_rollout_ref.rollout.max_num_batched_tokens=65536 \
+%     actor_rollout_ref.rollout.name=vllm \
+%     actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
+%     actor_rollout_ref.rollout.n=5 \
+%     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=8 \
+%     actor_rollout_ref.ref.megatron.pipeline_model_parallel_size=4 \
+%     actor_rollout_ref.ref.megatron.tensor_model_parallel_size=2 \
+%     algorithm.use_kl_in_reward=False \
+%     trainer.critic_warmup=0 \
+%     trainer.logger=['console','wandb'] \
+%     trainer.project_name=$proj_name \
+%     trainer.experiment_name=$exp_name \
+%     trainer.n_gpus_per_node=8 \
+%     trainer.nnodes=1 \
+%     trainer.save_freq=20 \
+%     trainer.test_freq=10 \
+%     trainer.total_epochs=2 $@
+% \end{lstlisting}
+
+
+% The following is our supervised finetuning training script:
+
+% \begin{lstlisting}[style=mypython]
+% torchrun --standalone --nnodes=1 --nproc_per_node=$nproc_per_node \
+%      -m verl.trainer.fsdp_sft_trainer \
+%     data.train_files=$train_files \
+%     data.val_files=$val_files \
+%     data.max_length=30000 \
+%     data.truncation=left \
+%     data.prompt_key=extra_info \
+%     data.response_key=extra_info \
+%     optim.lr=1e-5 \
+%     data.prompt_dict_keys=['question'] \
+%     +data.response_dict_keys=['answer'] \
+%     data.micro_batch_size=1 \
+%     data.micro_batch_size_per_gpu=1 \
+%     data.val_batch_size=1 \
+%     model.partial_pretrain=$base_model \
+%     trainer.default_local_dir=$save_path \
+%     trainer.project_name=main_exp \
+%     trainer.experiment_name=sft-qwen3-0.6 \
+%     trainer.logger=['console'] \
+%     trainer.total_epochs=2 \
+%     trainer.default_hdfs_dir=null $@ \
+%     ulysses_sequence_parallel_size=2 \
+%     use_remove_padding=true
+% \end{lstlisting}
+
+The other hyperparameters, such as optimizer $\beta$, are set to the defaults from the framework trainer configurations at \url{https://github.com/volcengine/verl/tree/main/verl/trainer/config}.
