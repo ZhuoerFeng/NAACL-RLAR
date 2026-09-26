@@ -8,7 +8,7 @@ from pathlib import Path
 from ..errors import StorageError
 from ..schemas import Message
 from ..storage.blobs import BlobStore, atomic_write_bytes
-from ..storage.canonical import canonical_json, digest
+from ..storage.canonical import canonical_json, digest, wire_json, wire_digest
 from ..storage.journal import Journal
 from ..storage.results import ResultsStore
 
@@ -32,7 +32,7 @@ def llm_calls(root):
         pid = p.get('physical_attempt_id')
         if e.type == 'llm_attempt_prepared':
             body = blobs.get_json(p['request_body_ref'])
-            if digest(body) != p['request_digest'] or body['messages'] != blobs.get_json(p['messages_ref']):
+            if wire_digest(body) != p['request_digest'] or body['messages'] != blobs.get_json(p['messages_ref']):
                 raise StorageError('request/messages digest mismatch')
             calls[pid] = {'schema_version': 'rlar.llm_call.v1', **p, 'request': body,
                 'response': None, 'dispatch_status': 'prepared', 'response_complete': False,
@@ -65,7 +65,7 @@ def llm_calls(root):
 
 def _write_jsonl(path, rows):
     path = Path(path)
-    atomic_write_bytes(path, b''.join(canonical_json(row) + b'\n' for row in rows))
+    atomic_write_bytes(path, b''.join(wire_json(row) + b'\n' for row in rows))
 
 
 def guard_output(root, output):
@@ -83,7 +83,13 @@ def export_llm_calls(root, output):
     guard_output(root, output)
     calls = llm_calls(root)
     _write_jsonl(output, calls)
-    return {'physical_attempts': len(calls), 'output': str(output)}
+    _, events, _, _ = read_run(root)
+    prepared = {e.payload['logical_call_id'] for e in events if e.type == 'llm_prepared'}
+    legacy = sum(e.type == 'llm_call_completed' and e.payload.get('logical_call_id') not in prepared for e in events)
+    manifest = {'schema_version': 'rlar.llm_export.v1', 'physical_attempts': len(calls),
+                'legacy_trace_unavailable': legacy, 'new_requests': 0, 'output': str(output)}
+    atomic_write_bytes(Path(str(output) + '.manifest.json'), wire_json(manifest))
+    return manifest
 
 
 def replay(root):

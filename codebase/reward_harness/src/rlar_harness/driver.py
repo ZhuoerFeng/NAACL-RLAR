@@ -130,6 +130,7 @@ class RunDriver:
             self.manifest = RunManifest(run_id=uuid.uuid4().hex, created_at=utc_now(), config=config,
                 config_digest=config.digest(), input_path=str(Path(input_path).resolve()) if input_path else None,
                 input_digest=file_digest(Path(input_path)) if input_path else None,
+                input_record_count=sum(bool(line.strip()) for line in open(input_path, "rb")) if input_path else None,
                 split=config.data.split, seed=config.construction.seed, deadline_utc=deadline,
                 harness_version='0.1.0', platform=platform.platform(),
                 runner_capabilities=self.runner.capabilities().model_dump(mode='json'), profile_kind=config.profile_kind,
@@ -207,12 +208,21 @@ class RunDriver:
     def process(self, records):
         try:
             committed = {r.input_location.as_key_suffix(): r for r in self.results.results}
+            consecutive_environment_failures = 0
+            pending_episodes = {e.episode_id for e in self.journal.scan().events if e.type == "episode_saved"}
             for item in records:
                 if item.location.as_key_suffix() in committed:
                     prior = committed[item.location.as_key_suffix()]
                     if item.raw_digest != prior.input_digest:
                         raise StorageError('input position changed')
                     continue
+                eid = digest({'run': self.manifest.run_id, 'position': item.location.as_key_suffix()})
+                exhausted = [dim for dim in ('controller_steps', 'model_requests', 'tool_calls', 'test_cases', 'component_executions')
+                             if self.run_ledger.remaining(dim) is not None and self.run_ledger.remaining(dim) <= 0]
+                if exhausted and eid not in pending_episodes:
+                    self.journal.append('run_interrupted', {'state': 'INTERRUPTED', 'reason': 'global_budget_exhausted',
+                        'dimensions': exhausted})
+                    return
                 if not item.ok:
                     yield self._input_error(item, item.error)
                     continue
@@ -237,6 +247,21 @@ class RunDriver:
                     llm.adapter.close()
                 self.run_ledger = budget.run
                 yield result
+                consecutive_environment_failures = (consecutive_environment_failures + 1
+                    if result.stop_reason == 'environment_unavailable' else 0)
+                if consecutive_environment_failures >= self.config.budget.retry.circuit_breaker_threshold:
+                    self.journal.append('run_interrupted', {'state': 'INTERRUPTED', 'reason': 'environment_circuit_breaker',
+                        'consecutive_environment_failures': consecutive_environment_failures})
+                    return
+                if self.deadline.expired():
+                    self.journal.append('run_interrupted', {'state': 'INTERRUPTED', 'reason': 'deadline_exceeded'})
+                    return
+                exhausted = [dim for dim in ('controller_steps', 'model_requests', 'tool_calls', 'test_cases', 'component_executions')
+                             if self.run_ledger.remaining(dim) is not None and self.run_ledger.remaining(dim) <= 0]
+                if exhausted:
+                    self.journal.append('run_interrupted', {'state': 'INTERRUPTED', 'reason': 'global_budget_exhausted',
+                        'dimensions': exhausted})
+                    return
             self.journal.append('run_completed', {'state': 'COMPLETED', 'results': len(self.results.results)})
         except BaseException as exc:
             # Never continue the input stream after a storage/auth/internal fault.

@@ -52,7 +52,7 @@ demo 不访问外网、不调用付费 API、不需要 API key 或 Docker。Scri
 - 历史只追加。固定 system 前缀不含时间戳/请求 ID；旧 observation 在首次限长后冻结。`model.token_counter=chars_div4_conservative` 保留兼容字段名，但实现使用 **UTF-8 字节数加 overhead** 的保守上界，不使用会低估代码/CJK 的 chars/4；真实 tokenizer 检查尚未提供。
 - `library_mode=continual` 将已提交成功产物发布给后续 query；`heldout` 使用固定空初始库，query 间不贡献。默认配置为 heldout，demo 显式 continual。当前不导入其他 run 的函数库；不会把外部同标签条目当作可信零调用证据。`reuse_enabled=false` 同时移除库上下文和复用路径。
 - 预算字段必须显式列出，`null` 表示明确不设该维度上限。controller、RM 物理 attempts 共同消耗 `model_requests`，评分另计 `scoring_requests`。每次派发前持久化预留，unknown 保留上界；指标报告另列已观测 token 和未知用量。价格缺失为 null。
-- 暂时网络错误只重试同一不可变请求；协议/代码错误进入下一次 controller 决策；鉴权、存储或未知内部错误暂停外层。环境不可用在有限内部重试后直接暂停，采用比配置 circuit breaker 更保守的单次暂停策略。不会自动重启取消的 run。
+- 暂时网络错误只重试同一不可变请求；协议/代码错误进入下一次 controller 决策；鉴权、存储或未知内部错误暂停外层。环境不可用在有限内部重试后终止当前 query，连续次数达到配置的 circuit breaker 阈值时暂停外层。不会自动重启取消的 run；全局构造预算耗尽后，后续 query 保留为未处理记录。
 - 绝对 UTC deadline 持久化，运行中由 monotonic 计时和 POSIX watchdog 中止阻塞调用；停机时间不会延长预算。相同 run 的输入、profile、suite、Python/dependency 或实现版本变化时拒绝 resume，需新建 run。
 - 内存 index 与 checkpoint 可以从 journal/results 重建。blob 原子写入并 fsync；result 行是 commit，library 的孤立行不发布。`flock` 单写者；只修复未换行的末尾撕裂记录，中间损坏或缺 blob 立即失败。
 - subprocess 只称**受控原型**：每个 example/component 使用新解释器，白名单环境、CPU/wall/output 限额、进程组清理与父进程死亡检测。macOS 不宣称内存/进程数量限制；同用户进程仍可访问宿主文件和网络，HMAC 文件也不构成对恶意代码的安全边界。

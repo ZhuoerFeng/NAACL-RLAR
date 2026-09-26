@@ -109,3 +109,14 @@ def reward_key_for(definition: Any) -> str:
 
 def text_digest(text: str) -> str:
     return sha256_hex(text.encode("utf-8"))
+
+
+def wire_json(value: Any) -> bytes:
+    """Exact JSON inputs: unlike reward canonicalization, no source rewriting."""
+    if isinstance(value, BaseModel):
+        value = value.model_dump(mode="json")
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+
+def wire_digest(value: Any) -> str:
+    return sha256_hex(wire_json(value))

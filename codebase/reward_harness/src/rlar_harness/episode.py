@@ -110,6 +110,8 @@ def construct_one(record, context: EpisodeContext):
             if s['state'] == 'LLM_PENDING':
                 result = c.llm.call(history, logical_call_id=logical)
                 if result.status in ('failed', 'unknown'):
+                    if result.error.category == 'transport':
+                        return finish('failed', 'environment_unavailable')
                     raise HarnessError(result.error.message, code=result.error.code)
                 error = result.parse_error
                 if error is None:
@@ -169,3 +171,7 @@ def construct_one(record, context: EpisodeContext):
                 save('OBSERVATIONS_READY')
     except (BudgetExhausted, DeadlineExceeded) as exc:
         return budget_finish(exc.code)
+    except HarnessError as exc:
+        if exc.code == 'environment_unavailable':
+            return finish('failed', 'environment_unavailable')
+        raise

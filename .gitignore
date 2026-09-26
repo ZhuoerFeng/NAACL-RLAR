@@ -60,3 +60,9 @@ cc_start.sh
 
 .parquet
 data/
+.json
+.pdf
+.jsonl
+codebase/analysis/results
+__pycache__
+

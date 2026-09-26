@@ -1,0 +1,171 @@
+{
+  "schema_version": "rlar.delivery.v1",
+  "platform": "macOS-26.6-arm64-arm-64bit",
+  "python": "3.12.14",
+  "pytest": {
+    "passed": 80,
+    "failed": 0,
+    "skipped": 0,
+    "duration_s": 34.47,
+    "all_p0_passed": true,
+    "acceptance_ids": 36
+  },
+  "demo": [
+    {
+      "controller_decisions": 2,
+      "query_id": "math_001",
+      "reused": false,
+      "reward_key": "c1d9af0a574087028ac9a52d8ffbd4522be2be068d2f46387228afc2a876d584",
+      "status": "success"
+    },
+    {
+      "controller_decisions": 0,
+      "query_id": "math_002",
+      "reused": true,
+      "reward_key": "c1d9af0a574087028ac9a52d8ffbd4522be2be068d2f46387228afc2a876d584",
+      "status": "success"
+    },
+    {
+      "controller_decisions": 1,
+      "query_id": "code_001",
+      "reused": false,
+      "reward_key": "b9f06a9529309ccdab92058d7ab5398f74443d44da9ac90aa756218a1e0cc033",
+      "status": "success"
+    }
+  ],
+  "recovery": [
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428849.5726972,
+      "duplicate_results": 0,
+      "fault_point": "llm_before_dispatch",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 3,
+      "physical_attempts_before_kill": 1,
+      "replay_verified": true,
+      "result_sha256": "9921433dff4c5041f6a26db22f0691212d7efc6367036198bf05e37019e7af02",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/llm_before_dispatch",
+      "unknown_attempts": 0
+    },
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428850.7487402,
+      "duplicate_results": 0,
+      "fault_point": "llm_after_dispatch",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 4,
+      "physical_attempts_before_kill": 1,
+      "replay_verified": true,
+      "result_sha256": "12a4921bdec2d7b70542ddd072b32952a0d9aeb9fc62fac3c736a9d35c4cb6aa",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/llm_after_dispatch",
+      "unknown_attempts": 1
+    },
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428851.909538,
+      "duplicate_results": 0,
+      "fault_point": "llm_after_response",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 3,
+      "physical_attempts_before_kill": 1,
+      "replay_verified": true,
+      "result_sha256": "f770a76ac0d2cca24a7a9451c64fa5c2a8be3b173c1885d11585febd05a68004",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/llm_after_response",
+      "unknown_attempts": 0
+    },
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428853.0574038,
+      "duplicate_results": 0,
+      "fault_point": "tool_after_result",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 3,
+      "physical_attempts_before_kill": 1,
+      "replay_verified": true,
+      "result_sha256": "c354cd4ad4810a8b1e793554a84ec81c4258bae10a1aa29268eb783209fc7918",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/tool_after_result",
+      "unknown_attempts": 0
+    },
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428854.2090728,
+      "duplicate_results": 0,
+      "fault_point": "after_library_before_result",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 3,
+      "physical_attempts_before_kill": 2,
+      "replay_verified": true,
+      "result_sha256": "35f50c4912cb87e9e79cabc3df0db32d385913e9a1ca52a08e55e2c27b12ae50",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/after_library_before_result",
+      "unknown_attempts": 0
+    },
+    {
+      "assistant_targets": 3,
+      "committed_results": 3,
+      "controller_decisions": [
+        2,
+        0,
+        1
+      ],
+      "deadline_utc": 1790428855.368286,
+      "duplicate_results": 0,
+      "fault_point": "after_result_before_checkpoint",
+      "kill_exit_code": -9,
+      "noop_resume_unchanged": true,
+      "physical_attempts_after_resume": 3,
+      "physical_attempts_before_kill": 2,
+      "replay_verified": true,
+      "result_sha256": "be1a940c0db6dffb02e3086090707f1a7ea81f7e6d4fd0e076308cfde254ddb4",
+      "resume_exit_code": 0,
+      "run_dir": "/Users/andrewfeng/Desktop/overleaf_projects/NAACL_RLAR/codebase/reward_harness/runs/recovery/after_result_before_checkpoint",
+      "unknown_attempts": 0
+    }
+  ],
+  "build": {
+    "wheel": "dist/rlar_harness-0.1.0-py3-none-any.whl",
+    "sdist": "dist/rlar_harness-0.1.0.tar.gz"
+  },
+  "external_integration": "not_configured_or_verified",
+  "tokenizer_validation": false,
+  "model_training": false
+}

@@ -150,3 +150,18 @@ def test_partial_missing_denominators_and_unvalidated(config, source, tmp_path):
     (packpath/'math_v1.json').write_text(json.dumps(pack)); config.data.task_pack_root = str(packpath)
     rows = construct_file(config, source, tmp_path/'run', llm_client=ScriptedLLM([turn()]))
     assert rows[0].status == 'unvalidated' and rows[0].usage.controller_logical_calls == 1
+
+@pytest.mark.acceptance('AT-01','AT-03')
+def test_preflight_validates_profiles_and_reports_all_placeholders(config,tmp_path):
+    from rlar_harness.config import preflight, load_config
+    from rlar_harness.errors import PreflightError
+    from conftest import ROOT
+    with pytest.raises(PreflightError) as exc:
+        load_config(ROOT/'configs/real_service.template.yaml')
+    assert 'config.model.endpoint' in exc.value.problems and 'config.validation.dev_suite_root' in exc.value.problems
+    packpath=tmp_path/'packs';packpath.mkdir()
+    raw=json.loads((Path(config.data.task_pack_root)/'math_v1.json').read_text())
+    raw['dev_suite_ref']='missing';(packpath/'math_v1.json').write_text(json.dumps(raw))
+    config.data.task_pack_root=str(packpath)
+    result=preflight(config,ROOT,runner_capabilities=SubprocessRunner().capabilities().model_dump())
+    assert not result.ok and any('missing' in p for p in result.problems)

@@ -145,3 +145,17 @@ def test_multi_candidate_selector_is_metric_then_key(config, source, tmp_path):
     assert rows[0].reward_key==min(reward_key_for(a),reward_key_for(b))
     assert rows[0].usage.controller_logical_calls==1
     assert rows[0].usage.test_cases==12
+
+@pytest.mark.acceptance('AT-20','AT-22')
+def test_global_budget_stops_taking_new_queries(config,source,tmp_path):
+    config.budget.run['controller_steps']=1
+    source.write_text(source.read_text()+source.read_text().replace('q1','q2'))
+    root=tmp_path/'run'
+    result=construct_file(config,source,root,llm_client=ScriptedLLM([turn(),turn()]))
+    assert len(result)==1 and result[0].status=='success'
+    from rlar_harness.trace.export import read_run
+    assert read_run(root)[1][-1].payload['reason']=='global_budget_exhausted'
+    assert len(llm_calls(root))==1
+    before=(root/'results.jsonl').read_bytes()
+    assert construct_file(None,None,root,resume=True)==[]
+    assert (root/'results.jsonl').read_bytes()==before

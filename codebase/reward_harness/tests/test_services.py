@@ -65,7 +65,8 @@ def test_http_retry_wire_snapshots_adapter_fields_and_no_secrets(config, source,
         class Extended(HttpChatJsonV1):
             def build_body(self, request):
                 return {**super().build_body(request), 'tools': [{'name':'fixture-schema'}],
-                        'response_format': {'type':'json_object'}, 'adapter_added':'frozen-at-boundary'}
+                        'response_format': {'type':'json_object'}, 'adapter_added':'frozen-at-boundary',
+                        'source':'adapter field with CRLF\r\nunchanged'}
         r = construct_file(c, source, tmp_path/'run', llm_client=Extended(c.model))[0]
         assert r.status == 'success' and r.usage.controller_logical_calls == 1
         calls = llm_calls(tmp_path/'run')
@@ -74,6 +75,10 @@ def test_http_retry_wire_snapshots_adapter_fields_and_no_secrets(config, source,
         for call, request in zip(calls, requests):
             assert call['request'] == request['body']
             assert request['authorization'] == 'Bearer secret-not-in-trace-8348'
+        from rlar_harness.trace.export import export_llm_calls
+        export_llm_calls(tmp_path/'run',tmp_path/'wire.jsonl')
+        expanded=[json.loads(line) for line in (tmp_path/'wire.jsonl').read_text().splitlines()]
+        assert [c['request'] for c in expanded]==[r['body'] for r in requests]
         assert calls[-1]['response']['raw']['text'] == json.dumps(response())
         assert calls[-1]['usage']['cached_tokens'] == 10
         assert calls[-1]['committed_to_history']
@@ -180,7 +185,8 @@ def test_active_http_total_watchdog_is_bounded(config, source, tmp_path):
         c=http_config(config,url); c.model.total_timeout_s=.1; c.budget.retry.max_transport_attempts=2
         from rlar_harness.errors import HarnessError
         started=time.monotonic()
-        with pytest.raises(HarnessError): construct_file(c,source,tmp_path/'run')
+        result=construct_file(c,source,tmp_path/'run')
+        assert result[0].stop_reason=='environment_unavailable'
         assert time.monotonic()-started < 1.5
         calls=llm_calls(tmp_path/'run')
         assert len(calls)==2 and all(c['dispatch_status']=='unknown' for c in calls)
@@ -193,3 +199,15 @@ def test_component_budget_admission_prevents_partial_suite(config, source, tmp_p
     assert rows[0].stop_reason=='budget_exhausted'
     assert rows[0].usage.component_executions==0
     assert not any(e.type=='evaluation_dispatched' for e in read_run(root)[1])
+
+@pytest.mark.acceptance('AT-18','AT-27','AT-31')
+def test_environment_circuit_breaker_preserves_unprocessed_records(config,source,tmp_path):
+    line=source.read_text(); source.write_text(line+line.replace('q1','q2')+line.replace('q1','q3'))
+    with server([(503,{'error':'offline'})]) as (url,requests):
+        c=http_config(config,url); c.budget.retry.max_transport_attempts=1; c.budget.retry.circuit_breaker_threshold=2
+        root=tmp_path/'run'; result=construct_file(c,source,root)
+        assert len(result)==2 and len(requests)==2
+        assert all(r.stop_reason=='environment_unavailable' for r in result)
+        stats=report(root)
+        assert stats['counts']['input']==3 and stats['counts']['unprocessed']==1
+        assert read_run(root)[1][-1].payload['reason']=='environment_circuit_breaker'

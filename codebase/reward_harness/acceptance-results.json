@@ -1,12 +1,18 @@
 {
   "schema_version": "rlar.acceptance.v1",
   "exit_status": 0,
-  "collected": 77,
+  "collected": 80,
   "matrix": {
     "AT-01": [
       {
         "at_id": "AT-01",
         "test": "tests/test_core.py::test_stream_errors_are_position_bound_and_read_only",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-01",
+        "test": "tests/test_core.py::test_preflight_validates_profiles_and_reports_all_placeholders",
         "phase": "call",
         "result": "passed"
       },
@@ -41,6 +47,12 @@
       {
         "at_id": "AT-03",
         "test": "tests/test_core.py::test_forged_and_stale_reports_cannot_finalize",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-03",
+        "test": "tests/test_core.py::test_preflight_validates_profiles_and_reports_all_placeholders",
         "phase": "call",
         "result": "passed"
       }
@@ -349,6 +361,12 @@
         "test": "tests/test_services.py::test_http_retry_wire_snapshots_adapter_fields_and_no_secrets",
         "phase": "call",
         "result": "passed"
+      },
+      {
+        "at_id": "AT-18",
+        "test": "tests/test_services.py::test_environment_circuit_breaker_preserves_unprocessed_records",
+        "phase": "call",
+        "result": "passed"
       }
     ],
     "AT-19": [
@@ -393,6 +411,12 @@
       {
         "at_id": "AT-20",
         "test": "tests/test_controller.py::test_finite_termination[tokens]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_global_budget_stops_taking_new_queries",
         "phase": "call",
         "result": "passed"
       },
@@ -523,6 +547,12 @@
       {
         "at_id": "AT-22",
         "test": "tests/test_controller.py::test_budget_stop_selects_previous_eligible",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_global_budget_stops_taking_new_queries",
         "phase": "call",
         "result": "passed"
       },
@@ -739,6 +769,12 @@
         "test": "tests/test_services.py::test_active_http_total_watchdog_is_bounded",
         "phase": "call",
         "result": "passed"
+      },
+      {
+        "at_id": "AT-27",
+        "test": "tests/test_services.py::test_environment_circuit_breaker_preserves_unprocessed_records",
+        "phase": "call",
+        "result": "passed"
       }
     ],
     "AT-28": [
@@ -775,6 +811,12 @@
       {
         "at_id": "AT-31",
         "test": "tests/test_exports.py::test_report_keeps_failure_partial_retry_and_unknown_denominators",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-31",
+        "test": "tests/test_services.py::test_environment_circuit_breaker_preserves_unprocessed_records",
         "phase": "call",
         "result": "passed"
       }

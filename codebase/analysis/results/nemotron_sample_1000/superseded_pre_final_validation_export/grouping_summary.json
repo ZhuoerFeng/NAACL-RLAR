@@ -1,9 +1,0 @@
-{
-  "original_rows": 1068273,
-  "unique_seed_groups": 1065731,
-  "representative_user_turns": {
-    "2": 343219,
-    "1": 722512
-  },
-  "method": "SHA256(seed:member:uuid) chooses one representative per normalized initial conversation input; SHA256(seed:group:seed_hash) provides random group order; original representatives then stratified by user turns."
-}

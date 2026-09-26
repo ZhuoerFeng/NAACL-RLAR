@@ -14,7 +14,7 @@ from ..config import ModelConfig, RetryConfig
 from ..durability import fault, watchdog
 from ..errors import BudgetExhausted, Code, DeadlineExceeded, StorageError
 from ..schemas import LLMRequest, LLMResult, StructuredError, Usage
-from ..storage.canonical import digest
+from ..storage.canonical import digest, wire_digest
 from .adapter import ProviderError, ProviderResponse
 from .protocol import parse_actions
 
@@ -74,7 +74,7 @@ class DurableLLMClient:
             self.budget.debit_once(logical, {'controller_steps': 1.0})
             prepared = dict(request_body_ref=self.blobs.put_json(body),
                 logical_request_ref=self.blobs.put_json(request.model_dump(mode='json')),
-                request_digest=digest(body), messages_ref=self.blobs.put_json(body['messages']),
+                request_digest=wire_digest(body), messages_ref=self.blobs.put_json(body['messages']),
                 model_config_ref=self.blobs.put_json(self.model_config.model_dump(mode='json')),
                 generation_config_ref=self.blobs.put_json({k: v for k, v in body.items() if k != 'messages'}),
                 tools_ref=self.blobs.put_json(body.get('tools', [])),
@@ -146,7 +146,7 @@ class DurableLLMClient:
             self._settle(reservation_id, response)
             return self._result(request, body, pid, response)
         last_error = last_error or {'code': 'environment_unavailable', 'message': 'retry limit exhausted', 'status': 'failed'}
-        return LLMResult(status=last_error['status'], history_cursor=history.cursor, request_digest=digest(body),
+        return LLMResult(status=last_error['status'], history_cursor=history.cursor, request_digest=wire_digest(body),
             error=StructuredError(category='auth' if last_error['code'] == Code.AUTH_FAILED else 'transport',
                 code=last_error['code'], phase='llm_call', retry_owner='none',
                 action_outcome=last_error['status'], message=last_error['message']))
@@ -162,7 +162,7 @@ class DurableLLMClient:
         parsed = parse_actions(response.text, known_tools=TOOLS, finish_reason=response.finish_reason)
         return LLMResult(status='incomplete' if response.finish_reason == 'length' else 'complete',
             assistant_text=response.text, proposed_actions=parsed.actions, parse_error=parsed.error,
-            request_digest=digest(body), finish_reason=response.finish_reason,
+            request_digest=wire_digest(body), finish_reason=response.finish_reason,
             provider_request_id=response.provider_request_id, history_cursor=request.expected_history_cursor,
             trace_ref=pid)
 

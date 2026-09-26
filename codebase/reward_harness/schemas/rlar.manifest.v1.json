@@ -815,6 +815,18 @@
       ],
       "title": "Input Digest"
     },
+    "input_record_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Record Count"
+    },
     "split": {
       "title": "Split",
       "type": "string"

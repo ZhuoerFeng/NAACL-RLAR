@@ -27,7 +27,8 @@ def report(root):
         return sum(values) if values else None
     active = {e.episode_id for e in events if e.type == 'episode_saved'} - {r.episode_id for r in results}
     return {'schema_version': 'rlar.report.v1', 'run_id': manifest['run_id'], 'profile_kind': manifest['profile_kind'],
-        'counts': {'input': len(results) + len(active), 'committed': len(results), **{k: statuses[k] for k in ('success', 'failed', 'unvalidated', 'skipped')},
+        'counts': {'input': manifest.get('input_record_count') or len(results) + len(active),
+                   'unprocessed': max(0, (manifest.get('input_record_count') or len(results) + len(active)) - len(results) - len(active)), 'committed': len(results), **{k: statuses[k] for k in ('success', 'failed', 'unvalidated', 'skipped')},
                    'interrupted': len(active)}, 'reuse_count': sum(r.reused for r in results),
         'reuse_rate': sum(r.reused for r in results) / len(results) if results else None,
         'controller_logical_calls': len(logicals), 'physical_requests': len(attempts),

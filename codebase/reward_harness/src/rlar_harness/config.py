@@ -319,6 +319,27 @@ def preflight(
         elif not p.exists():
             problems.append(f"{key} does not exist: {p}")
 
+    if paths["task_pack_root"] and paths["task_pack_root"].exists() and paths["dev_suite_root"]:
+        from .evaluation.taskpack import TaskPackStore, DevSuiteStore
+        store = TaskPackStore(paths["task_pack_root"])
+        suites = DevSuiteStore(paths["dev_suite_root"])
+        for profile in store.available():
+            try:
+                pack = store.get(profile)
+                if pack.applicability_rule.runtime_fingerprint != config.execution.runtime_fingerprint:
+                    problems.append(f"{profile}: runtime fingerprint differs from execution config")
+                if pack.verifier_version != config.validation.oracle_version:
+                    problems.append(f"{profile}: verifier version differs from configured oracle")
+                if pack.dev_suite_ref:
+                    suite = suites.get(pack.dev_suite_ref)
+                    ids = [case.case_id for case in suite.cases]
+                    if len(set(ids)) != len(ids):
+                        problems.append(f"{profile}: duplicate development case IDs")
+                if config.construction.reward_mode not in pack.mode_constraints:
+                    problems.append(f"{profile}: configured reward mode is not permitted")
+            except (ConfigError, ValueError) as exc:
+                problems.append(f"{profile}: {exc}")
+
     if config.model.provider_adapter == "http_chat_json_v1":
         if not config.model.endpoint:
             problems.append("model.endpoint is required for the http adapter")
@@ -405,6 +426,7 @@ class RunManifest(Strict):
     config_digest: str
     input_path: str | None
     input_digest: str | None
+    input_record_count: int | None = None
     split: str
     seed: int
     deadline_utc: float | None
