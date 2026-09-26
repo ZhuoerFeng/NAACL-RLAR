@@ -1,0 +1,64 @@
+{
+  "_id": "69ada32fcae5007187f21d6c",
+  "id": "nvidia/Nemotron-SFT-Instruction-Following-Chat-v2",
+  "author": "nvidia",
+  "sha": "1a9454ed054b8544503ab8d8c0a519d141a44c5b",
+  "lastModified": "2026-03-11T15:32:04.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "task_categories:text-generation",
+    "language:en",
+    "license:odc-by",
+    "region:us"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Description:\n\t\n\nThe Nemotron-Instruction-Following-Chat-v2 dataset is designed to broadly strengthen the model’s interactive capabilities, including open-ended chat and precise instruction following.The dataset is a refreshed version of Nemotron-Instruction-Following-Chat-v1 with synthetic dialogues generated from Kimi-K2-Thinking, GLM-4.6, Qwen3-235B-A22B-Thinking-2507, GPT-OSS-120b, Kimi-K2-Instruct-0905, and Qwen3-235B-A22B-Instruct-2507.\nThis dataset is ready for… See the full description on the dataset page: https://huggingface.co/datasets/nvidia/Nemotron-SFT-Instruction-Following-Chat-v2.",
+  "downloads": 5226,
+  "likes": 31,
+  "cardData": {
+    "language": [
+      "en"
+    ],
+    "license": [
+      "odc-by"
+    ],
+    "task_categories": [
+      "text-generation"
+    ],
+    "configs": [
+      {
+        "config_name": "default",
+        "data_files": [
+          {
+            "split": "reasoning_off",
+            "path": "data/reasoning_off.jsonl"
+          },
+          {
+            "split": "reasoning_on",
+            "path": "data/reasoning_on.jsonl"
+          }
+        ]
+      }
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": ".gitignore"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "data/reasoning_off.jsonl"
+    },
+    {
+      "rfilename": "data/reasoning_on.jsonl"
+    }
+  ],
+  "createdAt": "2026-03-08T16:26:23.000Z",
+  "usedStorage": 38428983712
+}

@@ -1,0 +1,287 @@
+{
+  "created_utc": "2026-09-23T12:37:42.195981+00:00",
+  "download": {
+    "repo": "nvidia/Nemotron-SFT-Instruction-Following-Chat-v2",
+    "revision": "1a9454ed054b8544503ab8d8c0a519d141a44c5b",
+    "downloaded_utc": "2026-09-23T13:02:39.203133+00:00",
+    "files": [
+      {
+        "path": "data/reasoning_off.jsonl",
+        "bytes": 5955778329,
+        "sha256": "888aa1606f4e9ab5f8ac3fcb651654490739a02b841335d07048a9b4552aaf9d",
+        "verified_against_hf_lfs": true
+      },
+      {
+        "path": "data/reasoning_on.jsonl",
+        "bytes": 10063505181,
+        "sha256": "2ab423660dd2bfd6b219f1745821ac5d5fb13643755ef77b56765fca524cbb4e",
+        "verified_against_hf_lfs": true
+      }
+    ]
+  },
+  "diagnostic_reservoir_per_section": 8192,
+  "seed": 20260923,
+  "task_hint_method": "first matching regex over first 4,000 characters of the last user message; if that message has fewer than 80 characters, append the first user message. Heuristic, multi-label signals retained; not a semantic classifier.",
+  "task_hint_rules": [
+    [
+      "translation",
+      "\\btranslat(?:e|ion|ing)\\b|翻译"
+    ],
+    [
+      "summarization",
+      "\\bsummari[sz](?:e|ation|ing)\\b|\\b(?:give|write|provide|make)\\b.{0,35}\\bsummary\\b|总结|摘要"
+    ],
+    [
+      "rewrite_edit",
+      "\\b(?:rewrite|rephrase|proofread|paraphrase|polish)\\b|\\b(?:correct|fix|improve)\\b.{0,45}\\b(?:grammar|sentence|wording|text|paragraph)\\b|润色|改写"
+    ],
+    [
+      "code_technical",
+      "```|\\b(?:python|javascript|typescript|java|c\\+\\+|csharp|sql|html|css|debug|compiler|compiling|linux|powershell|autohotkey|code|function|algorithm|programming|script|regex|bash|api)\\b|编程|代码"
+    ],
+    [
+      "math_quantitative",
+      "\\\\(?:frac|sqrt|int|sum|begin)|\\b(?:equation|calculate|integral|derivative|probability|polynomial|theorem|algebra|geometry|arithmetic|solve for|how many|how much)\\b|计算|方程"
+    ],
+    [
+      "extraction_format",
+      "\\b(?:extract|classify|categorize|json|csv|xml|tabulate)\\b|\\b(?:format|convert|sort)\\b.{0,50}\\b(?:table|list|data|text|following|these)\\b|提取|分类"
+    ],
+    [
+      "creative_generation",
+      "\\b(?:write|create|compose|draft|generate)\\b.{0,90}\\b(?:story|poem|song|essay|email|letter|dialogue|speech|scene|narrative|fiction|article|blog|slogan)\\b|写作|写一"
+    ],
+    [
+      "planning_advice",
+      "\\b(?:recommend|advice|suggest|planning|plan|strategy|strategies|tips|brainstorm)\\b|\\bhow (?:can|do|should|would) (?:i|we|you)\\b|建议|计划"
+    ],
+    [
+      "knowledge_explanation",
+      "\\b(?:what|why|who|when|where|which|explain|describe|define|compare|difference|tell me|discuss)\\b|什么|为何|为什么|解释"
+    ]
+  ],
+  "sections": {
+    "reasoning_off": {
+      "rows": 1068273,
+      "invalid_json": [],
+      "top_level_keys": {
+        "messages": 1068273,
+        "uuid": 1068273,
+        "license": 1068273,
+        "used_in": 1068273,
+        "reasoning": 1068273
+      },
+      "message_keys": {
+        "role": 3892941,
+        "content": 3892941
+      },
+      "roles": {
+        "system": 1068273,
+        "user": 1412334,
+        "assistant": 1412334
+      },
+      "reasoning": {
+        "off": 1068273
+      },
+      "used_in": {
+        "super_v3": 1068273
+      },
+      "license": {
+        "ODC-By": 1068273
+      },
+      "user_turns": {
+        "1": 724212,
+        "2": 344061
+      },
+      "task_hints": {
+        "rewrite_edit": 17391,
+        "code_technical": 137219,
+        "knowledge_explanation": 306081,
+        "other_uncertain": 431293,
+        "planning_advice": 59991,
+        "creative_generation": 42392,
+        "math_quantitative": 37211,
+        "extraction_format": 14960,
+        "summarization": 10377,
+        "translation": 11358
+      },
+      "task_signals": {
+        "rewrite_edit": 17964,
+        "planning_advice": 78122,
+        "knowledge_explanation": 457744,
+        "code_technical": 141629,
+        "creative_generation": 46644,
+        "math_quantitative": 47376,
+        "extraction_format": 29057,
+        "summarization": 10664,
+        "translation": 11358
+      },
+      "flags": {
+        "empty_system_placeholder": 1065115,
+        "non_latin_script_in_user_review_only": 51277,
+        "short_answer_under_20_chars_review_only": 18906,
+        "answer_copies_last_user_review_only": 4676,
+        "embedded_multi_qa_review_only": 7330
+      },
+      "structurally_valid_rows": 1068273,
+      "prompt_chars": {
+        "n": 1068273,
+        "mean": 2040.238536404084,
+        "p50": 506.0,
+        "p90": 5552.0,
+        "p95": 8147.0,
+        "p99": 15105.0,
+        "max": 348211.0
+      },
+      "answer_chars": {
+        "n": 1068273,
+        "mean": 3001.074331186878,
+        "p50": 2462.0,
+        "p90": 6322.0,
+        "p95": 8098.0,
+        "p99": 14075.0,
+        "max": 31005.0
+      },
+      "reasoning_chars": {
+        "n": 1068273,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0.0
+      },
+      "unique_prompts": 1067127,
+      "unique_uuids": 1068273,
+      "duplicate_prompt_groups": 1106,
+      "redundant_prompt_rows": 1146,
+      "unique_conversation_seeds": 1065731,
+      "duplicate_conversation_seed_groups": 2437,
+      "redundant_conversation_seed_rows": 2542,
+      "duplicate_uuid_groups": 0,
+      "redundant_uuid_rows": 0,
+      "unique_reference_texts": 1033269
+    },
+    "reasoning_on": {
+      "rows": 929237,
+      "invalid_json": [],
+      "top_level_keys": {
+        "messages": 929237,
+        "uuid": 929237,
+        "license": 929237,
+        "used_in": 929237,
+        "reasoning": 929237
+      },
+      "message_keys": {
+        "role": 3329073,
+        "content": 3329073,
+        "reasoning_content": 1199918
+      },
+      "roles": {
+        "system": 929237,
+        "user": 1199918,
+        "assistant": 1199918
+      },
+      "reasoning": {
+        "on": 929237
+      },
+      "used_in": {
+        "super_v3": 929237
+      },
+      "license": {
+        "ODC-By": 929237
+      },
+      "user_turns": {
+        "1": 681269,
+        "2": 236306,
+        "3": 6049,
+        "4": 2830,
+        "6": 633,
+        "5": 1435,
+        "7": 330,
+        "9": 107,
+        "8": 228,
+        "10": 50
+      },
+      "task_hints": {
+        "rewrite_edit": 16420,
+        "planning_advice": 59929,
+        "code_technical": 147184,
+        "extraction_format": 15467,
+        "other_uncertain": 312384,
+        "knowledge_explanation": 251869,
+        "translation": 11023,
+        "math_quantitative": 73457,
+        "summarization": 10518,
+        "creative_generation": 30986
+      },
+      "task_signals": {
+        "rewrite_edit": 17021,
+        "knowledge_explanation": 430541,
+        "planning_advice": 94073,
+        "code_technical": 152982,
+        "extraction_format": 35339,
+        "creative_generation": 35449,
+        "translation": 11023,
+        "math_quantitative": 86790,
+        "summarization": 10777
+      },
+      "flags": {
+        "empty_system_placeholder": 926251,
+        "final_assistant_has_separate_reasoning": 929237,
+        "non_latin_script_in_user_review_only": 32462,
+        "short_answer_under_20_chars_review_only": 32560,
+        "embedded_multi_qa_review_only": 7091,
+        "answer_copies_last_user_review_only": 91,
+        "empty_or_invalid_final_answer": 2
+      },
+      "structurally_valid_rows": 929235,
+      "prompt_chars": {
+        "n": 929237,
+        "mean": 2081.5664841154626,
+        "p50": 474.0,
+        "p90": 5758.0,
+        "p95": 8127.0,
+        "p99": 17626.0,
+        "max": 532552.0
+      },
+      "answer_chars": {
+        "n": 929237,
+        "mean": 3282.545230118904,
+        "p50": 2476.0,
+        "p90": 7200.0,
+        "p95": 8942.0,
+        "p99": 14374.0,
+        "max": 337429.0
+      },
+      "reasoning_chars": {
+        "n": 929237,
+        "mean": 3573.6346755456357,
+        "p50": 2647.0,
+        "p90": 7275.0,
+        "p95": 8756.0,
+        "p99": 14943.0,
+        "max": 69457.0
+      },
+      "unique_prompts": 928573,
+      "unique_uuids": 929237,
+      "duplicate_prompt_groups": 647,
+      "redundant_prompt_rows": 664,
+      "unique_conversation_seeds": 927952,
+      "duplicate_conversation_seed_groups": 1235,
+      "redundant_conversation_seed_rows": 1285,
+      "duplicate_uuid_groups": 0,
+      "redundant_uuid_rows": 0,
+      "unique_reference_texts": 902257
+    }
+  },
+  "between_sections": {
+    "shared_prompt_keys": 323396,
+    "shared_uuid_keys": 0,
+    "shared_conversation_seed_keys": 671081,
+    "reasoning_off_rows_with_shared_conversation_seed": 673189,
+    "reasoning_on_rows_with_shared_conversation_seed": 672318,
+    "reasoning_off_rows_with_shared_prompt": 324162,
+    "reasoning_on_rows_with_shared_prompt": 323943
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "raw_jsonl_line_counts": {
+    "reasoning_off": 1068273,
+    "reasoning_on": 929237
+  },
+  "index_rows": 1997510,
+  "official_card_rows": 1998568,
+  "card_difference": -1058
+}

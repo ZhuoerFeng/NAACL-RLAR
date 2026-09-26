@@ -1,0 +1,41 @@
+{
+  "method": "Targeted inspection of stratified diagnostic excerpts; not an accuracy estimate.",
+  "examples": [
+    {
+      "section": "reasoning_off",
+      "row": 393233,
+      "uuid": "7ade28ef-9782-4c74-843e-960e5108f5dd",
+      "task_hint": "code_technical",
+      "last_user": "I would like to explore the relationship between bilingualism and cognitive reserve. How does the ability to speak multiple languages affect the brain's ability to cope with neurological conditions such as dementia and Alzheimer's disease? Are there any specific aspects of brain structure or function that are particularly influenced by bilingualism in this context?",
+      "finding": "关键词 function 指脑功能，却触发 code_technical；应属于知识解释。",
+      "scope": "Task-label review only; final answer correctness not certified."
+    },
+    {
+      "section": "reasoning_off",
+      "row": 813084,
+      "uuid": "3bc240b4-52be-4e78-84b2-83cd6db63b13",
+      "task_hint": "extraction_format",
+      "last_user": "Спасибо, теперь понятно, как добавить товары. А можешь показать, как изменится код, если я захочу, чтобы новые товары загружались не статически, а, например, из JSON-файла в assets?",
+      "finding": "俄语请求修改从 JSON 加载的代码，被归为 extraction_format；实际主要是编程。",
+      "scope": "Task-label review only; final answer correctness not certified."
+    },
+    {
+      "section": "reasoning_off",
+      "row": 476780,
+      "uuid": "5341d1ed-4239-4eda-95a4-25ec72a94c25",
+      "task_hint": "other_uncertain",
+      "last_user": "That's a solid introduction, but could you now draft a shorter version—around 100 words—that highlights their core values and key industries they serve? Maybe something suitable for a website homepage or brochure?",
+      "finding": "要求将公司简介压缩至约 100 词，被归入 other_uncertain；实际是改写。",
+      "scope": "Task-label review only; final answer correctness not certified."
+    },
+    {
+      "section": "reasoning_on",
+      "row": 250297,
+      "uuid": "81032a78-16c2-4638-9d5e-fbeb3554d76b",
+      "task_hint": "planning_advice",
+      "last_user": "I tried the VBA solution for manual highlighting but it's giving an error when I change the sheet name. I set it to Sheets('MySheet') and it fails. How should I write the sheet name?",
+      "finding": "VBA 调试请求被 how should 规则归为 planning_advice；实际是编程。",
+      "scope": "Task-label review only; final answer correctness not certified."
+    }
+  ]
+}

@@ -1,0 +1,902 @@
+{
+  "schema_version": "rlar.acceptance.v1",
+  "exit_status": 0,
+  "collected": 77,
+  "matrix": {
+    "AT-01": [
+      {
+        "at_id": "AT-01",
+        "test": "tests/test_core.py::test_stream_errors_are_position_bound_and_read_only",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-01",
+        "test": "tests/test_recovery.py::test_input_change_refuses_resume_and_exports_preserve_sources",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-02": [
+      {
+        "at_id": "AT-02",
+        "test": "tests/test_core.py::test_layouts_and_rebuilt_index",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-02",
+        "test": "tests/test_exports.py::test_score_cli_uses_frozen_artifact_for_all_candidates",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-03": [
+      {
+        "at_id": "AT-03",
+        "test": "tests/test_core.py::test_hash_golden_and_full_contract_binding",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-03",
+        "test": "tests/test_core.py::test_forged_and_stale_reports_cannot_finalize",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-04": [
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions0-0.5-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions1-0.5-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions2-None-failed]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions3-0.0-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions4-1.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions5-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_core.py::test_real_component_execution[expressions6-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-04",
+        "test": "tests/test_exports.py::test_score_cli_uses_frozen_artifact_for_all_candidates",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-05": [
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions0-0.5-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions1-0.5-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions2-None-failed]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions3-0.0-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions4-1.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions5-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-05",
+        "test": "tests/test_core.py::test_real_component_execution[expressions6-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-06": [
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions0-0.5-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions1-0.5-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions2-None-failed]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions3-0.0-ok]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions4-1.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions5-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_real_component_execution[expressions6-0.0-partial]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-06",
+        "test": "tests/test_core.py::test_component_load_failures_bool_optin_and_state_reset",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-07": [
+      {
+        "at_id": "AT-07",
+        "test": "tests/test_core.py::test_reject_unsupported_aggregation[weights]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-07",
+        "test": "tests/test_core.py::test_reject_unsupported_aggregation[empty]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-07",
+        "test": "tests/test_core.py::test_reject_unsupported_aggregation[duplicate]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-07",
+        "test": "tests/test_core.py::test_reject_unsupported_aggregation[weighted]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-07",
+        "test": "tests/test_core.py::test_reject_unsupported_aggregation[single_mean]",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-08": [
+      {
+        "at_id": "AT-08",
+        "test": "tests/test_controller.py::test_explicit_submit_uses_same_finalizer",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-08",
+        "test": "tests/test_core.py::test_forged_and_stale_reports_cannot_finalize",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-09": [
+      {
+        "at_id": "AT-09",
+        "test": "tests/test_core.py::test_running_reward_is_not_quality_pass",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-10": [
+      {
+        "at_id": "AT-10",
+        "test": "tests/test_core.py::test_partial_missing_denominators_and_unvalidated",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-11": [
+      {
+        "at_id": "AT-11",
+        "test": "tests/test_controller.py::test_zero_one_two_decision_paths_and_incompatible_mode",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-12": [
+      {
+        "at_id": "AT-12",
+        "test": "tests/test_controller.py::test_zero_one_two_decision_paths_and_incompatible_mode",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-12",
+        "test": "tests/test_controller.py::test_explicit_submit_uses_same_finalizer",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-13": [
+      {
+        "at_id": "AT-13",
+        "test": "tests/test_controller.py::test_single_completion_never_repairs",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-14": [
+      {
+        "at_id": "AT-14",
+        "test": "tests/test_controller.py::test_three_decisions_preserve_every_prefix_message",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-15": [
+      {
+        "at_id": "AT-15",
+        "test": "tests/test_controller.py::test_query_histories_are_independent",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-16": [
+      {
+        "at_id": "AT-16",
+        "test": "tests/test_controller.py::test_parallel_read_barrier_and_stale_cursor",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-16",
+        "test": "tests/test_controller.py::test_multi_candidate_selector_is_metric_then_key",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-17": [
+      {
+        "at_id": "AT-17",
+        "test": "tests/test_controller.py::test_invalid_batches_and_truncation_never_execute[json]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-17",
+        "test": "tests/test_controller.py::test_invalid_batches_and_truncation_never_execute[unknown]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-17",
+        "test": "tests/test_controller.py::test_invalid_batches_and_truncation_never_execute[arguments]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-17",
+        "test": "tests/test_controller.py::test_invalid_batches_and_truncation_never_execute[truncated]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-17",
+        "test": "tests/test_services.py::test_http_finish_reason_and_unknown_usage",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-18": [
+      {
+        "at_id": "AT-18",
+        "test": "tests/test_services.py::test_http_retry_wire_snapshots_adapter_fields_and_no_secrets",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-19": [
+      {
+        "at_id": "AT-19",
+        "test": "tests/test_services.py::test_http_dispatched_unknown_is_replayed_and_charged",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-20": [
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[context]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[steps]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[revision]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[stagnation]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[deadline]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_controller.py::test_finite_termination[tokens]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_response]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_library_before_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_result_before_checkpoint]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_services.py::test_rm_broker_physical_retry_shared_budget_and_worker_key_boundary",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-20",
+        "test": "tests/test_services.py::test_component_budget_admission_prevents_partial_suite",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-21": [
+      {
+        "at_id": "AT-21",
+        "test": "tests/test_recovery.py::test_worker_resource_bounds_and_process_group_cleanup[loop]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-21",
+        "test": "tests/test_recovery.py::test_worker_resource_bounds_and_process_group_cleanup[stdout]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-21",
+        "test": "tests/test_recovery.py::test_worker_resource_bounds_and_process_group_cleanup[child]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-21",
+        "test": "tests/test_recovery.py::test_sigkill_active_driver_cleans_orphan_worker",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-22": [
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[context]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[steps]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[revision]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[stagnation]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[deadline]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_finite_termination[tokens]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_controller.py::test_budget_stop_selects_previous_eligible",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_recovery.py::test_restart_keeps_expired_deadline_and_budget",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-22",
+        "test": "tests/test_services.py::test_active_http_total_watchdog_is_bounded",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-23": [
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_response]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_library_before_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_result_before_checkpoint]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_restart_keeps_expired_deadline_and_budget",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-23",
+        "test": "tests/test_recovery.py::test_sigkill_active_driver_cleans_orphan_worker",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-24": [
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_response]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_library_before_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-24",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_result_before_checkpoint]",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-25": [
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[llm_after_response]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_before_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_dispatch]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[tool_after_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_library_before_result]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-25",
+        "test": "tests/test_recovery.py::test_sigkill_recovery_is_idempotent[after_result_before_checkpoint]",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-26": [
+      {
+        "at_id": "AT-26",
+        "test": "tests/test_recovery.py::test_torn_tails_corruption_missing_blob_and_double_writer",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-26",
+        "test": "tests/test_recovery.py::test_input_change_refuses_resume_and_exports_preserve_sources",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-27": [
+      {
+        "at_id": "AT-27",
+        "test": "tests/test_recovery.py::test_disk_failure_before_dispatch_does_not_spend_request",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-27",
+        "test": "tests/test_recovery.py::test_sigterm_cancellation_never_commits_or_restarts",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-27",
+        "test": "tests/test_services.py::test_auth_stops_outer_stream",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-27",
+        "test": "tests/test_services.py::test_active_http_total_watchdog_is_bounded",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-28": [
+      {
+        "at_id": "AT-28",
+        "test": "tests/test_services.py::test_rm_broker_physical_retry_shared_budget_and_worker_key_boundary",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-28",
+        "test": "tests/test_services.py::test_rm_actual_worker_ipc",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-29": [
+      {
+        "at_id": "AT-29",
+        "test": "tests/test_exports.py::test_formal_audit_refused_prototype_frozen_and_invisible",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-30": [
+      {
+        "at_id": "AT-30",
+        "test": "tests/test_exports.py::test_replay_and_sft_causal_targets_no_reuse_or_automatic_targets",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-31": [
+      {
+        "at_id": "AT-31",
+        "test": "tests/test_exports.py::test_report_keeps_failure_partial_retry_and_unknown_denominators",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-32": [
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_retry_wire_snapshots_adapter_fields_and_no_secrets",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_bad_shapes_rejected[obj0]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_bad_shapes_rejected[obj1]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_bad_shapes_rejected[obj2]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_bad_shapes_rejected[obj3]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_bad_shapes_rejected[obj4]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-32",
+        "test": "tests/test_services.py::test_http_finish_reason_and_unknown_usage",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-33": [
+      {
+        "at_id": "AT-33",
+        "test": "tests/test_exports.py::test_export_keeps_the_actual_bounded_observation",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-33",
+        "test": "tests/test_services.py::test_http_retry_wire_snapshots_adapter_fields_and_no_secrets",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-34": [
+      {
+        "at_id": "AT-34",
+        "test": "tests/test_exports.py::test_invalid_truncated_retry_returns_excluded_but_history_retained",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-34",
+        "test": "tests/test_exports.py::test_late_return_archived_without_target_or_actions",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-34",
+        "test": "tests/test_services.py::test_http_dispatched_unknown_is_replayed_and_charged",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-35": [
+      {
+        "at_id": "AT-35",
+        "test": "tests/test_exports.py::test_replay_and_sft_causal_targets_no_reuse_or_automatic_targets",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-35",
+        "test": "tests/test_exports.py::test_invalid_truncated_retry_returns_excluded_but_history_retained",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-35",
+        "test": "tests/test_exports.py::test_legacy_unavailable_and_window_exclusions_are_explicit",
+        "phase": "call",
+        "result": "passed"
+      }
+    ],
+    "AT-36": [
+      {
+        "at_id": "AT-36",
+        "test": "tests/test_exports.py::test_export_fails_on_corruption_without_reconstruction[missing]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-36",
+        "test": "tests/test_exports.py::test_export_fails_on_corruption_without_reconstruction[hash]",
+        "phase": "call",
+        "result": "passed"
+      },
+      {
+        "at_id": "AT-36",
+        "test": "tests/test_exports.py::test_legacy_unavailable_and_window_exclusions_are_explicit",
+        "phase": "call",
+        "result": "passed"
+      }
+    ]
+  },
+  "all_p0_passed": true
+}

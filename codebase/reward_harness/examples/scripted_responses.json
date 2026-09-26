@@ -1,0 +1,111 @@
+{
+  "math_v1": [
+    {
+      "actions": [
+        {
+          "id": "test",
+          "tool": "test_reward",
+          "arguments": {
+            "definition": {
+              "mode": "checklist",
+              "components": [
+                {
+                  "id": "correctness",
+                  "criterion": "Task contract correctness",
+                  "source": "def score(example, context):\n    return 1.0\n",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [
+                    "rational_arithmetic_v1"
+                  ]
+                }
+              ],
+              "aggregation": {
+                "kind": "mean"
+              },
+              "runtime_contract": {
+                "environment_ref": "python-stdlib-fixture-v1"
+              }
+            },
+            "dev_profile_id": "math_v1",
+            "on_pass": "submit",
+            "display_limit": 2
+          }
+        }
+      ]
+    },
+    {
+      "actions": [
+        {
+          "id": "test",
+          "tool": "test_reward",
+          "arguments": {
+            "definition": {
+              "mode": "checklist",
+              "components": [
+                {
+                  "id": "correctness",
+                  "criterion": "Task contract correctness",
+                  "source": "def score(example, context):\n    return context.check_answer(example)\n",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [
+                    "rational_arithmetic_v1"
+                  ]
+                }
+              ],
+              "aggregation": {
+                "kind": "mean"
+              },
+              "runtime_contract": {
+                "environment_ref": "python-stdlib-fixture-v1"
+              }
+            },
+            "dev_profile_id": "math_v1",
+            "on_pass": "submit",
+            "display_limit": 2
+          }
+        }
+      ]
+    }
+  ],
+  "code_v1": [
+    {
+      "actions": [
+        {
+          "id": "test",
+          "tool": "test_reward",
+          "arguments": {
+            "definition": {
+              "mode": "checklist",
+              "components": [
+                {
+                  "id": "correctness",
+                  "criterion": "Task contract correctness",
+                  "source": "def score(example, context):\n    return float(context.run_task_tests(example) == 1.0)\n",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [
+                    "python_unit_tests_v1"
+                  ]
+                }
+              ],
+              "aggregation": {
+                "kind": "mean"
+              },
+              "runtime_contract": {
+                "environment_ref": "python-stdlib-fixture-v1"
+              }
+            },
+            "dev_profile_id": "code_v1",
+            "on_pass": "submit",
+            "display_limit": 2
+          }
+        }
+      ]
+    }
+  ]
+}

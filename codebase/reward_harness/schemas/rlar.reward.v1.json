@@ -1,0 +1,204 @@
+{
+  "$defs": {
+    "Aggregation": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "identity",
+            "mean"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Aggregation",
+      "type": "object"
+    },
+    "Component": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "criterion": {
+          "minLength": 1,
+          "title": "Criterion",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "entrypoint": {
+          "const": "score",
+          "default": "score",
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "normalization": {
+          "$ref": "#/$defs/Normalization"
+        },
+        "required_apis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Apis",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "criterion",
+        "source",
+        "normalization"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "Normalization": {
+      "additionalProperties": false,
+      "description": "Frozen mapping of a component's raw score into [0, 1].\n\n``identity`` requires the component to already return a value in [0, 1].\n``mapping`` refers to a mapping declared by the task pack / RM catalogue;\nthe agent may only reference declared mapping IDs, so it cannot smuggle a\nweight in through an arbitrary output scale.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "identity",
+            "mapping"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "range": {
+          "default": [
+            0.0,
+            1.0
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Range",
+          "type": "array"
+        },
+        "mapping_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mapping Id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Normalization",
+      "type": "object"
+    },
+    "RuntimeContract": {
+      "additionalProperties": false,
+      "description": "Backend-independent fingerprint of everything that can change scores.",
+      "properties": {
+        "scoring_abi": {
+          "default": "v1",
+          "enum": [
+            "v1",
+            "v1+bool"
+          ],
+          "title": "Scoring Abi",
+          "type": "string"
+        },
+        "python_version": {
+          "default": "3.11+",
+          "title": "Python Version",
+          "type": "string"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "scoring_sdk": {
+          "default": "rlar.scoring.v1",
+          "title": "Scoring Sdk",
+          "type": "string"
+        },
+        "api_revisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Api Revisions",
+          "type": "object"
+        },
+        "aggregator_version": {
+          "default": "agg.v1",
+          "title": "Aggregator Version",
+          "type": "string"
+        },
+        "environment_ref": {
+          "default": "configured_at_run_start",
+          "title": "Environment Ref",
+          "type": "string"
+        }
+      },
+      "title": "RuntimeContract",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.reward.v1",
+      "default": "rlar.reward.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "single",
+        "checklist"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/Component"
+      },
+      "minItems": 1,
+      "title": "Components",
+      "type": "array"
+    },
+    "aggregation": {
+      "$ref": "#/$defs/Aggregation"
+    },
+    "runtime_contract": {
+      "$ref": "#/$defs/RuntimeContract"
+    }
+  },
+  "required": [
+    "mode",
+    "components",
+    "aggregation"
+  ],
+  "title": "RewardDefinition",
+  "type": "object"
+}

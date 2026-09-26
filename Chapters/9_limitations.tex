@@ -1,18 +1,17 @@
 
 \section{Limitations}
 
-We primarily validate \method{} on heterogeneous tasks in text forms. Due to budget constraints, we did not extend the scope to multi-modal or audio tasks such as text-to-image generation. We believe this is a promising direction for future work. There is still room for further analysis on the scalability of the \method{} framework.
+The revised construction protocol focuses on objectively verifiable text tasks, initially mathematics and code. Its tests inherit the coverage and failure modes of the task oracle: answer equivalence does not certify reasoning, and finite code tests do not prove general program correctness. Repeated development feedback can also induce overfitting, which motivates a sealed audit and held-out task templates. Open-ended translation and dialogue require independent quality labels before the same validation claims can be made.
 
-In practice, some repository READMEs may become outdated when reporting (such as claiming to be state-of-the-art at the time of writing). Though not directly caused by the design, \method{} is potentially vulnerable to README hacking, as our assumption is that most of these repository READMEs are trustworthy. We leave the development of more robust retrieval modules for future work.
+A fixed reward-model catalogue simplifies reproducibility but limits the available neural components. Model cards provide documentation rather than evidence of suitability; claims must be checked through task tests. Library reuse may reduce repeated construction but cannot guarantee applicability to new task subtypes. The proposed Qwen3-8B distillation and revised construction comparisons remain to be evaluated.
 
-
-Lastly, we focus on language models that are modeled as text classifiers. This is quite similar to practices in the industry, mainly aiming to save the computational cost of reward calculation. For generative reward models, our framework can support development on this basis; however, given the constraints of our experimental setup, we consider this to be outside the scope of the present work. 
-
-
+The historical experiments retained in this draft have not been rerun under the revised protocol. Their limitations and provenance must be assessed separately before transferring any performance, cost, or robustness claim to the new design.
 
 \section{Broader Impacts and Ethical Considerations}
 \label{sec:impact_ethic}
 
+
+The following discussion is retained from the earlier implementation and does not establish that the revised protocol has been deployed.
 
 Our research aims to provide positive societal impacts by improving the reliability of reward system design for the reinforcement learning framework in LLM post-training. However, we acknowledge potential negative societal impacts. Like many tuning methods, our approach could theoretically be repurposed for malicious uses, such as exposing malicious reward model checkpoints to \method{} and thereby planting intended deficiencies in the policy LLM.
 Furthermore, if \method{} is deployed without careful calibration, it might inherit or amplify biases present in the training data, leading to unfair outcomes for marginalized tasks. We encourage future research to focus on bias mitigation and robustness evaluation before deploying such methods in production environments.

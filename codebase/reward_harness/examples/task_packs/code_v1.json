@@ -1,0 +1,50 @@
+{
+  "schema_version": "rlar.taskpack.v1",
+  "profile_id": "code_v1",
+  "version": "1",
+  "task_contract": "Implement abs_int(n) for integers; meet every supplied boundary test.",
+  "applicability_rule": {
+    "task_contract_digest": "2b90d33b01a8ce5ed9b63499858aca6b4912df8fd468374929d17ac190aa2118",
+    "permitted_inputs": [
+      "query",
+      "response",
+      "task_tests",
+      "task_entrypoint"
+    ],
+    "mode_constraints": [
+      "single",
+      "checklist"
+    ],
+    "runtime_fingerprint": "python-stdlib-fixture-v1"
+  },
+  "permitted_inputs": [
+    "query",
+    "response",
+    "task_tests",
+    "task_entrypoint"
+  ],
+  "permitted_apis": [
+    "python_unit_tests_v1"
+  ],
+  "mode_constraints": [
+    "single",
+    "checklist"
+  ],
+  "dev_suite_ref": "code_v1",
+  "verifier_version": "fixture-oracle-v1",
+  "acceptance_policy": {
+    "score_threshold": 0.5,
+    "tie_tolerance": 1e-09,
+    "max_false_accept_rate": 0.0,
+    "max_false_reject_rate": 0.0,
+    "max_execution_error_rate": 0.0,
+    "min_ranking_accuracy": 1.0,
+    "max_invariance_violation_rate": 0.0,
+    "min_coverage": 1.0,
+    "allow_partial_component_mask": false
+  },
+  "max_components": 4,
+  "resources": {
+    "checker_help": "Use context.run_task_tests(example)"
+  }
+}

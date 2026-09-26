@@ -1,0 +1,114 @@
+{
+  "_id": "691bddeeeb3ced5117321b92",
+  "id": "allenai/Dolci-Instruct-SFT-No-Tools",
+  "author": "allenai",
+  "sha": "9156a5a542b2503100d4f1fabbf50be5eb25d977",
+  "lastModified": "2026-01-05T16:24:15.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "license:odc-by",
+    "size_categories:1M<n<10M",
+    "format:parquet",
+    "format:optimized-parquet",
+    "modality:text",
+    "library:datasets",
+    "library:dask",
+    "library:polars",
+    "library:mlcroissant",
+    "arxiv:2512.13961",
+    "region:us"
+  ],
+  "description": "A version of our new Instruct dataset with tool-use data removed, for people not needing that skill.\nFor the full dataset, documentation, etc. see the main dataset card.\nThis dataset is licensed under ODC-BY. It is intended for research and educational use in accordance with Ai2's Responsible Use Guidelines.\n\n\t\n\t\t\n\t\n\t\n\t\tCitation\n\t\n\n@misc{olmo2025olmo3,\ntitle={Olmo 3},\nauthor={Team Olmo and Allyson Ettinger and Amanda Bertsch and Bailey Kuehl and David Graham and David Heineman and Dirk… See the full description on the dataset page: https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT-No-Tools.",
+  "downloads": 479,
+  "likes": 4,
+  "cardData": {
+    "dataset_info": {
+      "features": [
+        {
+          "name": "id",
+          "dtype": "string"
+        },
+        {
+          "name": "messages",
+          "list": [
+            {
+              "name": "content",
+              "dtype": "string"
+            },
+            {
+              "name": "role",
+              "dtype": "string"
+            }
+          ]
+        },
+        {
+          "name": "source",
+          "dtype": "string"
+        }
+      ],
+      "splits": [
+        {
+          "name": "train",
+          "num_bytes": 4545163663,
+          "num_examples": 1924533
+        }
+      ],
+      "download_size": 2277811511,
+      "dataset_size": 4545163663
+    },
+    "configs": [
+      {
+        "config_name": "default",
+        "data_files": [
+          {
+            "split": "train",
+            "path": "data/train-*"
+          }
+        ]
+      }
+    ],
+    "license": "odc-by"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "data/train-00000-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00001-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00002-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00003-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00004-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00005-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00006-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00007-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00008-of-00010.parquet"
+    },
+    {
+      "rfilename": "data/train-00009-of-00010.parquet"
+    }
+  ],
+  "createdAt": "2025-11-18T02:46:06.000Z",
+  "usedStorage": 2277811511
+}

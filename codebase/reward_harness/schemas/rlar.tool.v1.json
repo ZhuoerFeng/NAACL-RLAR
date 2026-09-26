@@ -1,0 +1,320 @@
+{
+  "$defs": {
+    "ActionOutcome": {
+      "enum": [
+        "completed",
+        "failed",
+        "unknown"
+      ],
+      "title": "ActionOutcome",
+      "type": "string"
+    },
+    "ErrorCategory": {
+      "enum": [
+        "protocol",
+        "reward_code",
+        "quality",
+        "transport",
+        "timeout",
+        "auth",
+        "resource",
+        "budget",
+        "cancelled",
+        "input",
+        "internal"
+      ],
+      "title": "ErrorCategory",
+      "type": "string"
+    },
+    "RetryOwner": {
+      "description": "Who is responsible for making progress after this error.",
+      "enum": [
+        "agent",
+        "harness",
+        "none"
+      ],
+      "title": "RetryOwner",
+      "type": "string"
+    },
+    "StructuredError": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/ErrorCategory"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "phase": {
+          "title": "Phase",
+          "type": "string"
+        },
+        "retry_owner": {
+          "$ref": "#/$defs/RetryOwner"
+        },
+        "action_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Action Id"
+        },
+        "action_outcome": {
+          "$ref": "#/$defs/ActionOutcome",
+          "default": "failed"
+        },
+        "reward_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reward Key"
+        },
+        "remaining_budget": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remaining Budget"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "suggested_recovery": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suggested Recovery"
+        },
+        "detail_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail Ref"
+        }
+      },
+      "required": [
+        "category",
+        "code",
+        "phase",
+        "retry_owner"
+      ],
+      "title": "StructuredError",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "description": "Cost accounting. ``None`` means unknown; it never means zero.",
+      "properties": {
+        "input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Tokens"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Tokens"
+        },
+        "cached_input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cached Input Tokens"
+        },
+        "unknown_usage_events": {
+          "default": 0,
+          "title": "Unknown Usage Events",
+          "type": "integer"
+        },
+        "controller_logical_calls": {
+          "default": 0,
+          "title": "Controller Logical Calls",
+          "type": "integer"
+        },
+        "physical_requests": {
+          "default": 0,
+          "title": "Physical Requests",
+          "type": "integer"
+        },
+        "transport_retries": {
+          "default": 0,
+          "title": "Transport Retries",
+          "type": "integer"
+        },
+        "scoring_requests": {
+          "default": 0,
+          "title": "Scoring Requests",
+          "type": "integer"
+        },
+        "tool_calls": {
+          "default": 0,
+          "title": "Tool Calls",
+          "type": "integer"
+        },
+        "component_executions": {
+          "default": 0,
+          "title": "Component Executions",
+          "type": "integer"
+        },
+        "test_cases": {
+          "default": 0,
+          "title": "Test Cases",
+          "type": "integer"
+        },
+        "wall_seconds": {
+          "default": 0.0,
+          "title": "Wall Seconds",
+          "type": "number"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Usd"
+        },
+        "cost_status": {
+          "default": "unavailable",
+          "enum": [
+            "known",
+            "unavailable",
+            "unknown"
+          ],
+          "title": "Cost Status",
+          "type": "string"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.tool.v1",
+      "default": "rlar.tool.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "call_id": {
+      "title": "Call Id",
+      "type": "string"
+    },
+    "tool": {
+      "title": "Tool",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "unknown"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Result"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StructuredError"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "usage": {
+      "$ref": "#/$defs/Usage"
+    },
+    "trace_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trace Ref"
+    }
+  },
+  "required": [
+    "call_id",
+    "tool",
+    "status"
+  ],
+  "title": "ToolResult",
+  "type": "object"
+}

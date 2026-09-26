@@ -1,0 +1,4700 @@
+{
+  "quality_flags": [
+    {
+      "split": "train",
+      "row": 672,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 1184,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 1277,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 1788,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2302,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2351,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:extra_info.function_call"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2385,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2739,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:extra_info.function_call"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2827,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:extra_info.function_call"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 2986,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 3276,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 3889,
+      "source": "govreport-summarization",
+      "flags": [
+        "empty:extra_info.function_call"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 4076,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 4403,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 4744,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 4954,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 5001,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 5461,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 6188,
+      "source": "arxiv-summarization",
+      "flags": [
+        "empty:extra_info.function_call"
+      ]
+    },
+    {
+      "split": "train",
+      "row": 6370,
+      "source": "allenai-WildChat-1M-multiturn",
+      "flags": [
+        "empty:message_content"
+      ]
+    }
+  ],
+  "prompt_exact": [],
+  "prompt_normalized": [],
+  "question_normalized_nonempty": [
+    [
+      {
+        "split": "train",
+        "row": 3166,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 4378,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5003,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3518,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 6244,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 4472,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 4582,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5978,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "valid",
+        "row": 91,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ]
+  ],
+  "answer_normalized": [],
+  "sample_without_split_or_function": [],
+  "wildchat_first_user_message": [
+    [
+      {
+        "split": "train",
+        "row": 241,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 757,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1179,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1652,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1692,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1953,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 2388,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3081,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3286,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3581,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3932,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5675,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5743,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5944,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 6340,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 424,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1658,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 637,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3120,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 981,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1456,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 1733,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 2121,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 2267,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 2479,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3590,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3639,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 4876,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5933,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1101,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3308,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 6502,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3488,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 3518,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 4974,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      {
+        "split": "train",
+        "row": 5584,
+        "source": "allenai-WildChat-1M-multiturn"
+      }
+    ]
+  ],
+  "translation_pair_direction_invariant": [
+    [
+      {
+        "split": "train",
+        "row": 34,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4638,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 43,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2993,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 46,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 461,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 54,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6389,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 71,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 2972,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 76,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 2000,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 103,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 1001,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 104,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5686,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 113,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6113,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 250,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 616,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 305,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 2889,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 316,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5506,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 379,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 1510,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 383,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 1696,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 459,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4212,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 512,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2990,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 594,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2629,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 621,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 993,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 645,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4857,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 805,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6513,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 890,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4271,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 929,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "valid",
+        "row": 71,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 963,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "valid",
+        "row": 187,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 994,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3044,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1013,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 1098,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1113,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4596,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1117,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 1594,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1166,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3539,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1174,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2843,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1176,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6082,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1232,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5876,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1297,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5371,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1327,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5868,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1366,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 1944,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1372,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3119,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1377,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2234,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1433,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4348,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1546,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5191,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1553,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4437,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1673,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3399,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1709,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 2935,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1784,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4721,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1820,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6142,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1821,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5325,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1878,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 2765,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1896,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3537,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 1901,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3536,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2037,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6241,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2116,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5993,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2198,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 2679,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2270,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6479,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2328,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3408,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2333,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6400,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2380,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5852,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2425,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6083,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2440,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6295,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2475,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4357,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2480,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3853,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2482,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5077,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2631,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3255,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2755,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3998,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2855,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4587,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2867,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3812,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2873,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4468,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2902,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6190,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 2983,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5540,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3097,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 3664,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3243,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4528,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3287,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4351,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3637,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6548,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3697,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "valid",
+        "row": 36,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3948,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 5328,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3969,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 4481,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 3994,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4121,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 4144,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4723,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 4372,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6550,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 4541,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 4801,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5039,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6416,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5341,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5836,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5410,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6047,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5728,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 6326,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5773,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "valid",
+        "row": 58,
+        "source": "english-french-translation_fr-en"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 5884,
+        "source": "english-french-translation_fr-en"
+      },
+      {
+        "split": "train",
+        "row": 5977,
+        "source": "english-french-translation_en-fr"
+      }
+    ],
+    [
+      {
+        "split": "train",
+        "row": 6145,
+        "source": "english-french-translation_en-fr"
+      },
+      {
+        "split": "train",
+        "row": 6300,
+        "source": "english-french-translation_fr-en"
+      }
+    ]
+  ],
+  "essay_title_candidate": [],
+  "same_prompt_different_answers": [],
+  "wildchat_shared_complete_prefix": [
+    {
+      "train": {
+        "split": "train",
+        "row": 981,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1733,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2121,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3590,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3639,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4876,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5933,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "shared_prefix_messages": 2
+    }
+  ],
+  "nearest_train_prompt_per_valid": [
+    {
+      "train": {
+        "split": "train",
+        "row": 5959,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 1,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.101812
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2121,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 10,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.206415
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 556,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 19,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.149557
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1833,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 24,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.043324
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 94,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 35,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.054205
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3898,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 40,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.084832
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 757,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 42,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.09317
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3590,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 46,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.206147
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3715,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 52,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.08987
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 485,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 56,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.064581
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3148,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 61,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.133172
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5562,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 64,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.073715
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4408,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 65,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.107657
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5975,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 75,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.096461
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5003,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 76,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.147792
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4632,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 80,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.114307
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5974,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 87,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.05901
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1533,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 91,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.082531
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5949,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 92,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.145753
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4128,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 109,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.096199
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 665,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 110,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.054777
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2688,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 124,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.087286
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1699,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 132,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.073633
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4784,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 137,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.134897
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1264,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 144,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.086966
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1640,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 145,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.128879
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1140,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 151,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.121006
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1700,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 159,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.148446
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2775,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 163,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.141054
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5794,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 166,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.107087
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5175,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 167,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.077092
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3133,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 177,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.051856
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3610,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 178,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.120913
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4433,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 183,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.108677
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 773,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 186,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.073488
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3146,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 205,
+        "source": "allenai-WildChat-1M-multiturn"
+      },
+      "cosine": 0.058861
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5640,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 2,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.143174
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4562,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 3,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.155232
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5756,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 8,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.102951
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5027,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 11,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.165646
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4602,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 12,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.249479
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3871,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 13,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.184747
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5440,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 25,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.233266
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1736,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 34,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.153289
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3418,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 44,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.113923
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4201,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 68,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.161991
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4279,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 97,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.210205
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1930,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 99,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.198092
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 240,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 107,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.140296
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3179,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 127,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.127639
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3021,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 140,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.179288
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3627,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 149,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.188568
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3805,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 155,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.169206
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 52,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 164,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.138951
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6573,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 168,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.156709
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2513,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 181,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.156681
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2804,
+        "source": "arxiv-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 185,
+        "source": "arxiv-summarization"
+      },
+      "cosine": 0.152076
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3864,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 0,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.09655
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5410,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 18,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.083782
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3502,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 29,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.102119
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2679,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 36,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.348298
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3110,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 48,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.211436
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4728,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 54,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.07238
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5685,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 63,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.089458
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1972,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 66,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.113563
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1178,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 69,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.093804
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2426,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 71,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.101164
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3712,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 89,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.062892
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1178,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 95,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.147835
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4659,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 106,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.084742
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2131,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 121,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.353235
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3373,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 133,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.107621
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3789,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 162,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.083323
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 754,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 171,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.13746
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2439,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 193,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.203513
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6145,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 200,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.127125
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6522,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 5,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.106043
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3115,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 21,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.099001
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5614,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 23,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.092798
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5153,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 27,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.125328
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1297,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 33,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.105388
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5995,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 43,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.212404
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5775,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 45,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.140896
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3925,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 57,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.06557
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6389,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 58,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.201312
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 330,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 70,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.123468
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2012,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 72,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.122176
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2924,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 90,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.210939
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2731,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 93,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.164966
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4081,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 104,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.065706
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4689,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 117,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.114037
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 611,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 120,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.120798
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3177,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 122,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.165671
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3329,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 125,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.071732
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5586,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 129,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.103596
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5398,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 131,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.111579
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6308,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 138,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.105177
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 282,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 141,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.06688
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1098,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 146,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.072686
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 777,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 147,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.280376
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2725,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 157,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.112975
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3925,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 160,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.142628
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4698,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 170,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.081022
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4033,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 172,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.078939
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5516,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 184,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.085089
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5328,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 187,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.09642
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5703,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 194,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.135541
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1173,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 197,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.089086
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1547,
+        "source": "english-french-translation_fr-en"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 201,
+        "source": "english-french-translation_fr-en"
+      },
+      "cosine": 0.150324
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 688,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 7,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.070637
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5917,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 15,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.055756
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 16,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.059437
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 744,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 17,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.087503
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4179,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 28,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.098532
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3239,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 32,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.071722
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2046,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 38,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.11122
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4440,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 55,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.12839
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6376,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 59,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.065616
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2401,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 60,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.054011
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3942,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 67,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.122719
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3424,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 79,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.098069
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1966,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 86,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.07452
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 744,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 103,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.07619
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6558,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 113,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.086153
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1422,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 115,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.08393
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4049,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 118,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.056741
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5907,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 126,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.067768
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4814,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 136,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.099694
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5695,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 142,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.075433
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3424,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 143,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.094543
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2063,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 148,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.050223
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5767,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 169,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.087325
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3150,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 174,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.050463
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3147,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 188,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.08604
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1029,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 192,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.069176
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5583,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 195,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.076219
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 270,
+        "source": "essay_abs2text"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 202,
+        "source": "essay_abs2text"
+      },
+      "cosine": 0.077523
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2783,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 6,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.152594
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3159,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 22,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.144202
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6176,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 30,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.09119
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6167,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 37,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.080276
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3593,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 39,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.121964
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4016,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 41,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.146041
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3218,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 49,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.061866
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5087,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 51,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.092396
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3646,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 73,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.116392
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1824,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 77,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.068291
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5270,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 81,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.071536
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1125,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 82,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.097252
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 14,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 88,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.100852
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1942,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 101,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.12893
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1401,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 105,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.07769
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5430,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 108,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.076064
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 600,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 112,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.102285
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5736,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 128,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.088072
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5628,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 134,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.065991
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4462,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 152,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.129277
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 607,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 153,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.100695
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1779,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 161,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.091694
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5729,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 176,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.086288
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1154,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 182,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.098436
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 692,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 190,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.08833
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3159,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 196,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.087678
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6292,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 199,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.118024
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5648,
+        "source": "essay_infilling"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 204,
+        "source": "essay_infilling"
+      },
+      "cosine": 0.093006
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4486,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 4,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.646065
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3215,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 20,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.16433
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2785,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 50,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.171793
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2122,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 53,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.187731
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5448,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 74,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.222246
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5894,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 78,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.188895
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5719,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 84,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.145979
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4013,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 96,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.225071
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3966,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 102,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.239699
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3530,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 111,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.187289
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5644,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 114,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.194686
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2865,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 116,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.231285
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 50,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 119,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.169482
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4667,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 130,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.177284
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1074,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 150,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.191723
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3749,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 175,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.334542
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2636,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 179,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.232579
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6289,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 189,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.216169
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5548,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 203,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.195252
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6482,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 206,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.157034
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7129,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 207,
+        "source": "gsm8k"
+      },
+      "cosine": 0.078353
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7080,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 208,
+        "source": "gsm8k"
+      },
+      "cosine": 0.122867
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7510,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 209,
+        "source": "gsm8k"
+      },
+      "cosine": 0.10318
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7061,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 210,
+        "source": "gsm8k"
+      },
+      "cosine": 0.272251
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7201,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 211,
+        "source": "gsm8k"
+      },
+      "cosine": 0.124839
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6915,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 212,
+        "source": "gsm8k"
+      },
+      "cosine": 0.224707
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7476,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 213,
+        "source": "gsm8k"
+      },
+      "cosine": 0.130435
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6813,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 214,
+        "source": "gsm8k"
+      },
+      "cosine": 0.118097
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6868,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 215,
+        "source": "gsm8k"
+      },
+      "cosine": 0.087641
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6892,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 216,
+        "source": "gsm8k"
+      },
+      "cosine": 0.122712
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6865,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 217,
+        "source": "gsm8k"
+      },
+      "cosine": 0.171167
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7463,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 218,
+        "source": "gsm8k"
+      },
+      "cosine": 0.182892
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6892,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 219,
+        "source": "gsm8k"
+      },
+      "cosine": 0.132138
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6949,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 220,
+        "source": "gsm8k"
+      },
+      "cosine": 0.131129
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6961,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 221,
+        "source": "gsm8k"
+      },
+      "cosine": 0.102356
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7025,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 222,
+        "source": "gsm8k"
+      },
+      "cosine": 0.0882
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6878,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 223,
+        "source": "gsm8k"
+      },
+      "cosine": 0.066537
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6786,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 224,
+        "source": "gsm8k"
+      },
+      "cosine": 0.158124
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7412,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 225,
+        "source": "gsm8k"
+      },
+      "cosine": 0.136169
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6881,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 226,
+        "source": "gsm8k"
+      },
+      "cosine": 0.152405
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6874,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 227,
+        "source": "gsm8k"
+      },
+      "cosine": 0.17609
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7480,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 228,
+        "source": "gsm8k"
+      },
+      "cosine": 0.200279
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6745,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 229,
+        "source": "gsm8k"
+      },
+      "cosine": 0.16902
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6742,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 230,
+        "source": "gsm8k"
+      },
+      "cosine": 0.127823
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6670,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 231,
+        "source": "gsm8k"
+      },
+      "cosine": 0.18654
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7259,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 232,
+        "source": "gsm8k"
+      },
+      "cosine": 0.096365
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7325,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 233,
+        "source": "gsm8k"
+      },
+      "cosine": 0.178048
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6822,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 234,
+        "source": "gsm8k"
+      },
+      "cosine": 0.095337
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7428,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 235,
+        "source": "gsm8k"
+      },
+      "cosine": 0.337084
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7231,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 236,
+        "source": "gsm8k"
+      },
+      "cosine": 0.13993
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2774,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 9,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.191238
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1395,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 14,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.16779
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 274,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 26,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.111955
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6351,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 31,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.079817
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3192,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 47,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.122046
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3512,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 62,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.205147
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 860,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 83,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.123189
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1192,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 85,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.127471
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 1111,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 94,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.114012
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3641,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 98,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.097497
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2696,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 100,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.15707
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3725,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 123,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.136501
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4169,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 135,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.135953
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 331,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 139,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.048464
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2610,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 154,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.234606
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 5100,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 156,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.064874
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2537,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 158,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.104102
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6520,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 165,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.157916
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4663,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 173,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.158267
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4107,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 180,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.137113
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 972,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 191,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.104906
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 6498,
+        "source": "pubmed-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 198,
+        "source": "pubmed-summarization"
+      },
+      "cosine": 0.122589
+    }
+  ],
+  "lexical_overlap_followup": [
+    {
+      "train": {
+        "split": "train",
+        "row": 2679,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 36,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.348298,
+      "shared_input_5grams": 3,
+      "valid_input_unique_5grams": 15,
+      "valid_input_5gram_coverage_by_train": 0.2,
+      "valid_reference_5gram_coverage_by_train": 0.11764705882352941
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 2131,
+        "source": "english-french-translation_en-fr"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 121,
+        "source": "english-french-translation_en-fr"
+      },
+      "cosine": 0.353235,
+      "shared_input_5grams": 2,
+      "valid_input_unique_5grams": 9,
+      "valid_input_5gram_coverage_by_train": 0.2222222222222222,
+      "valid_reference_5gram_coverage_by_train": 0.2727272727272727
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 4486,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 4,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.646065,
+      "shared_input_5grams": 4582,
+      "valid_input_unique_5grams": 5508,
+      "valid_input_5gram_coverage_by_train": 0.8318809005083515,
+      "valid_reference_5gram_coverage_by_train": 0.79957805907173
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 3749,
+        "source": "govreport-summarization"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 175,
+        "source": "govreport-summarization"
+      },
+      "cosine": 0.334542,
+      "shared_input_5grams": 187,
+      "valid_input_unique_5grams": 7259,
+      "valid_input_5gram_coverage_by_train": 0.02576112412177986,
+      "valid_reference_5gram_coverage_by_train": 0.0
+    },
+    {
+      "train": {
+        "split": "train",
+        "row": 7428,
+        "source": "gsm8k"
+      },
+      "valid": {
+        "split": "valid",
+        "row": 235,
+        "source": "gsm8k"
+      },
+      "cosine": 0.337084,
+      "shared_input_5grams": 22,
+      "valid_input_unique_5grams": 71,
+      "valid_input_5gram_coverage_by_train": 0.30985915492957744,
+      "valid_reference_5gram_coverage_by_train": 0.0
+    }
+  ],
+  "tulu_manual_review_sample": []
+}

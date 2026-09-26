@@ -1,0 +1,1654 @@
+{
+  "_id": "686fc33898943c873b45c9a0",
+  "id": "HuggingFaceTB/smoltalk2",
+  "author": "HuggingFaceTB",
+  "sha": "fc6cc2103c066455aade5d7fbb346039ae36ca5e",
+  "lastModified": "2025-10-31T13:49:55.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "size_categories:1M<n<10M",
+    "format:parquet",
+    "modality:text",
+    "library:datasets",
+    "library:dask",
+    "library:mlcroissant",
+    "library:polars",
+    "arxiv:2410.15553",
+    "arxiv:2412.15115",
+    "region:us"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tSmolTalk2\n\t\n\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset description\n\t\n\nThis dataset contains three subsets (Mid, SFT, Preference) that correspond to the three phases of Post-Training for SmolLM3-3B. You can find more details in our blog post about how we used the data in each of the stages SmolLM3.\nThe specific weight of each subset is available in the training recipe in SmolLM's repository.\nYou can load a dataset using\nfrom datasets import load_dataset\n\n# To load the train split of a specific subset… See the full description on the dataset page: https://huggingface.co/datasets/HuggingFaceTB/smoltalk2.",
+  "downloads": 26539,
+  "likes": 173,
+  "cardData": {
+    "dataset_info": [
+      {
+        "config_name": "Mid",
+        "features": [
+          {
+            "name": "messages",
+            "list": [
+              {
+                "name": "content",
+                "dtype": "string"
+              },
+              {
+                "name": "role",
+                "dtype": "string"
+              }
+            ]
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          }
+        ],
+        "splits": [
+          {
+            "name": "Llama_Nemotron_Post_Training_Dataset_reasoning_r1",
+            "num_bytes": 61605080860,
+            "num_examples": 3644790
+          },
+          {
+            "name": "OpenThoughts3_1.2M",
+            "num_bytes": 56341153994,
+            "num_examples": 1135104
+          }
+        ],
+        "download_size": 53697026569,
+        "dataset_size": 117946234854
+      },
+      {
+        "config_name": "Preference",
+        "features": [
+          {
+            "name": "chosen",
+            "list": [
+              {
+                "name": "content",
+                "dtype": "string"
+              },
+              {
+                "name": "role",
+                "dtype": "string"
+              }
+            ]
+          },
+          {
+            "name": "rejected",
+            "list": [
+              {
+                "name": "content",
+                "dtype": "string"
+              },
+              {
+                "name": "role",
+                "dtype": "string"
+              }
+            ]
+          },
+          {
+            "name": "prompt",
+            "dtype": "string"
+          },
+          {
+            "name": "chat_template_kwargs",
+            "struct": [
+              {
+                "name": "custom_instructions",
+                "dtype": "string"
+              },
+              {
+                "name": "enable_thinking",
+                "dtype": "bool"
+              },
+              {
+                "name": "python_tools",
+                "sequence": "string"
+              },
+              {
+                "name": "xml_tools",
+                "sequence": "string"
+              }
+            ]
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          }
+        ],
+        "splits": [
+          {
+            "name": "llama_3.1_tulu_3_8b_preference_mixture_no_think",
+            "num_bytes": 1471659085,
+            "num_examples": 230501
+          },
+          {
+            "name": "tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think",
+            "num_bytes": 4563920395,
+            "num_examples": 216385
+          }
+        ],
+        "download_size": 2599953933,
+        "dataset_size": 6035579480
+      },
+      {
+        "config_name": "SFT",
+        "features": [
+          {
+            "name": "messages",
+            "list": [
+              {
+                "name": "content",
+                "dtype": "string"
+              },
+              {
+                "name": "role",
+                "dtype": "string"
+              }
+            ]
+          },
+          {
+            "name": "chat_template_kwargs",
+            "struct": [
+              {
+                "name": "custom_instructions",
+                "dtype": "string"
+              },
+              {
+                "name": "enable_thinking",
+                "dtype": "bool"
+              },
+              {
+                "name": "python_tools",
+                "list": "string"
+              },
+              {
+                "name": "xml_tools",
+                "list": "string"
+              }
+            ]
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          }
+        ],
+        "splits": [
+          {
+            "name": "LongAlign_64k_Qwen3_32B_yarn_131k_think",
+            "num_bytes": 520907823,
+            "num_examples": 7526
+          },
+          {
+            "name": "OpenThoughts3_1.2M_think",
+            "num_bytes": 56273098407,
+            "num_examples": 1133524
+          },
+          {
+            "name": "aya_dataset_Qwen3_32B_think",
+            "num_bytes": 60172886,
+            "num_examples": 15222
+          },
+          {
+            "name": "multi_turn_reasoning_if_think",
+            "num_bytes": 421909719,
+            "num_examples": 28217
+          },
+          {
+            "name": "s1k_1.1_think",
+            "num_bytes": 25598191,
+            "num_examples": 835
+          },
+          {
+            "name": "smolagents_toolcalling_traces_think",
+            "num_bytes": 200401637,
+            "num_examples": 9079
+          },
+          {
+            "name": "smoltalk_multilingual8_Qwen3_32B_think",
+            "num_bytes": 1900647658,
+            "num_examples": 244736
+          },
+          {
+            "name": "smoltalk_systemchats_Qwen3_32B_think",
+            "num_bytes": 123542086,
+            "num_examples": 27436
+          },
+          {
+            "name": "table_gpt_Qwen3_32B_think",
+            "num_bytes": 77802435,
+            "num_examples": 13201
+          },
+          {
+            "name": "LongAlign_64k_context_lang_annotated_lang_6_no_think",
+            "num_bytes": 402317420,
+            "num_examples": 6249
+          },
+          {
+            "name": "Mixture_of_Thoughts_science_no_think",
+            "num_bytes": 130260467,
+            "num_examples": 86110
+          },
+          {
+            "name": "OpenHermes_2.5_no_think",
+            "num_bytes": 585433379,
+            "num_examples": 384900
+          },
+          {
+            "name": "OpenThoughts3_1.2M_no_think_no_think",
+            "num_bytes": 1215060567,
+            "num_examples": 435193
+          },
+          {
+            "name": "hermes_function_calling_v1_no_think",
+            "num_bytes": 45038786,
+            "num_examples": 8961
+          },
+          {
+            "name": "smoltalk_multilingual_8languages_lang_5_no_think",
+            "num_bytes": 564939737,
+            "num_examples": 254047
+          },
+          {
+            "name": "smoltalk_smollm3_everyday_conversations_no_think",
+            "num_bytes": 1955692,
+            "num_examples": 2260
+          },
+          {
+            "name": "smoltalk_smollm3_explore_instruct_rewriting_no_think",
+            "num_bytes": 14186608,
+            "num_examples": 30391
+          },
+          {
+            "name": "smoltalk_smollm3_smol_magpie_ultra_no_think",
+            "num_bytes": 2820888852,
+            "num_examples": 406843
+          },
+          {
+            "name": "smoltalk_smollm3_smol_rewrite_no_think",
+            "num_bytes": 89561602,
+            "num_examples": 53262
+          },
+          {
+            "name": "smoltalk_smollm3_smol_summarize_no_think",
+            "num_bytes": 229104725,
+            "num_examples": 96061
+          },
+          {
+            "name": "smoltalk_smollm3_systemchats_30k_no_think",
+            "num_bytes": 89680522,
+            "num_examples": 33997
+          },
+          {
+            "name": "table_gpt_no_think",
+            "num_bytes": 31127809,
+            "num_examples": 13203
+          },
+          {
+            "name": "tulu_3_sft_personas_instruction_following_no_think",
+            "num_bytes": 59890932,
+            "num_examples": 29970
+          },
+          {
+            "name": "xlam_traces_no_think",
+            "num_bytes": 96806049,
+            "num_examples": 59962
+          },
+          {
+            "name": "smoltalk_everyday_convs_reasoning_Qwen3_32B_think",
+            "num_bytes": 11738101,
+            "num_examples": 2057
+          }
+        ],
+        "download_size": 31451143641,
+        "dataset_size": 65992072090
+      }
+    ],
+    "configs": [
+      {
+        "config_name": "Mid",
+        "data_files": [
+          {
+            "split": "Llama_Nemotron_Post_Training_Dataset_reasoning_r1",
+            "path": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-*"
+          },
+          {
+            "split": "OpenThoughts3_1.2M",
+            "path": "Mid/OpenThoughts3_1.2M-*"
+          }
+        ]
+      },
+      {
+        "config_name": "Preference",
+        "data_files": [
+          {
+            "split": "llama_3.1_tulu_3_8b_preference_mixture_no_think",
+            "path": "Preference/llama_3.1_tulu_3_8b_preference_mixture_no_think-*"
+          },
+          {
+            "split": "tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think",
+            "path": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-*"
+          }
+        ]
+      },
+      {
+        "config_name": "SFT",
+        "data_files": [
+          {
+            "split": "LongAlign_64k_Qwen3_32B_yarn_131k_think",
+            "path": "SFT/LongAlign_64k_Qwen3_32B_yarn_131k_think-*"
+          },
+          {
+            "split": "OpenThoughts3_1.2M_think",
+            "path": "SFT/OpenThoughts3_1.2M_think-*"
+          },
+          {
+            "split": "aya_dataset_Qwen3_32B_think",
+            "path": "SFT/aya_dataset_Qwen3_32B_think-*"
+          },
+          {
+            "split": "multi_turn_reasoning_if_think",
+            "path": "SFT/multi_turn_reasoning_if_think-*"
+          },
+          {
+            "split": "s1k_1.1_think",
+            "path": "SFT/s1k_1.1_think-*"
+          },
+          {
+            "split": "smolagents_toolcalling_traces_think",
+            "path": "SFT/smolagents_toolcalling_traces_think-*"
+          },
+          {
+            "split": "smoltalk_everyday_convs_reasoning_Qwen3_32B_think",
+            "path": "SFT/smoltalk_everyday_convs_reasoning_Qwen3_32B_think-*"
+          },
+          {
+            "split": "smoltalk_multilingual8_Qwen3_32B_think",
+            "path": "SFT/smoltalk_multilingual8_Qwen3_32B_think-*"
+          },
+          {
+            "split": "smoltalk_systemchats_Qwen3_32B_think",
+            "path": "SFT/smoltalk_systemchats_Qwen3_32B_think-*"
+          },
+          {
+            "split": "table_gpt_Qwen3_32B_think",
+            "path": "SFT/table_gpt_Qwen3_32B_think-*"
+          },
+          {
+            "split": "LongAlign_64k_context_lang_annotated_lang_6_no_think",
+            "path": "SFT/LongAlign_64k_context_lang_annotated_lang_6_no_think-*"
+          },
+          {
+            "split": "Mixture_of_Thoughts_science_no_think",
+            "path": "SFT/Mixture_of_Thoughts_science_no_think-*"
+          },
+          {
+            "split": "OpenHermes_2.5_no_think",
+            "path": "SFT/OpenHermes_2.5_no_think-*"
+          },
+          {
+            "split": "OpenThoughts3_1.2M_no_think_no_think",
+            "path": "SFT/OpenThoughts3_1.2M_no_think_no_think-*"
+          },
+          {
+            "split": "hermes_function_calling_v1_no_think",
+            "path": "SFT/hermes_function_calling_v1_no_think-*"
+          },
+          {
+            "split": "smoltalk_multilingual_8languages_lang_5_no_think",
+            "path": "SFT/smoltalk_multilingual_8languages_lang_5_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_everyday_conversations_no_think",
+            "path": "SFT/smoltalk_smollm3_everyday_conversations_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_explore_instruct_rewriting_no_think",
+            "path": "SFT/smoltalk_smollm3_explore_instruct_rewriting_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_smol_magpie_ultra_no_think",
+            "path": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_smol_rewrite_no_think",
+            "path": "SFT/smoltalk_smollm3_smol_rewrite_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_smol_summarize_no_think",
+            "path": "SFT/smoltalk_smollm3_smol_summarize_no_think-*"
+          },
+          {
+            "split": "smoltalk_smollm3_systemchats_30k_no_think",
+            "path": "SFT/smoltalk_smollm3_systemchats_30k_no_think-*"
+          },
+          {
+            "split": "table_gpt_no_think",
+            "path": "SFT/table_gpt_no_think-*"
+          },
+          {
+            "split": "tulu_3_sft_personas_instruction_following_no_think",
+            "path": "SFT/tulu_3_sft_personas_instruction_following_no_think-*"
+          },
+          {
+            "split": "xlam_traces_no_think",
+            "path": "SFT/xlam_traces_no_think-*"
+          }
+        ]
+      }
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00000-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00001-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00002-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00003-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00004-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00005-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00006-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00007-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00008-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00009-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00010-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00011-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00012-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00013-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00014-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00015-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00016-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00017-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00018-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00019-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00020-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00021-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00022-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00023-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00024-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00025-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00026-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00027-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00028-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00029-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00030-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00031-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00032-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00033-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00034-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00035-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00036-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00037-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00038-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00039-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00040-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00041-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00042-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00043-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00044-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00045-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00046-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00047-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00048-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00049-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00050-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00051-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00052-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00053-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00054-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00055-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00056-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00057-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00058-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00059-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00060-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00061-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00062-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00063-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00064-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00065-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00066-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00067-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00068-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00069-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00070-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00071-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00072-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00073-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00074-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00075-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00076-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00077-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00078-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00079-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00080-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00081-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00082-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00083-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00084-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00085-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00086-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00087-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00088-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00089-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00090-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00091-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00092-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00093-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00094-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00095-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00096-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00097-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00098-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00099-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00100-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00101-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00102-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00103-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00104-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00105-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00106-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00107-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00108-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00109-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00110-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00111-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00112-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00113-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00114-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00115-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00116-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00117-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00118-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00119-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00120-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00121-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00122-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/Llama_Nemotron_Post_Training_Dataset_reasoning_r1-00123-of-00124.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00000-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00001-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00002-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00003-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00004-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00005-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00006-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00007-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00008-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00009-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00010-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00011-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00012-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00013-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00014-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00015-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00016-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00017-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00018-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00019-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00020-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00021-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00022-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00023-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00024-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00025-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00026-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00027-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00028-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00029-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00030-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00031-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00032-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00033-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00034-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00035-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00036-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00037-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00038-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00039-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00040-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00041-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00042-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00043-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00044-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00045-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00046-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00047-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00048-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00049-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00050-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00051-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00052-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00053-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00054-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00055-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00056-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00057-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00058-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00059-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00060-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00061-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00062-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00063-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00064-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00065-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00066-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00067-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00068-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00069-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00070-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00071-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00072-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00073-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00074-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00075-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00076-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00077-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00078-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00079-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00080-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00081-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00082-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00083-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00084-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00085-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00086-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00087-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00088-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00089-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00090-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00091-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00092-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00093-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00094-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00095-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00096-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00097-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00098-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00099-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00100-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00101-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00102-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00103-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00104-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00105-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00106-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00107-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00108-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00109-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00110-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00111-of-00113.parquet"
+    },
+    {
+      "rfilename": "Mid/OpenThoughts3_1.2M-00112-of-00113.parquet"
+    },
+    {
+      "rfilename": "Preference/llama_3.1_tulu_3_8b_preference_mixture_no_think-00000-of-00003.parquet"
+    },
+    {
+      "rfilename": "Preference/llama_3.1_tulu_3_8b_preference_mixture_no_think-00001-of-00003.parquet"
+    },
+    {
+      "rfilename": "Preference/llama_3.1_tulu_3_8b_preference_mixture_no_think-00002-of-00003.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00000-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00001-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00002-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00003-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00004-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00005-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00006-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00007-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00008-of-00010.parquet"
+    },
+    {
+      "rfilename": "Preference/tulu_3_8b_pref_mix_Qwen3_32B_Qwen3_0.6B_think-00009-of-00010.parquet"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "SFT/LongAlign_64k_Qwen3_32B_yarn_131k_think-00000-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/LongAlign_64k_Qwen3_32B_yarn_131k_think-00001-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/LongAlign_64k_context_lang_annotated_lang_6_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/Mixture_of_Thoughts_science_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenHermes_2.5_no_think-00000-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenHermes_2.5_no_think-00001-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_no_think_no_think-00000-of-00003.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_no_think_no_think-00001-of-00003.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_no_think_no_think-00002-of-00003.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00000-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00001-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00002-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00003-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00004-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00005-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00006-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00007-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00008-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00009-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00010-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00011-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00012-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00013-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00014-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00015-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00016-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00017-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00018-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00019-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00020-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00021-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00022-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00023-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00024-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00025-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00026-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00027-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00028-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00029-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00030-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00031-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00032-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00033-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00034-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00035-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00036-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00037-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00038-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00039-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00040-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00041-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00042-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00043-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00044-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00045-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00046-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00047-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00048-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00049-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00050-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00051-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00052-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00053-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00054-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00055-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00056-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00057-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00058-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00059-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00060-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00061-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00062-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00063-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00064-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00065-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00066-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00067-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00068-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00069-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00070-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00071-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00072-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00073-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00074-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00075-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00076-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00077-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00078-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00079-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00080-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00081-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00082-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00083-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00084-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00085-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00086-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00087-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00088-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00089-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00090-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00091-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00092-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00093-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00094-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00095-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00096-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00097-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00098-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00099-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00100-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00101-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00102-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00103-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00104-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00105-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00106-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00107-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00108-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00109-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00110-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00111-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/OpenThoughts3_1.2M_think-00112-of-00113.parquet"
+    },
+    {
+      "rfilename": "SFT/aya_dataset_Qwen3_32B_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/hermes_function_calling_v1_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/multi_turn_reasoning_if_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/s1k_1.1_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smolagents_toolcalling_traces_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_everyday_convs_reasoning_Qwen3_32B_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual8_Qwen3_32B_think-00000-of-00004.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual8_Qwen3_32B_think-00001-of-00004.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual8_Qwen3_32B_think-00002-of-00004.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual8_Qwen3_32B_think-00003-of-00004.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual_8languages_lang_5_no_think-00000-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_multilingual_8languages_lang_5_no_think-00001-of-00002.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_everyday_conversations_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_explore_instruct_rewriting_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00000-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00001-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00002-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00003-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00004-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_magpie_ultra_no_think-00005-of-00006.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_rewrite_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_smol_summarize_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_smollm3_systemchats_30k_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/smoltalk_systemchats_Qwen3_32B_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/table_gpt_Qwen3_32B_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/table_gpt_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/tulu_3_sft_personas_instruction_following_no_think-00000-of-00001.parquet"
+    },
+    {
+      "rfilename": "SFT/xlam_traces_no_think-00000-of-00001.parquet"
+    }
+  ],
+  "createdAt": "2025-07-10T13:42:16.000Z",
+  "usedStorage": 87748124143
+}

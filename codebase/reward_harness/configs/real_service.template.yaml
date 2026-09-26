@@ -1,0 +1,40 @@
+# Intentionally incomplete. validate-config reports all REQUIRED paths together.
+# Provide real services and formal task packs; demo thresholds are never inherited.
+schema_version: rlar.config.v1
+run_label: real-experiment
+profile_kind: real
+data:
+  input_path: REQUIRED
+  task_pack_root: REQUIRED
+  split: REQUIRED
+  output_layout: reference
+construction:
+  strategy: agentic
+  reward_mode: checklist
+  library_mode: heldout
+  max_components: REQUIRED
+model:
+  provider_adapter: http_chat_json_v1
+  endpoint: REQUIRED
+  model: REQUIRED
+  revision: REQUIRED
+  api_key_env: REQUIRED
+  max_output_tokens: REQUIRED
+  context_limit_tokens: REQUIRED
+execution:
+  runner_type: subprocess
+  runner_profile: formal
+  required_capabilities: [filesystem_isolation, network_isolation, label_secret_isolation]
+  runtime_fingerprint: REQUIRED
+  allow_untrusted_code: false
+budget:
+  run: REQUIRED
+  episode: REQUIRED
+  absolute_deadline_utc: REQUIRED
+validation:
+  dev_suite_root: REQUIRED
+  oracle_version: REQUIRED
+  audit_suite_root: REQUIRED
+  audit_required_assurance: isolated
+# P0 ships a Runner interface and subprocess prototype. A production isolated
+# backend is an external integration, not silently emulated by this template.

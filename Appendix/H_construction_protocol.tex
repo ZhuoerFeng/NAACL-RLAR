@@ -1,0 +1,166 @@
+\section{Reward Construction Protocol and Trace Specification}
+\label{apd:construction_protocol}
+
+The experiment manifest must fix test-set sizes, budgets, acceptance thresholds, model revisions, and training hyperparameters before comparisons. This proposed protocol has not yet been evaluated.
+
+\subsection{Stream Interface and Reward Representation}
+\label{apd:harness_stream}
+
+The core interface consumes an iterator of query records and yields construction results. A JSONL adapter supports append-only output; Parquet inputs can be streamed in batches and joined with a result sidecar by stable query IDs. Original inputs remain unchanged. Each record includes a query ID, query, task-profile reference, optional reference/metadata, and the configured reward mode. The profile supplies versioned task requirements and development tests, avoiding duplication in every row. Missing test evidence permits an unvalidated definition, not a validated-quality claim.
+
+A result records input and configuration digests, initial library snapshot, job/attempt IDs, terminal status, stop reason, reward key, optional inline definition, validation/trace references, fallback attribution, and usage. Successful, unvalidated, failed, and skipped records are distinguished. Fallback availability is not counted as successful construction. Interrupted attempts are recorded separately and do not enter the completed-job set.
+
+A reward definition contains its schema version, mode, component list, aggregation, and runtime contract. Each component has a criterion ID/description, function source as a string, entrypoint, and normalization. Single mode contains one component; checklist mode contains a bounded planned list whose successful scores are averaged with equal weights. Empty lists, non-finite scores, and unsupported aggregation options are invalid. Weight parameters and weight optimization are not part of this revision. The scoring runtime returns per-component statuses/scores and the aggregate. Normalization is declared and frozen; duplicate or overlapping criteria are checked because they can implicitly change emphasis despite equal averaging.
+
+Inline storage writes the definition directly into each result. Reference storage writes it once to an optional library and stores its SHA-256 key in query records. Canonical serialization fixes encoding, key ordering, number representation, and source line endings. The key covers sources, composition, calibration, and dependency/API versions. Query inputs and validation reports are separate; report validity is bound to the reward key, task contract, suite, and runtime version. Changed components, normalization, or dependencies invalidate prior validation. Hash equality provides exact deduplication, not semantic similarity; task tags and applicability evidence support reuse. Exported wrapper source is derived from this authoritative definition and its pinned aggregation runtime.
+
+The planned checklist and equal-mean rule are fixed for a query and its rollout group. Components execute independently; malformed code or a runtime failure in one component does not prevent the others from running. Successful finite scores form an explicit active mask. Partial execution returns their arithmetic mean, a partial status, and coverage; an empty mask returns a failed status with no aggregate. All valid zero scores yield a valid zero reward, not an execution failure. Quality validation is separate from operational partial success. Different active masks across candidates can affect reward comparability and must be reported and analyzed in downstream RL; a common-mask or coverage-gated variant would be an additional declared experiment, not the current default. Component diagnostics supplement evaluation of aggregate reward quality.
+
+\subsection{Tool Interfaces and Trusted State Transitions}
+\label{apd:harness_interfaces}
+
+The task pack, catalogue, and a small library index can be supplied directly as context. Dedicated task-analysis/model-inspection tools are unnecessary. File Read/Write/Edit and Bash are optional coding-agent adapters; a filesystem is not the persistent reward representation. Optional registry search accepts a query, resource kind, task tags, and limit, and returns versioned definitions and applicability/validation references. Search matches do not certify applicability.
+
+Tool responses contain schema/call IDs, operation status, structured results/errors, usage, and a trace reference. Errors have stable categories, phases, and retryability. Negative reward-quality findings are valid test-tool observations, not transport errors. Truncation is marked and complete permitted observations remain accessible by reference. File adapters enforce version-aware edits; shell adapters enforce the configured backend's directory, time, and output limits. Both native and normalized events are retained, including source changes made through Bash.
+
+\noindent\textbf{Validation.} \texttt{test\_reward} accepts a serialized definition, an allowed development profile, a failure-display limit, and an on-pass policy (submit or return). A file adapter may first serialize a workspace. The supervisor creates an immutable artifact and calls the runner; profiles do not allow arbitrary evaluators or audit access. Reports identify the reward key, environment fingerprint, suite/profile, completed/errored counts, component and aggregate diagnostics, eligibility, and usage. Display limits do not change denominators. Missing metrics are null with a reason. The evaluator computes reports from actual scores and independent labels, rather than accepting agent-authored reports.
+
+\noindent\textbf{Submission.} \texttt{submit\_reward} identifies the selected key and matching complete development-validation run. The supervisor verifies ownership, applicability, versions, and acceptance rules. Submission ends the episode with a selected artifact; the outer driver commits storage. Old reports cannot validate changed definitions. Baselines without interactive tests submit their final definitions once for common external validation, with no feedback for further edits. Sealed audit remains a separate, non-interactive evaluator action.
+
+The default efficiency policy allows a test action to request submission on success. The harness applies exactly the same finalizer checks, including full development validation, without a further assistant turn. Failure returns the report for repair; partial execution alone never implies admission. Explicit submission remains available for comparing candidates. A batch containing several candidates waits for the relevant reports and uses a predeclared selector, never arrival order. Submission policies are recorded across conditions; storage commit remains a separate driver responsibility.
+
+\subsection{Shared Prefixes and Efficient Controller Calls}
+\label{apd:llm_protocol}
+
+One \texttt{llm\_call} boundary assembles all controller requests. Inputs identify the episode, expected history cursor, immutable prefix/history references, model configuration, logical call ID, remaining budget, and deadline. Outputs include the complete observable assistant message and proposed actions, completion status, request digest, provider request ID, usage, and errors. The adapter validates schemas without an auxiliary repair model; the harness validates proposed actions before execution.
+
+The logical context is a fixed run prefix, a frozen episode prefix, and append-only history. Instructions, tool definitions/order, and output schemas do not change within the episode. Task resources and the initial library snapshot are frozen; later drafts, observations, and budget updates appear only at the tail. Across queries, only identical permitted static resources share a prefix; conversations remain separate. The manifest pins the serializer/API adapter. Request metadata and retry timestamps stay outside the shared prompt prefix. Provider continuation IDs and prefix caches are optional optimizations, not the source of truth or a guarantee of identical wire formats or cache hits.
+
+Within an episode, controller calls are serial. Independent tools may execute concurrently, but their results enter history in the original call order after all actions have outcomes or explicit terminal states. Dependent edits and reads execute sequentially; decisions requiring unseen results wait. The trace preserves actual completion times separately. One complete definition can contain the checklist plan and all component sources, and one test request can evaluate its components and development examples without separate model turns.
+
+Ordinary code handles exact applicability checks, retrieval, hashing, report formatting, retry control, and finalization. Uncertain reuse is resolved by the same controller, not a hidden routing model. Reports use bounded deterministic diagnostics with references to complete permitted observations. Their visible representation is fixed on first insertion, with no later rewriting of history. Context preflight reserves space for output and bounded observations; overflow terminates with a recorded context-budget reason. This short-episode protocol uses neither silent sliding windows nor LLM summarization.
+
+Checkpoints retain prefix/history digests, the committed message cursor, request references, adapter version, and pending batch order/status. Transport retries preserve the logical request; physical attempts and unknown usage remain separately accounted. A truncated response is diagnostic data, not an executable action; a further generation, if affordable, is a new logical request with an appended diagnostic. Recovery reconstructs the same confirmed history without summary calls or duplicate messages. Late responses to a stale cursor cannot trigger actions.
+
+Report controller decisions, physical API requests/retries, tool calls, neural scoring requests, input/output and cached tokens, cost, and latency separately. Batching reduces round trips, concurrency reduces waiting, and prefix caching can reduce prefill work; none demonstrates a quality or speed improvement without measurement. Single-completion and agentic conditions share initial information and final validation, while only the latter receives feedback for repair. Compare quality against total cost rather than assuming that additional or fewer calls establish superiority.
+
+\subsection{Execution Backends without a Docker Requirement}
+\label{apd:harness_isolation}
+
+Construction, serialization, and stream control are independent of execution isolation. A runner accepts an immutable definition, permitted scoring inputs, capabilities, and resource limits, and returns structured results and usage. Suitable backends include an existing remote execution service, a configured Linux process sandbox, or an optional container/VM. The selected design retains generated Python functions. A restricted interpreter for predefined checker/API compositions would reduce this action space and is only an alternative, not the protocol adopted here. No particular service or backend has been deployed in this revision.
+
+A local subprocess with a fixed environment is a lightweight prototype with crash and timeout management, not a filesystem/network security boundary. Generated Python is never imported into the main driver. Same-user subprocesses may access host files, so merely placing audit labels in another process or directory does not ensure isolation. Formal audits require an execution backend or permission boundary that enforces the declared separation. Bash is available only through the selected execution capability; omitting Docker does not grant unrestricted host-shell access.
+
+The trusted evaluator retains oracle labels and service credentials outside the candidate's accessible environment. Workers receive only permitted scoring inputs. Code candidates use separate bounded execution jobs, and scoring state is reset between examples. Model inference can remain in independent API services; worker CPU demand and isolation are separate issues. Limits cover wall time, memory, processes, outputs, and brokered requests, regardless of backend. Cold-start overhead may be amortized over a batch without sharing candidate execution state. Fixed dependencies and service versions permit replay without requiring a specific container image format.
+
+\subsection{Nested Termination, Errors, and Durable Results}
+\label{apd:harness_termination}
+
+\noindent\textbf{Interruption and error-recovery rules.} Recovery is defined at the synthesis-action level. Invalid tool arguments or reward-code/test errors are observations for agent repair. Transient transport/service faults are retried by the harness on the same immutable action input; an infrastructure outage is not labeled as poor reward quality and does not instruct the agent to rewrite the reward. Each error identifies its phase, action outcome, and retry owner (agent, harness, or none), preventing nested automatic and agent retries from multiplying indefinitely.
+
+The checkpoint retains the last confirmed history, current definition/hash, eligible candidates, pending action/request IDs, versions, and consumed/reserved budget. A result already logged is consumed rather than re-executed. A dispatched request with unknown outcome is reconciled or safely retried with explicit duplicate-cost accounting. Incomplete streamed model output is diagnostic data, not a completed tool action. User/process interruption resumes from the last confirmed step only on continuation; budget exhaustion terminates the episode, and environmental/configuration errors remain distinct from semantic validation failure.
+
+A query episode has finite limits on steps, revisions, tool/test/model calls, tokens, component count, and wall time. These are shared across checklist items and retries. The supervisor enforces transport/call timeouts and an independent episode deadline; checking a counter only before a potentially blocking call is insufficient. Repeated invalid actions or unchanged failing definitions trigger a bounded no-progress rule. Hard limits remain effective even if the agent produces superficially different drafts. Completed valid reuse or successful submission ends the episode; exhaustion selects a previously eligible artifact only under a predeclared rule, otherwise records failure.
+
+Input/schema errors and repairable reward-code failures are contained within the affected query. Transient rate limits or runner failures receive bounded backoff charged to the same budgets. Authentication/environment errors, failed durable writes, unknown driver faults, or a persistent infrastructure outage stop the outer run. A circuit breaker avoids spending the full dataset budget on a broken service. EOF, user cancellation, and global budget exhaustion stop intake and trigger bounded cleanup; they never silently mark unfinished jobs as complete. Every event carries an error category and termination reason.
+
+The initial implementation can use a single writer with result/trace JSONL files, a run manifest, and an optional hash library. For a selected definition, persist the library record first, then the complete result record, then update the reconstructible index/checkpoint. The result record is the logical commit. An orphan library entry after a crash is not published for subsequent reuse; a committed result with a stale checkpoint is recovered from the result log. A partial final JSONL record is uncommitted. Concurrent multi-writer implementations require additional transaction/locking semantics.
+
+Resume keys include stable input content, configuration, and the task's recorded library snapshot. Committed records rebuild the library in the original stream order. Attempt IDs, consumed/reserved budgets, and external request IDs survive retries and restart; retries cannot reset all limits. Interrupted attempts remain resumable under explicit continuation. Logical result commits are idempotent, but external API calls are not assumed exactly-once: a request may have completed before a crash, so duplicate cost or unknown usage is logged unless the provider supplies idempotency guarantees.
+
+\subsection{Task Packs and Information Boundaries}
+
+Task packs record the task ID/subtype, contract, schemas, permitted resources, development suite, and oracle/test-builder versions. The harness maintains the sealed audit suite. Splits are created before generating response variants: all variants of one underlying question, code problem, or template stay in one split. Generalization claims require held-out task subtypes/templates, not only randomly held-out responses to familiar problems.
+
+\begin{table}[ht]
+\centering
+\caption{Proposed objective tests for the initial mathematics and code scope. Mutations are retained only when the independent oracle confirms their labels.}
+\small
+\begin{tabularx}{\linewidth}{@{}p{0.18\linewidth}XX@{}}
+\toprule
+\textbf{Test purpose} & \textbf{Mathematics} & \textbf{Code} \\
+\midrule
+Discrimination & Correct vs. incorrect final answers under a trusted equivalence checker. & Passing vs. failing implementations under trusted task tests. \\
+Content sensitivity & Change a sign, value, or unit when the task requires it; confirm the resulting error. & Introduce a boundary or logic error; confirm it is detected by independent tests. \\
+Allowed invariance & Equivalent representations such as $1/2$ and $0.5$ when both are allowed. & Semantics-preserving variable renaming or whitespace changes, checked by execution. \\
+Constraint separation & Cross content correctness with satisfaction/violation of an explicitly required answer format. & Cross functional correctness with required interface/signature compliance. \\
+Execution robustness & Empty output, malformed expressions, and multiple incompatible final answers. & Parse errors, invalid interfaces, nontermination, and task-specified resource violations. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Response pools are built before reward construction from trusted solutions, outputs of fixed candidate models, and validated mutations; their source and generation settings are recorded. Development and audit pools use disjoint base problems and include held-out mutation families for robustness analysis. The harness obtains quality labels before evaluating a candidate reward. For example, a code response that passes exposed examples but fails independent boundary tests is a useful negative for reward auditing. An independent checker does not call the generated parser to establish its own labels. A code oracle certifies behavior only on its declared tests, not program correctness on all possible inputs. Answer-equivalence tests certify final-answer correctness, not the validity of every reasoning step. These limits must accompany results.
+
+The permitted scoring contract explicitly lists which reference answers, public tests, execution APIs, or checker APIs a reward may use. Stronger audit-only tests remain inaccessible to all methods, including the agent. A directly available exact checker is evaluated as an oracle-reward baseline. If direct verification is already sufficient, the study should report that boundary rather than claim an inherent benefit from construction.
+
+\noindent\textbf{Data roles.} Training construction tasks generate teacher traces and reusable library entries. Development tasks tune controller prompts, acceptance rules, calibration, and resource budgets. Final held-out tasks have their own exposed development examples for constructing a program and a sealed audit partition for scoring that program. No audit observations enter construction. The distinction between a held-out task's allowed development examples and its inaccessible audit labels is explicit in every event's provenance.
+
+For the primary held-out evaluation, every method starts from the same library built only from training tasks. Held-out tasks run in isolated workspaces and do not donate artifacts to other held-out tasks. A separate continual-reuse study may grow a library on an ordered construction stream, but uses disjoint audit queries, matched task order across methods, and repeated stream orders. That study is reported separately from unseen-task generalization.
+
+\subsection{Test Reports and Registration}
+
+Each test report contains the artifact hash, suite version, evaluated sample IDs, component scores, oracle comparisons, errors by cause, and aggregate metrics. Errors are retained in the relevant denominator. A failure to construct or finalize an eligible artifact counts against episode success; quality among successful artifacts is additionally reported but is not the sole metric. Pairwise accuracy alone does not determine admission: interface checks, score bounds, task-specific critical constraints, minimum test coverage, and predefined quality thresholds must also pass. Execution permits only declared resources and blocks audit access. Shared source screening rejects explicit example/answer lookup tables; held-out evaluation remains necessary to test generalization.
+
+For binary correct/incorrect examples, fix a reward threshold $b_\tau$ using development data. False acceptance is the fraction of incorrect examples assigned $s\geq b_\tau$, and false rejection is the fraction of correct examples assigned $s<b_\tau$. Use all examples in the relevant class as the denominator; report execution errors separately because a missing score is neither a valid acceptance nor a valid rejection. Admission requires the execution criterion as well as these class diagnostics. Report pairwise discrimination, equality/near-equality behavior, and perturbation results independently of this threshold. The same thresholds and tie rules apply across compared methods; an absent test category is reported as unavailable, not as a perfect score.
+
+Development-test queries and exposed failures are bounded. The final artifact is frozen before audit, and audit results never trigger a retry or replacement of that artifact. If construction fails, a downstream RL run may use the predeclared common fallback, but its use is logged and attributed to construction failure. Partial component execution follows the fixed successful-component mean; an all-component failure yields no score and triggers the downstream invalid-group policy in Section~\ref{sec:library_memory}. Candidate timeouts defined as incorrect task behavior remain valid low-score outcomes.
+
+\subsection{Controlled Comparisons}
+
+\begin{table}[ht]
+\centering
+\caption{Construction controls and the question each comparison answers. All program outputs are evaluated by the same external harness.}
+\small
+\begin{tabularx}{\linewidth}{@{}p{0.25\linewidth}XX@{}}
+\toprule
+\textbf{Condition} & \textbf{Construction behavior} & \textbf{Purpose} \\
+\midrule
+Single completion & Generate one complete program from the shared task pack and catalogue. & Primary non-interactive reward-design baseline. \\
+Independent drafts & Sample multiple programs without feeding scores back; a fixed selector chooses by development metrics. & Control additional sampling and selection under the same total budget. \\
+Self-revision & Revise previous drafts for multiple turns without execution observations. & Isolate extra generation and reflection from test feedback. \\
+Full agent & Inspect, retrieve, write, test, and repair adaptively. & Test whether observed failures improve subsequent designs. \\
+Direct oracle & Use the permitted trusted verifier directly as the reward. & Determine whether reward construction is necessary for this task. \\
+Fixed composition & Use a predefined rule/model combination with equal averaging. & Compare construction with a simple, reproducible alternative. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Single/checklist representation and single-completion/interactive construction are separate factors. Comparisons within each mode share scoring components and account for all component-level calls. All LLM construction conditions share the controller backbone/version, task descriptions, scoring resources, initial library, interface requirements, and development examples. For small catalogues and libraries, full descriptions can be included in every starting context. If retrieval is necessary, the same retrieval facility is exposed in every condition or its information is supplied in advance; only the adaptivity to observations differs. Task analysis must not silently use a stronger auxiliary model. Any learned helper is shared across conditions and its cost counted.
+
+The primary single-completion comparison exposes the same labeled examples but provides no feedback about its generated program before submission. The budget-matched independent-drafts baseline uses the same development evaluator and a fixed, predeclared selection rule with critical-constraint checks and deterministic tie-breaking. Its entire generation and test cost is counted. A quality--cost curve at several common budget limits complements the single-completion result. Final external audit cost is reported separately and is the same measurement stage for all conditions.
+
+Additional ablations have precise interventions: (i) disable construction-time execution, including Bash, candidate validation, and interactive scoring observations, while retaining identical public input files and final external measurement; (ii) remove the library mount and index from the controller while retaining the fixed primitive catalogue; (iii) disallow new custom verifier code and permit only selection or parameterized composition of fixed components; and (iv) remove neural scoring APIs while retaining code-based construction. Removing only \texttt{test\_reward} while retaining Bash is a separate standardized-validator ablation: the agent can still write and run its own diagnostics. Model-API removal is enforced by the proxy, not merely by omitting its tool description. The custom-code and model-API ablations change available resources, so they measure component contributions rather than agentic control alone.
+
+To isolate memory, compare a frozen initial library with an accumulating library on the same construction stream. Neither condition sees audit feedback. Report library hit rate, validated reuse rate, new artifact count, duplicate count, construction cost amortized over reuse, and reward quality. The frozen and growing conditions share the same neural API catalogue. Query routing can separately be compared with a task-metadata rule under the same frozen library.
+
+Report per-task quality and construction success with uncertainty over task units and repeated construction seeds. Where the task mix supports a summary, use a declared task weighting rather than pooling all response pairs and letting large suites dominate. Downstream GRPO comparisons share policy initialization, rollout/training budget, fallback behavior, and held-out evaluation. Offline reward quality and downstream policy quality are separate endpoints.
+
+\subsection{Trace Format and Replay}
+
+An episode is an append-only sequence of events. Required fields are:
+\begin{quote}
+\small\ttfamily
+schema\_version, episode\_id, task\_id, split, step, actor\_version, library\_snapshot, tool\_name, arguments, observation\_ref, observation\_hash, artifact\_before, artifact\_after, suite\_version, status, usage, latency.
+\end{quote}
+The manifest also records prompts, generation settings, dependencies, APIs, budget, seeds, final artifact, mode/checklist plan, and stop reason. Trace events include job/attempt and component IDs, retries, and budget consumption so nested loops can be reconstructed. Content-addressed source files, model cards, observations, and reports preserve the original trajectory. Replaying stored observations and re-executing versioned tools are separate reproducibility checks.
+
+For controller calls, retain prefix/history digests, message cursor, actual request reference/digest, adapter version, logical call and physical attempt IDs, and batch call order. Stored model-visible messages preserve their original roles, IDs, and bounded observations. Automatic finalization is a harness event, not an invented assistant message.
+
+Record visible actions, explicit design summaries, failed drafts, patches, and submissions without requiring hidden reasoning. Audit results are stored separately. Runtime retrieval returns reusable artifacts and short development reports, not prior conversation archives.
+
+\begin{samepage}
+\subsection{Proposed Qwen3-8B Distillation}
+
+Let $\mathcal D_{\mathrm{trace}}$ contain successful, development-validated teacher episodes from training tasks. Every teacher attempt is retained in the raw archive; training selection rules are fixed on the training/development partitions and use no held-out audit outcomes. Intermediate failures within successful episodes remain in their causal order, so the student can learn to respond to actual tool errors and comparison failures. Fully failed episodes are used for failure analysis and may support later training variants; they are not silently relabeled as successful demonstrations.\par
+\end{samepage}
+
+For action tokens $u$ in an assistant message or code submission, use
+\begin{equation}
+\mathcal L_{\mathrm{SFT}}(\theta)
+ =-\mathbb E_{\xi\sim\mathcal D_{\mathrm{trace}}}
+   \sum_{u\in\operatorname{AssistantTokens}(\xi)}
+   \log\pi_\theta(u\mid\xi_{<u}).
+\end{equation}
+Tool observations condition subsequent actions but their tokens are loss-masked; automatic finalization events are not assistant targets. Full-trace examples retain the shared prefix and causal batch order and must fit the declared student context window. Overlength episodes are excluded with counts, or studied as a separately declared windowing variant that preserves failure--repair dependencies; they are not silently relabeled as full traces. The final-program-only control trains on the same task/artifact pairs with intermediate interaction removed; training-token budgets and data repetition are reported to distinguish interaction supervision from additional training compute.
+
+Evaluate both SFT variants, the untrained student, and teacher under identical resources. Report construction success, sealed-audit quality, tool-schema validity, cost, and repair of standardized faulty drafts using real feedback. Hold out templates and mutation families to test generalization beyond program memorization. Student reinforcement learning is outside this revision.

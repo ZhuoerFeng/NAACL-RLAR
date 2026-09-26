@@ -1,0 +1,1298 @@
+{
+  "tokenizer_path": "/Users/andrewfeng/Desktop/overleaf_projects/202605_RLAR/codebase/model_tokeniser",
+  "tokenizer_class": "Qwen2TokenizerFast",
+  "tokenizer_hashes": {
+    "config.json": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+    "generation_config.json": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+  },
+  "versions": {
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "jinja2": "3.1.6"
+  },
+  "tokenizer_model_max_length": 131072,
+  "model_config_max_position_embeddings": 40960,
+  "prompt_method": "apply_chat_template(full prompt, tokenize=True, add_generation_prompt=True, enable_thinking=True/False, truncation=False, padding=False); no additional system prompt or tools",
+  "reference_method": "tokenizer(ground_truth, add_special_tokens=False, truncation=False, padding=False); no generated reasoning assumed",
+  "action": "Statistics only; no token-based filtering or truncation",
+  "splits": {
+    "train": {
+      "input_sha256": "8f46b61607e195e4b84f23c079933775b329f8924868d11724712a488e326b33",
+      "n": 7591,
+      "prompt_thinking": {
+        "n": 7591,
+        "mean": 2893.96,
+        "min": 32.0,
+        "p50": 548.0,
+        "p90": 8777.0,
+        "p95": 12866.5,
+        "p99": 22139.6,
+        "max": 187328.0
+      },
+      "prompt_nonthinking": {
+        "n": 7591,
+        "mean": 2897.96,
+        "min": 36.0,
+        "p50": 552.0,
+        "p90": 8781.0,
+        "p95": 12870.5,
+        "p99": 22143.6,
+        "max": 187332.0
+      },
+      "reference_text": {
+        "n": 7591,
+        "mean": 453.02,
+        "min": 1.0,
+        "p50": 175.0,
+        "p90": 977.0,
+        "p95": 1799.5,
+        "p99": 4374.3,
+        "max": 13094.0
+      },
+      "prompt_over_threshold_thinking": {
+        "4096": 1696,
+        "8192": 834,
+        "10000": 607,
+        "16384": 209,
+        "32768": 23,
+        "40960": 16,
+        "65536": 6,
+        "131072": 2
+      },
+      "prompt_over_threshold_nonthinking": {
+        "4096": 1698,
+        "8192": 834,
+        "10000": 607,
+        "16384": 209,
+        "32768": 23,
+        "40960": 16,
+        "65536": 6,
+        "131072": 2
+      },
+      "reference_over_5000": 46,
+      "nonthinking_minus_thinking": {
+        "4": 7591
+      },
+      "by_source": {
+        "allenai-WildChat-1M-multiturn": {
+          "n": 946,
+          "prompt_thinking": {
+            "n": 946,
+            "mean": 1828.83,
+            "min": 32.0,
+            "p50": 936.5,
+            "p90": 3820.0,
+            "p95": 5788.0,
+            "p99": 15798.85,
+            "max": 25819.0
+          },
+          "prompt_nonthinking": {
+            "n": 946,
+            "mean": 1832.83,
+            "min": 36.0,
+            "p50": 940.5,
+            "p90": 3824.0,
+            "p95": 5792.0,
+            "p99": 15802.85,
+            "max": 25823.0
+          },
+          "reference_text": {
+            "n": 946,
+            "mean": 413.47,
+            "min": 1.0,
+            "p50": 346.0,
+            "p90": 790.5,
+            "p95": 987.5,
+            "p99": 1538.95,
+            "max": 4096.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 75,
+            "8192": 31,
+            "10000": 19,
+            "16384": 9,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 75,
+            "8192": 31,
+            "10000": 19,
+            "16384": 9,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "arxiv-summarization": {
+          "n": 760,
+          "prompt_thinking": {
+            "n": 760,
+            "mean": 9747.81,
+            "min": 126.0,
+            "p50": 7406.0,
+            "p90": 17851.6,
+            "p95": 21434.85,
+            "p99": 44985.39,
+            "max": 187328.0
+          },
+          "prompt_nonthinking": {
+            "n": 760,
+            "mean": 9751.81,
+            "min": 130.0,
+            "p50": 7410.0,
+            "p90": 17855.6,
+            "p95": 21438.85,
+            "p99": 44989.39,
+            "max": 187332.0
+          },
+          "reference_text": {
+            "n": 760,
+            "mean": 396.39,
+            "min": 34.0,
+            "p50": 210.5,
+            "p90": 459.7,
+            "p95": 835.15,
+            "p99": 4896.88,
+            "max": 7418.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 609,
+            "8192": 337,
+            "10000": 255,
+            "16384": 96,
+            "32768": 14,
+            "40960": 12,
+            "65536": 4,
+            "131072": 2
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 610,
+            "8192": 337,
+            "10000": 255,
+            "16384": 96,
+            "32768": 14,
+            "40960": 12,
+            "65536": 4,
+            "131072": 2
+          },
+          "reference_over_5000": 7
+        },
+        "english-french-translation_en-fr": {
+          "n": 731,
+          "prompt_thinking": {
+            "n": 731,
+            "mean": 81.08,
+            "min": 59.0,
+            "p50": 79.0,
+            "p90": 97.0,
+            "p95": 104.0,
+            "p99": 131.5,
+            "max": 203.0
+          },
+          "prompt_nonthinking": {
+            "n": 731,
+            "mean": 85.08,
+            "min": 63.0,
+            "p50": 83.0,
+            "p90": 101.0,
+            "p95": 108.0,
+            "p99": 135.5,
+            "max": 207.0
+          },
+          "reference_text": {
+            "n": 731,
+            "mean": 39.03,
+            "min": 6.0,
+            "p50": 36.0,
+            "p90": 62.0,
+            "p95": 73.0,
+            "p99": 103.2,
+            "max": 196.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "english-french-translation_fr-en": {
+          "n": 776,
+          "prompt_thinking": {
+            "n": 776,
+            "mean": 91.41,
+            "min": 58.0,
+            "p50": 89.0,
+            "p90": 114.0,
+            "p95": 123.25,
+            "p99": 153.5,
+            "max": 186.0
+          },
+          "prompt_nonthinking": {
+            "n": 776,
+            "mean": 95.41,
+            "min": 62.0,
+            "p50": 93.0,
+            "p90": 118.0,
+            "p95": 127.25,
+            "p99": 157.5,
+            "max": 190.0
+          },
+          "reference_text": {
+            "n": 776,
+            "mean": 27.52,
+            "min": 3.0,
+            "p50": 25.0,
+            "p90": 43.5,
+            "p95": 50.25,
+            "p99": 73.0,
+            "max": 102.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "essay_abs2text": {
+          "n": 933,
+          "prompt_thinking": {
+            "n": 933,
+            "mean": 157.25,
+            "min": 133.0,
+            "p50": 156.0,
+            "p90": 169.0,
+            "p95": 173.0,
+            "p99": 183.68,
+            "max": 211.0
+          },
+          "prompt_nonthinking": {
+            "n": 933,
+            "mean": 161.25,
+            "min": 137.0,
+            "p50": 160.0,
+            "p90": 173.0,
+            "p95": 177.0,
+            "p99": 187.68,
+            "max": 215.0
+          },
+          "reference_text": {
+            "n": 933,
+            "mean": 1908.01,
+            "min": 204.0,
+            "p50": 1413.0,
+            "p90": 3775.4,
+            "p95": 4751.2,
+            "p99": 8610.36,
+            "max": 13094.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 39
+        },
+        "essay_infilling": {
+          "n": 929,
+          "prompt_thinking": {
+            "n": 929,
+            "mean": 1881.42,
+            "min": 98.0,
+            "p50": 1436.0,
+            "p90": 3687.0,
+            "p95": 4492.2,
+            "p99": 7867.52,
+            "max": 28146.0
+          },
+          "prompt_nonthinking": {
+            "n": 929,
+            "mean": 1885.42,
+            "min": 102.0,
+            "p50": 1440.0,
+            "p90": 3691.0,
+            "p95": 4496.2,
+            "p99": 7871.52,
+            "max": 28150.0
+          },
+          "reference_text": {
+            "n": 929,
+            "mean": 129.78,
+            "min": 5.0,
+            "p50": 114.0,
+            "p90": 247.0,
+            "p95": 281.6,
+            "p99": 380.48,
+            "max": 1028.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 59,
+            "8192": 9,
+            "10000": 2,
+            "16384": 2,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 60,
+            "8192": 9,
+            "10000": 2,
+            "16384": 2,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "govreport-summarization": {
+          "n": 746,
+          "prompt_thinking": {
+            "n": 746,
+            "mean": 9986.81,
+            "min": 222.0,
+            "p50": 8449.5,
+            "p90": 17421.0,
+            "p95": 22137.0,
+            "p99": 35187.4,
+            "max": 87246.0
+          },
+          "prompt_nonthinking": {
+            "n": 746,
+            "mean": 9990.81,
+            "min": 226.0,
+            "p50": 8453.5,
+            "p90": 17425.0,
+            "p95": 22141.0,
+            "p99": 35191.4,
+            "max": 87250.0
+          },
+          "reference_text": {
+            "n": 746,
+            "mean": 626.75,
+            "min": 93.0,
+            "p50": 653.5,
+            "p90": 887.0,
+            "p95": 947.5,
+            "p99": 1030.1,
+            "max": 1374.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 625,
+            "8192": 386,
+            "10000": 291,
+            "16384": 93,
+            "32768": 9,
+            "40960": 4,
+            "65536": 2,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 625,
+            "8192": 386,
+            "10000": 291,
+            "16384": 93,
+            "32768": 9,
+            "40960": 4,
+            "65536": 2,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "gsm8k": {
+          "n": 1000,
+          "prompt_thinking": {
+            "n": 1000,
+            "mean": 99.92,
+            "min": 61.0,
+            "p50": 96.0,
+            "p90": 129.1,
+            "p95": 140.0,
+            "p99": 167.0,
+            "max": 229.0
+          },
+          "prompt_nonthinking": {
+            "n": 1000,
+            "mean": 103.92,
+            "min": 65.0,
+            "p50": 100.0,
+            "p90": 133.1,
+            "p95": 144.0,
+            "p99": 171.0,
+            "max": 233.0
+          },
+          "reference_text": {
+            "n": 1000,
+            "mean": 117.94,
+            "min": 29.0,
+            "p50": 108.0,
+            "p90": 190.1,
+            "p95": 216.0,
+            "p99": 274.01,
+            "max": 348.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "pubmed-summarization": {
+          "n": 770,
+          "prompt_thinking": {
+            "n": 770,
+            "mean": 4227.0,
+            "min": 69.0,
+            "p50": 3556.5,
+            "p90": 7827.4,
+            "p95": 10053.25,
+            "p99": 16615.96,
+            "max": 20711.0
+          },
+          "prompt_nonthinking": {
+            "n": 770,
+            "mean": 4231.0,
+            "min": 73.0,
+            "p50": 3560.5,
+            "p90": 7831.4,
+            "p95": 10057.25,
+            "p99": 16619.96,
+            "max": 20715.0
+          },
+          "reference_text": {
+            "n": 770,
+            "mean": 273.19,
+            "min": 57.0,
+            "p50": 268.0,
+            "p90": 426.2,
+            "p95": 457.55,
+            "p99": 550.34,
+            "max": 643.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 328,
+            "8192": 71,
+            "10000": 40,
+            "16384": 9,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 328,
+            "8192": 71,
+            "10000": 40,
+            "16384": 9,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        }
+      },
+      "longest_prompts": [
+        {
+          "split": "train",
+          "row": 5419,
+          "original_row": 6261,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 187328,
+          "prompt_tokens_nonthinking": 187332,
+          "reference_tokens": 280
+        },
+        {
+          "split": "train",
+          "row": 6188,
+          "original_row": 7141,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 151480,
+          "prompt_tokens_nonthinking": 151484,
+          "reference_tokens": 475
+        },
+        {
+          "split": "train",
+          "row": 3889,
+          "original_row": 4491,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 87246,
+          "prompt_tokens_nonthinking": 87250,
+          "reference_tokens": 499
+        },
+        {
+          "split": "train",
+          "row": 5432,
+          "original_row": 6276,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 81007,
+          "prompt_tokens_nonthinking": 81011,
+          "reference_tokens": 634
+        },
+        {
+          "split": "train",
+          "row": 3122,
+          "original_row": 3623,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 73414,
+          "prompt_tokens_nonthinking": 73418,
+          "reference_tokens": 728
+        },
+        {
+          "split": "train",
+          "row": 4732,
+          "original_row": 5469,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 65668,
+          "prompt_tokens_nonthinking": 65672,
+          "reference_tokens": 830
+        },
+        {
+          "split": "train",
+          "row": 4624,
+          "original_row": 5346,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 63377,
+          "prompt_tokens_nonthinking": 63381,
+          "reference_tokens": 682
+        },
+        {
+          "split": "train",
+          "row": 3874,
+          "original_row": 4474,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 58248,
+          "prompt_tokens_nonthinking": 58252,
+          "reference_tokens": 595
+        },
+        {
+          "split": "train",
+          "row": 5811,
+          "original_row": 6715,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 56677,
+          "prompt_tokens_nonthinking": 56681,
+          "reference_tokens": 133
+        },
+        {
+          "split": "train",
+          "row": 254,
+          "original_row": 281,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 48928,
+          "prompt_tokens_nonthinking": 48932,
+          "reference_tokens": 1033
+        }
+      ]
+    },
+    "valid": {
+      "input_sha256": "0fa365222cd9f6426a4a32beb11f5c5d9e8839e9538683db5dfc5ebc2d4a0b9b",
+      "n": 237,
+      "prompt_thinking": {
+        "n": 237,
+        "mean": 2519.69,
+        "min": 65.0,
+        "p50": 282.0,
+        "p90": 8025.4,
+        "p95": 10730.6,
+        "p99": 21037.44,
+        "max": 23198.0
+      },
+      "prompt_nonthinking": {
+        "n": 237,
+        "mean": 2523.69,
+        "min": 69.0,
+        "p50": 286.0,
+        "p90": 8029.4,
+        "p95": 10734.6,
+        "p99": 21041.44,
+        "max": 23202.0
+      },
+      "reference_text": {
+        "n": 237,
+        "mean": 481.89,
+        "min": 6.0,
+        "p50": 155.0,
+        "p90": 916.6,
+        "p95": 1658.8,
+        "p99": 5428.8,
+        "max": 9587.0
+      },
+      "prompt_over_threshold_thinking": {
+        "4096": 46,
+        "8192": 24,
+        "10000": 17,
+        "16384": 7,
+        "32768": 0,
+        "40960": 0,
+        "65536": 0,
+        "131072": 0
+      },
+      "prompt_over_threshold_nonthinking": {
+        "4096": 46,
+        "8192": 24,
+        "10000": 17,
+        "16384": 7,
+        "32768": 0,
+        "40960": 0,
+        "65536": 0,
+        "131072": 0
+      },
+      "reference_over_5000": 4,
+      "nonthinking_minus_thinking": {
+        "4": 237
+      },
+      "by_source": {
+        "allenai-WildChat-1M-multiturn": {
+          "n": 36,
+          "prompt_thinking": {
+            "n": 36,
+            "mean": 1295.06,
+            "min": 96.0,
+            "p50": 993.0,
+            "p90": 2633.0,
+            "p95": 3073.75,
+            "p99": 4461.05,
+            "max": 4929.0
+          },
+          "prompt_nonthinking": {
+            "n": 36,
+            "mean": 1299.06,
+            "min": 100.0,
+            "p50": 997.0,
+            "p90": 2637.0,
+            "p95": 3077.75,
+            "p99": 4465.05,
+            "max": 4933.0
+          },
+          "reference_text": {
+            "n": 36,
+            "mean": 404.14,
+            "min": 24.0,
+            "p50": 293.5,
+            "p90": 844.5,
+            "p95": 1020.25,
+            "p99": 1331.35,
+            "max": 1450.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 1,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 1,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "arxiv-summarization": {
+          "n": 21,
+          "prompt_thinking": {
+            "n": 21,
+            "mean": 8472.05,
+            "min": 1671.0,
+            "p50": 6763.0,
+            "p90": 16926.0,
+            "p95": 16993.0,
+            "p99": 21048.2,
+            "max": 22062.0
+          },
+          "prompt_nonthinking": {
+            "n": 21,
+            "mean": 8476.05,
+            "min": 1675.0,
+            "p50": 6767.0,
+            "p90": 16930.0,
+            "p95": 16997.0,
+            "p99": 21052.2,
+            "max": 22066.0
+          },
+          "reference_text": {
+            "n": 21,
+            "mean": 382.86,
+            "min": 29.0,
+            "p50": 207.0,
+            "p90": 422.0,
+            "p95": 589.0,
+            "p99": 3158.6,
+            "max": 3801.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 19,
+            "8192": 8,
+            "10000": 5,
+            "16384": 3,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 19,
+            "8192": 8,
+            "10000": 5,
+            "16384": 3,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "english-french-translation_en-fr": {
+          "n": 19,
+          "prompt_thinking": {
+            "n": 19,
+            "mean": 83.95,
+            "min": 68.0,
+            "p50": 80.0,
+            "p90": 109.6,
+            "p95": 120.8,
+            "p99": 126.56,
+            "max": 128.0
+          },
+          "prompt_nonthinking": {
+            "n": 19,
+            "mean": 87.95,
+            "min": 72.0,
+            "p50": 84.0,
+            "p90": 113.6,
+            "p95": 124.8,
+            "p99": 130.56,
+            "max": 132.0
+          },
+          "reference_text": {
+            "n": 19,
+            "mean": 40.58,
+            "min": 20.0,
+            "p50": 34.0,
+            "p90": 70.6,
+            "p95": 75.6,
+            "p99": 94.32,
+            "max": 99.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "english-french-translation_fr-en": {
+          "n": 33,
+          "prompt_thinking": {
+            "n": 33,
+            "mean": 92.3,
+            "min": 65.0,
+            "p50": 92.0,
+            "p90": 111.8,
+            "p95": 123.0,
+            "p99": 134.72,
+            "max": 136.0
+          },
+          "prompt_nonthinking": {
+            "n": 33,
+            "mean": 96.3,
+            "min": 69.0,
+            "p50": 96.0,
+            "p90": 115.8,
+            "p95": 127.0,
+            "p99": 138.72,
+            "max": 140.0
+          },
+          "reference_text": {
+            "n": 33,
+            "mean": 29.0,
+            "min": 9.0,
+            "p50": 28.0,
+            "p90": 44.2,
+            "p95": 47.2,
+            "p99": 58.52,
+            "max": 63.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "essay_abs2text": {
+          "n": 28,
+          "prompt_thinking": {
+            "n": 28,
+            "mean": 156.61,
+            "min": 142.0,
+            "p50": 157.0,
+            "p90": 166.9,
+            "p95": 169.65,
+            "p99": 172.19,
+            "max": 173.0
+          },
+          "prompt_nonthinking": {
+            "n": 28,
+            "mean": 160.61,
+            "min": 146.0,
+            "p50": 161.0,
+            "p90": 170.9,
+            "p95": 173.65,
+            "p99": 176.19,
+            "max": 177.0
+          },
+          "reference_text": {
+            "n": 28,
+            "mean": 2273.64,
+            "min": 339.0,
+            "p50": 1398.5,
+            "p90": 5362.5,
+            "p95": 6508.45,
+            "p99": 8902.55,
+            "max": 9587.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 4
+        },
+        "essay_infilling": {
+          "n": 28,
+          "prompt_thinking": {
+            "n": 28,
+            "mean": 1394.75,
+            "min": 102.0,
+            "p50": 1614.0,
+            "p90": 2370.4,
+            "p95": 2581.3,
+            "p99": 3063.55,
+            "max": 3208.0
+          },
+          "prompt_nonthinking": {
+            "n": 28,
+            "mean": 1398.75,
+            "min": 106.0,
+            "p50": 1618.0,
+            "p90": 2374.4,
+            "p95": 2585.3,
+            "p99": 3067.55,
+            "max": 3212.0
+          },
+          "reference_text": {
+            "n": 28,
+            "mean": 133.0,
+            "min": 6.0,
+            "p50": 103.5,
+            "p90": 265.7,
+            "p95": 283.55,
+            "p99": 312.28,
+            "max": 322.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "govreport-summarization": {
+          "n": 20,
+          "prompt_thinking": {
+            "n": 20,
+            "mean": 10367.75,
+            "min": 2253.0,
+            "p50": 8404.0,
+            "p90": 19598.7,
+            "p95": 23050.75,
+            "p99": 23168.55,
+            "max": 23198.0
+          },
+          "prompt_nonthinking": {
+            "n": 20,
+            "mean": 10371.75,
+            "min": 2257.0,
+            "p50": 8408.0,
+            "p90": 19602.7,
+            "p95": 23054.75,
+            "p99": 23172.55,
+            "max": 23202.0
+          },
+          "reference_text": {
+            "n": 20,
+            "mean": 667.55,
+            "min": 187.0,
+            "p50": 735.0,
+            "p90": 892.9,
+            "p95": 925.55,
+            "p99": 1025.11,
+            "max": 1050.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 17,
+            "8192": 10,
+            "10000": 8,
+            "16384": 4,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 17,
+            "8192": 10,
+            "10000": 8,
+            "16384": 4,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "gsm8k": {
+          "n": 30,
+          "prompt_thinking": {
+            "n": 30,
+            "mean": 98.97,
+            "min": 73.0,
+            "p50": 95.5,
+            "p90": 123.5,
+            "p95": 139.75,
+            "p99": 152.65,
+            "max": 157.0
+          },
+          "prompt_nonthinking": {
+            "n": 30,
+            "mean": 102.97,
+            "min": 77.0,
+            "p50": 99.5,
+            "p90": 127.5,
+            "p95": 143.75,
+            "p99": 156.65,
+            "max": 161.0
+          },
+          "reference_text": {
+            "n": 30,
+            "mean": 112.97,
+            "min": 47.0,
+            "p50": 116.0,
+            "p90": 151.5,
+            "p95": 181.3,
+            "p99": 211.94,
+            "max": 216.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 0,
+            "8192": 0,
+            "10000": 0,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        },
+        "pubmed-summarization": {
+          "n": 22,
+          "prompt_thinking": {
+            "n": 22,
+            "mean": 5192.18,
+            "min": 184.0,
+            "p50": 3716.0,
+            "p90": 10624.0,
+            "p95": 11119.1,
+            "p99": 13703.02,
+            "max": 14383.0
+          },
+          "prompt_nonthinking": {
+            "n": 22,
+            "mean": 5196.18,
+            "min": 188.0,
+            "p50": 3720.0,
+            "p90": 10628.0,
+            "p95": 11123.1,
+            "p99": 13707.02,
+            "max": 14387.0
+          },
+          "reference_text": {
+            "n": 22,
+            "mean": 262.09,
+            "min": 92.0,
+            "p50": 246.5,
+            "p90": 426.5,
+            "p95": 456.65,
+            "p99": 477.75,
+            "max": 483.0
+          },
+          "prompt_over_threshold_thinking": {
+            "4096": 9,
+            "8192": 6,
+            "10000": 4,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "prompt_over_threshold_nonthinking": {
+            "4096": 9,
+            "8192": 6,
+            "10000": 4,
+            "16384": 0,
+            "32768": 0,
+            "40960": 0,
+            "65536": 0,
+            "131072": 0
+          },
+          "reference_over_5000": 0
+        }
+      },
+      "longest_prompts": [
+        {
+          "split": "valid",
+          "row": 179,
+          "original_row": 198,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 23198,
+          "prompt_tokens_nonthinking": 23202,
+          "reference_tokens": 650
+        },
+        {
+          "split": "valid",
+          "row": 53,
+          "original_row": 59,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 23043,
+          "prompt_tokens_nonthinking": 23047,
+          "reference_tokens": 218
+        },
+        {
+          "split": "valid",
+          "row": 25,
+          "original_row": 27,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 22062,
+          "prompt_tokens_nonthinking": 22066,
+          "reference_tokens": 127
+        },
+        {
+          "split": "valid",
+          "row": 114,
+          "original_row": 129,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 19216,
+          "prompt_tokens_nonthinking": 19220,
+          "reference_tokens": 187
+        },
+        {
+          "split": "valid",
+          "row": 116,
+          "original_row": 131,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 17552,
+          "prompt_tokens_nonthinking": 17556,
+          "reference_tokens": 1050
+        },
+        {
+          "split": "valid",
+          "row": 34,
+          "original_row": 37,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 16993,
+          "prompt_tokens_nonthinking": 16997,
+          "reference_tokens": 105
+        },
+        {
+          "split": "valid",
+          "row": 12,
+          "original_row": 12,
+          "source": "arxiv-summarization",
+          "prompt_tokens_thinking": 16926,
+          "prompt_tokens_nonthinking": 16930,
+          "reference_tokens": 92
+        },
+        {
+          "split": "valid",
+          "row": 150,
+          "original_row": 166,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 16258,
+          "prompt_tokens_nonthinking": 16262,
+          "reference_tokens": 890
+        },
+        {
+          "split": "valid",
+          "row": 74,
+          "original_row": 83,
+          "source": "govreport-summarization",
+          "prompt_tokens_thinking": 15933,
+          "prompt_tokens_nonthinking": 15937,
+          "reference_tokens": 745
+        },
+        {
+          "split": "valid",
+          "row": 123,
+          "original_row": 139,
+          "source": "pubmed-summarization",
+          "prompt_tokens_thinking": 14383,
+          "prompt_tokens_nonthinking": 14387,
+          "reference_tokens": 483
+        }
+      ]
+    }
+  }
+}

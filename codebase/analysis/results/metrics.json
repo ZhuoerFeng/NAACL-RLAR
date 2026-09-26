@@ -1,0 +1,1592 @@
+{
+  "created_utc": "2026-09-23T10:14:24.890010+00:00",
+  "files": {
+    "train": {
+      "rows": 8604,
+      "bytes": 111734744,
+      "sha256": "671a134cebe65cc2727d69fd4bd2e1a0180cd1fd928abe8ffcb1656bbe13a52f",
+      "schema": "prompt: list<element: struct<content: string, role: string>>\n  child 0, element: struct<content: string, role: string>\n      child 0, content: string\n      child 1, role: string\ndata_source: string\nextra_info: struct<answer: string, function_call: string, question: string, split: string>\n  child 0, answer: string\n  child 1, function_call: string\n  child 2, question: string\n  child 3, split: string\nreward_model: struct<ground_truth: string, style: string>\n  child 0, ground_truth: string\n  child 1, style: string\nability: string\n-- schema metadata --\npandas: '{\"index_columns\": [], \"column_indexes\": [], \"columns\": [{\"name\":' + 670",
+      "top_level_nulls": {
+        "prompt": 0,
+        "data_source": 0,
+        "extra_info": 0,
+        "reward_model": 0,
+        "ability": 0
+      }
+    },
+    "valid": {
+      "rows": 265,
+      "bytes": 3179711,
+      "sha256": "0a6bc8bf1ee565f740a46bfb0e3742612f108e38392c69849e220f2629119a36",
+      "schema": "prompt: list<element: struct<content: string, role: string>>\n  child 0, element: struct<content: string, role: string>\n      child 0, content: string\n      child 1, role: string\ndata_source: string\nextra_info: struct<answer: string, function_call: string, question: string, split: string>\n  child 0, answer: string\n  child 1, function_call: string\n  child 2, question: string\n  child 3, split: string\nreward_model: struct<ground_truth: string, style: string>\n  child 0, ground_truth: string\n  child 1, style: string\nability: string\n-- schema metadata --\npandas: '{\"index_columns\": [], \"column_indexes\": [], \"columns\": [{\"name\":' + 670",
+      "top_level_nulls": {
+        "prompt": 0,
+        "data_source": 0,
+        "extra_info": 0,
+        "reward_model": 0,
+        "ability": 0
+      }
+    }
+  },
+  "schemas_equal": true,
+  "by_source": {
+    "train": {
+      "allenai-WildChat-1M-multiturn": {
+        "n": 957,
+        "fraction": 0.11122733612273361,
+        "prompt_chars": {
+          "n": 957,
+          "mean": 7948.2,
+          "min": 53.0,
+          "p50": 4016.0,
+          "p90": 17311.4,
+          "p95": 23989.8,
+          "p99": 64335.96,
+          "max": 131740.0
+        },
+        "answer_chars": {
+          "n": 957,
+          "mean": 1853.66,
+          "min": 4.0,
+          "p50": 1569.0,
+          "p90": 3545.4,
+          "p95": 4296.0,
+          "p99": 6444.28,
+          "max": 12306.0
+        },
+        "prompt_char_share": 0.07787711252250307,
+        "message_count": {
+          "n": 957,
+          "mean": 6.98,
+          "min": 3.0,
+          "p50": 5.0,
+          "p90": 13.0,
+          "p95": 19.0,
+          "p99": 37.0,
+          "max": 69.0
+        },
+        "style": {
+          "model": 957
+        },
+        "function": {
+          "compute_skywork_llama_score": 606,
+          "compute_reward_reward_score": 180,
+          "compute_seed_score": 41,
+          "compute_deberta_reward_score": 101,
+          "compute_gpt2_large_helpful_score": 20,
+          "reference_citation": 1,
+          "": 3,
+          "structure_compliance": 1,
+          "keyword_presence": 1,
+          "compute_length_score": 2,
+          "stepwise_completeness": 1
+        },
+        "metadata_split": {
+          "train": 957
+        },
+        "row_range": [
+          4,
+          7579
+        ]
+      },
+      "arxiv-summarization": {
+        "n": 760,
+        "fraction": 0.08833100883310088,
+        "prompt_chars": {
+          "n": 760,
+          "mean": 35238.67,
+          "min": 479.0,
+          "p50": 28032.5,
+          "p90": 63088.7,
+          "p95": 77084.8,
+          "p99": 142329.61,
+          "max": 556071.0
+        },
+        "answer_chars": {
+          "n": 760,
+          "mean": 1711.48,
+          "min": 131.0,
+          "p50": 998.0,
+          "p90": 1940.2,
+          "p95": 3540.65,
+          "p99": 19919.03,
+          "max": 27045.0
+        },
+        "prompt_char_share": 0.27419663078385836,
+        "message_count": {
+          "n": 760,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 760
+        },
+        "function": {
+          "compute_seed_score": 24,
+          "compute_skywork_llama_score": 458,
+          "compute_deberta_reward_score": 107,
+          "compute_reward_reward_score": 170,
+          "": 1
+        },
+        "metadata_split": {
+          "train": 760
+        },
+        "row_range": [
+          49,
+          7598
+        ]
+      },
+      "english-french-translation_en-fr": {
+        "n": 731,
+        "fraction": 0.08496048349604834,
+        "prompt_chars": {
+          "n": 731,
+          "mean": 340.15,
+          "min": 238.0,
+          "p50": 327.0,
+          "p90": 415.0,
+          "p95": 453.5,
+          "p99": 530.1,
+          "max": 976.0
+        },
+        "answer_chars": {
+          "n": 731,
+          "mean": 135.87,
+          "min": 18.0,
+          "p50": 122.0,
+          "p90": 225.0,
+          "p95": 264.0,
+          "p99": 364.5,
+          "max": 729.0
+        },
+        "prompt_char_share": 0.002545780317829183,
+        "message_count": {
+          "n": 731,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 731
+        },
+        "function": {
+          "compute_seed_score": 731
+        },
+        "metadata_split": {
+          "train": 731
+        },
+        "row_range": [
+          22,
+          7608
+        ]
+      },
+      "english-french-translation_fr-en": {
+        "n": 776,
+        "fraction": 0.0901906090190609,
+        "prompt_chars": {
+          "n": 776,
+          "mean": 354.79,
+          "min": 235.0,
+          "p50": 343.0,
+          "p90": 441.0,
+          "p95": 470.75,
+          "p99": 549.0,
+          "max": 739.0
+        },
+        "answer_chars": {
+          "n": 776,
+          "mean": 117.37,
+          "min": 14.0,
+          "p50": 107.0,
+          "p90": 191.5,
+          "p95": 217.25,
+          "p99": 280.0,
+          "max": 434.0
+        },
+        "prompt_char_share": 0.0028187852893352045,
+        "message_count": {
+          "n": 776,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 776
+        },
+        "function": {
+          "compute_seed_score": 775,
+          "compute_skywork_llama_score": 1
+        },
+        "metadata_split": {
+          "train": 776
+        },
+        "row_range": [
+          0,
+          7592
+        ]
+      },
+      "essay_abs2text": {
+        "n": 933,
+        "fraction": 0.10843793584379359,
+        "prompt_chars": {
+          "n": 933,
+          "mean": 855.26,
+          "min": 720.0,
+          "p50": 853.0,
+          "p90": 914.0,
+          "p95": 936.0,
+          "p99": 962.72,
+          "max": 1209.0
+        },
+        "answer_chars": {
+          "n": 933,
+          "mean": 9572.6,
+          "min": 1103.0,
+          "p50": 7064.0,
+          "p90": 19094.4,
+          "p95": 23523.8,
+          "p99": 42946.0,
+          "max": 68374.0
+        },
+        "prompt_char_share": 0.008169764637463835,
+        "message_count": {
+          "n": 933,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 933
+        },
+        "function": {
+          "compute_skywork_llama_score": 492,
+          "compute_reward_reward_score": 255,
+          "compute_deberta_reward_score": 157,
+          "compute_gpt2_large_helpful_score": 8,
+          "compute_length_score": 21
+        },
+        "metadata_split": {
+          "train": 933
+        },
+        "row_range": [
+          1,
+          7610
+        ]
+      },
+      "essay_infilling": {
+        "n": 929,
+        "fraction": 0.10797303579730358,
+        "prompt_chars": {
+          "n": 929,
+          "mean": 9287.74,
+          "min": 478.0,
+          "p50": 7094.0,
+          "p90": 18047.8,
+          "p95": 22229.6,
+          "p99": 38566.68,
+          "max": 136632.0
+        },
+        "answer_chars": {
+          "n": 929,
+          "mean": 648.77,
+          "min": 7.0,
+          "p50": 568.0,
+          "p90": 1253.8,
+          "p95": 1478.6,
+          "p99": 1819.0,
+          "max": 9191.0
+        },
+        "prompt_char_share": 0.08833946366773257,
+        "message_count": {
+          "n": 929,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 929
+        },
+        "function": {
+          "compute_skywork_llama_score": 707,
+          "compute_reward_reward_score": 148,
+          "compute_deberta_reward_score": 74
+        },
+        "metadata_split": {
+          "train": 929
+        },
+        "row_range": [
+          17,
+          7586
+        ],
+        "blank_marker_counts": {
+          "1": 929
+        }
+      },
+      "govreport-summarization": {
+        "n": 746,
+        "fraction": 0.08670385867038587,
+        "prompt_chars": {
+          "n": 746,
+          "mean": 51199.6,
+          "min": 1038.0,
+          "p50": 43233.5,
+          "p90": 91966.0,
+          "p95": 112727.75,
+          "p99": 164400.55,
+          "max": 441802.0
+        },
+        "answer_chars": {
+          "n": 746,
+          "mean": 3228.6,
+          "min": 464.0,
+          "p50": 3338.5,
+          "p90": 4638.5,
+          "p95": 4894.75,
+          "p99": 5180.85,
+          "max": 7197.0
+        },
+        "prompt_char_share": 0.39105186046053997,
+        "message_count": {
+          "n": 746,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 746
+        },
+        "function": {
+          "compute_reward_reward_score": 398,
+          "compute_skywork_llama_score": 294,
+          "key_information_coverage": 25,
+          "compute_deberta_reward_score": 24,
+          "compute_gpt2_large_helpful_score": 3,
+          "compute_seed_score": 1,
+          "": 1
+        },
+        "metadata_split": {
+          "train": 746
+        },
+        "row_range": [
+          44,
+          7647
+        ]
+      },
+      "gsm8k": {
+        "n": 1000,
+        "fraction": 0.11622501162250116,
+        "prompt_chars": {
+          "n": 1000,
+          "mean": 364.5,
+          "min": 198.0,
+          "p50": 347.0,
+          "p90": 487.1,
+          "p95": 534.05,
+          "p99": 652.05,
+          "max": 988.0
+        },
+        "answer_chars": {
+          "n": 1000,
+          "mean": 277.88,
+          "min": 51.0,
+          "p50": 252.0,
+          "p90": 470.1,
+          "p95": 528.05,
+          "p99": 701.38,
+          "max": 981.0
+        },
+        "prompt_char_share": 0.003731818754512926,
+        "message_count": {
+          "n": 1000,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "model": 1000
+        },
+        "function": {
+          "compute_skywork_llama_score": 967,
+          "exact_numeric_match": 3,
+          "final_answer_correctness": 29,
+          "numeric_accuracy": 1
+        },
+        "metadata_split": {
+          "train": 1000
+        },
+        "row_range": [
+          7599,
+          8603
+        ],
+        "answers_with_hash_marker": 1000,
+        "answers_with_numeric_suffix": 1000
+      },
+      "pubmed-summarization": {
+        "n": 790,
+        "fraction": 0.09181775918177591,
+        "prompt_chars": {
+          "n": 790,
+          "mean": 17778.66,
+          "min": 205.0,
+          "p50": 15358.5,
+          "p90": 33365.4,
+          "p95": 40253.95,
+          "p99": 64664.75,
+          "max": 90636.0
+        },
+        "answer_chars": {
+          "n": 790,
+          "mean": 1238.12,
+          "min": 174.0,
+          "p50": 1271.0,
+          "p90": 1848.1,
+          "p95": 1953.65,
+          "p99": 2145.97,
+          "max": 2401.0
+        },
+        "prompt_char_share": 0.1437987368649184,
+        "message_count": {
+          "n": 790,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 790
+        },
+        "function": {
+          "compute_reward_reward_score": 274,
+          "compute_skywork_llama_score": 375,
+          "compute_deberta_reward_score": 132,
+          "compute_seed_score": 8,
+          "compute_gpt2_large_helpful_score": 1
+        },
+        "metadata_split": {
+          "train": 790
+        },
+        "row_range": [
+          15,
+          7587
+        ]
+      },
+      "tulu3-sft-reused-on-policy-8b": {
+        "n": 982,
+        "fraction": 0.11413296141329614,
+        "prompt_chars": {
+          "n": 982,
+          "mean": 742.99,
+          "min": 2.0,
+          "p50": 369.5,
+          "p90": 1484.7,
+          "p95": 1941.55,
+          "p99": 5424.85,
+          "max": 12924.0
+        },
+        "answer_chars": {
+          "n": 982,
+          "mean": 1622.91,
+          "min": 2.0,
+          "p50": 1377.0,
+          "p90": 3347.9,
+          "p95": 3842.1,
+          "p99": 6837.61,
+          "max": 10977.0
+        },
+        "prompt_char_share": 0.007470046701306474,
+        "message_count": {
+          "n": 982,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "model": 982
+        },
+        "function": {
+          "compute_skywork_llama_score": 620,
+          "explicit_irrelevance": 130,
+          "contradiction_detection": 63,
+          "compute_reward_reward_score": 60,
+          "compute_deberta_reward_score": 50,
+          "topic_classifier": 17,
+          "compute_seed_score": 5,
+          "compute_gpt2_large_helpful_score": 21,
+          "topic_divergence": 7,
+          "forbidden_content": 1,
+          "reference_match": 2,
+          "negative_relevance_score": 1,
+          "section_coverage": 1,
+          "": 1,
+          "exact_output_match": 3
+        },
+        "metadata_split": {
+          "train": 982
+        },
+        "row_range": [
+          10,
+          7593
+        ]
+      }
+    },
+    "valid": {
+      "allenai-WildChat-1M-multiturn": {
+        "n": 36,
+        "fraction": 0.13584905660377358,
+        "prompt_chars": {
+          "n": 36,
+          "mean": 5755.03,
+          "min": 207.0,
+          "p50": 4655.5,
+          "p90": 11538.5,
+          "p95": 15535.25,
+          "p99": 18269.8,
+          "max": 18897.0
+        },
+        "answer_chars": {
+          "n": 36,
+          "mean": 1824.78,
+          "min": 73.0,
+          "p50": 1240.5,
+          "p90": 4117.5,
+          "p95": 4673.5,
+          "p99": 5243.1,
+          "max": 5486.0
+        },
+        "prompt_char_share": 0.0770961412298632,
+        "message_count": {
+          "n": 36,
+          "mean": 7.17,
+          "min": 3.0,
+          "p50": 5.0,
+          "p90": 13.0,
+          "p95": 16.0,
+          "p99": 38.5,
+          "max": 49.0
+        },
+        "style": {
+          "model": 36
+        },
+        "function": {
+          "compute_skywork_llama_score": 24,
+          "compute_reward_reward_score": 5,
+          "compute_deberta_reward_score": 3,
+          "compute_seed_score": 4
+        },
+        "metadata_split": {
+          "train": 36
+        },
+        "row_range": [
+          1,
+          232
+        ]
+      },
+      "arxiv-summarization": {
+        "n": 21,
+        "fraction": 0.07924528301886792,
+        "prompt_chars": {
+          "n": 21,
+          "mean": 32272.38,
+          "min": 4215.0,
+          "p50": 27610.0,
+          "p90": 54806.0,
+          "p95": 61823.0,
+          "p99": 77355.8,
+          "max": 81239.0
+        },
+        "answer_chars": {
+          "n": 21,
+          "mean": 1789.62,
+          "min": 121.0,
+          "p50": 1052.0,
+          "p90": 1802.0,
+          "p95": 2679.0,
+          "p99": 14531.8,
+          "max": 17495.0
+        },
+        "prompt_char_share": 0.25219299469692147,
+        "message_count": {
+          "n": 21,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 21
+        },
+        "function": {
+          "compute_skywork_llama_score": 14,
+          "compute_deberta_reward_score": 6,
+          "compute_reward_reward_score": 1
+        },
+        "metadata_split": {
+          "train": 21
+        },
+        "row_range": [
+          2,
+          207
+        ]
+      },
+      "english-french-translation_en-fr": {
+        "n": 19,
+        "fraction": 0.07169811320754717,
+        "prompt_chars": {
+          "n": 19,
+          "mean": 348.84,
+          "min": 274.0,
+          "p50": 324.0,
+          "p90": 436.4,
+          "p95": 492.2,
+          "p99": 536.84,
+          "max": 548.0
+        },
+        "answer_chars": {
+          "n": 19,
+          "mean": 139.89,
+          "min": 56.0,
+          "p50": 116.0,
+          "p90": 221.8,
+          "p95": 277.7,
+          "p99": 369.14,
+          "max": 392.0
+        },
+        "prompt_char_share": 0.002466409680769633,
+        "message_count": {
+          "n": 19,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 19
+        },
+        "function": {
+          "compute_seed_score": 19
+        },
+        "metadata_split": {
+          "train": 19
+        },
+        "row_range": [
+          0,
+          225
+        ]
+      },
+      "english-french-translation_fr-en": {
+        "n": 33,
+        "fraction": 0.12452830188679245,
+        "prompt_chars": {
+          "n": 33,
+          "mean": 359.67,
+          "min": 264.0,
+          "p50": 353.0,
+          "p90": 442.8,
+          "p95": 477.8,
+          "p99": 516.32,
+          "max": 524.0
+        },
+        "answer_chars": {
+          "n": 33,
+          "mean": 122.48,
+          "min": 41.0,
+          "p50": 123.0,
+          "p90": 196.8,
+          "p95": 224.0,
+          "p99": 242.4,
+          "max": 244.0
+        },
+        "prompt_char_share": 0.004416689272941275,
+        "message_count": {
+          "n": 33,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 33
+        },
+        "function": {
+          "compute_seed_score": 33
+        },
+        "metadata_split": {
+          "train": 33
+        },
+        "row_range": [
+          5,
+          226
+        ]
+      },
+      "essay_abs2text": {
+        "n": 28,
+        "fraction": 0.10566037735849057,
+        "prompt_chars": {
+          "n": 28,
+          "mean": 859.93,
+          "min": 756.0,
+          "p50": 863.5,
+          "p90": 925.9,
+          "p95": 928.65,
+          "p99": 929.73,
+          "max": 930.0
+        },
+        "answer_chars": {
+          "n": 28,
+          "mean": 11137.64,
+          "min": 1790.0,
+          "p50": 7055.5,
+          "p90": 26606.8,
+          "p95": 28194.3,
+          "p99": 44468.79,
+          "max": 50361.0
+        },
+        "prompt_char_share": 0.008959899259742188,
+        "message_count": {
+          "n": 28,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 28
+        },
+        "function": {
+          "compute_skywork_llama_score": 18,
+          "compute_deberta_reward_score": 6,
+          "compute_reward_reward_score": 4
+        },
+        "metadata_split": {
+          "train": 28
+        },
+        "row_range": [
+          7,
+          229
+        ]
+      },
+      "essay_infilling": {
+        "n": 28,
+        "fraction": 0.10566037735849057,
+        "prompt_chars": {
+          "n": 28,
+          "mean": 6651.39,
+          "min": 485.0,
+          "p50": 7104.0,
+          "p90": 10250.7,
+          "p95": 12370.5,
+          "p99": 14112.48,
+          "max": 14538.0
+        },
+        "answer_chars": {
+          "n": 28,
+          "mean": 655.57,
+          "min": 8.0,
+          "p50": 526.0,
+          "p90": 1287.5,
+          "p95": 1458.1,
+          "p99": 1673.8,
+          "max": 1744.0
+        },
+        "prompt_char_share": 0.06930320949560284,
+        "message_count": {
+          "n": 28,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 28
+        },
+        "function": {
+          "compute_skywork_llama_score": 23,
+          "compute_reward_reward_score": 3,
+          "compute_deberta_reward_score": 2
+        },
+        "metadata_split": {
+          "train": 28
+        },
+        "row_range": [
+          6,
+          231
+        ],
+        "blank_marker_counts": {
+          "1": 28
+        }
+      },
+      "govreport-summarization": {
+        "n": 20,
+        "fraction": 0.07547169811320754,
+        "prompt_chars": {
+          "n": 20,
+          "mean": 53230.6,
+          "min": 11662.0,
+          "p50": 40538.5,
+          "p90": 102429.9,
+          "p95": 117981.35,
+          "p99": 122090.67,
+          "max": 123118.0
+        },
+        "answer_chars": {
+          "n": 20,
+          "mean": 3455.85,
+          "min": 1067.0,
+          "p50": 3707.0,
+          "p90": 4823.9,
+          "p95": 4954.25,
+          "p99": 5170.85,
+          "max": 5225.0
+        },
+        "prompt_char_share": 0.3961631477162825,
+        "message_count": {
+          "n": 20,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 20
+        },
+        "function": {
+          "compute_skywork_llama_score": 6,
+          "compute_reward_reward_score": 14
+        },
+        "metadata_split": {
+          "train": 20
+        },
+        "row_range": [
+          4,
+          234
+        ]
+      },
+      "gsm8k": {
+        "n": 30,
+        "fraction": 0.11320754716981132,
+        "prompt_chars": {
+          "n": 30,
+          "mean": 363.3,
+          "min": 239.0,
+          "p50": 329.5,
+          "p90": 516.0,
+          "p95": 567.55,
+          "p99": 690.14,
+          "max": 729.0
+        },
+        "answer_chars": {
+          "n": 30,
+          "mean": 275.27,
+          "min": 88.0,
+          "p50": 259.0,
+          "p90": 369.3,
+          "p95": 464.45,
+          "p99": 593.26,
+          "max": 624.0
+        },
+        "prompt_char_share": 0.004055733118694663,
+        "message_count": {
+          "n": 30,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "model": 30
+        },
+        "function": {
+          "compute_skywork_llama_score": 29,
+          "final_answer_correctness": 1
+        },
+        "metadata_split": {
+          "test": 30
+        },
+        "row_range": [
+          235,
+          264
+        ],
+        "answers_with_hash_marker": 30,
+        "answers_with_numeric_suffix": 30
+      },
+      "pubmed-summarization": {
+        "n": 22,
+        "fraction": 0.0830188679245283,
+        "prompt_chars": {
+          "n": 22,
+          "mean": 21914.82,
+          "min": 812.0,
+          "p50": 16955.5,
+          "p90": 45991.0,
+          "p95": 47179.35,
+          "p99": 48595.76,
+          "max": 48962.0
+        },
+        "answer_chars": {
+          "n": 22,
+          "mean": 1171.59,
+          "min": 419.0,
+          "p50": 1154.5,
+          "p90": 1637.0,
+          "p95": 1732.15,
+          "p99": 1759.12,
+          "max": 1765.0
+        },
+        "prompt_char_share": 0.1794086049714454,
+        "message_count": {
+          "n": 22,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "bleu": 22
+        },
+        "function": {
+          "compute_deberta_reward_score": 6,
+          "compute_skywork_llama_score": 11,
+          "compute_reward_reward_score": 5
+        },
+        "metadata_split": {
+          "train": 22
+        },
+        "row_range": [
+          9,
+          221
+        ]
+      },
+      "tulu3-sft-reused-on-policy-8b": {
+        "n": 28,
+        "fraction": 0.10566037735849057,
+        "prompt_chars": {
+          "n": 28,
+          "mean": 569.82,
+          "min": 20.0,
+          "p50": 362.0,
+          "p90": 1384.5,
+          "p95": 1584.8,
+          "p99": 2252.02,
+          "max": 2461.0
+        },
+        "answer_chars": {
+          "n": 28,
+          "mean": 1606.93,
+          "min": 11.0,
+          "p50": 1106.0,
+          "p90": 3570.5,
+          "p95": 3727.4,
+          "p99": 5680.99,
+          "max": 6373.0
+        },
+        "prompt_char_share": 0.005937170557736797,
+        "message_count": {
+          "n": 28,
+          "mean": 1.0,
+          "min": 1.0,
+          "p50": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "style": {
+          "model": 28
+        },
+        "function": {
+          "compute_skywork_llama_score": 17,
+          "compute_deberta_reward_score": 2,
+          "explicit_irrelevance": 5,
+          "topic_classifier": 1,
+          "compute_reward_reward_score": 3
+        },
+        "metadata_split": {
+          "train": 28
+        },
+        "row_range": [
+          15,
+          233
+        ]
+      }
+    }
+  },
+  "by_split": {
+    "train": {
+      "sources": {
+        "english-french-translation_fr-en": 776,
+        "essay_abs2text": 933,
+        "allenai-WildChat-1M-multiturn": 957,
+        "tulu3-sft-reused-on-policy-8b": 982,
+        "pubmed-summarization": 790,
+        "essay_infilling": 929,
+        "english-french-translation_en-fr": 731,
+        "govreport-summarization": 746,
+        "arxiv-summarization": 760,
+        "gsm8k": 1000
+      },
+      "abilities": {
+        "translation": 1507,
+        "writing": 933,
+        "multi-turn": 957,
+        "rlhf": 982,
+        "summarization": 2296,
+        "infilling": 929,
+        "math": 1000
+      },
+      "styles": {
+        "bleu": 5665,
+        "model": 2939
+      },
+      "functions": {
+        "compute_seed_score": 1585,
+        "compute_skywork_llama_score": 4520,
+        "compute_reward_reward_score": 1485,
+        "explicit_irrelevance": 130,
+        "compute_deberta_reward_score": 645,
+        "contradiction_detection": 63,
+        "compute_gpt2_large_helpful_score": 53,
+        "key_information_coverage": 25,
+        "compute_length_score": 23,
+        "topic_classifier": 17,
+        "topic_divergence": 7,
+        "reference_citation": 1,
+        "": 6,
+        "forbidden_content": 1,
+        "reference_match": 2,
+        "structure_compliance": 1,
+        "keyword_presence": 1,
+        "negative_relevance_score": 1,
+        "section_coverage": 1,
+        "stepwise_completeness": 1,
+        "exact_output_match": 3,
+        "exact_numeric_match": 3,
+        "final_answer_correctness": 29,
+        "numeric_accuracy": 1
+      },
+      "metadata_split": {
+        "train": 8604
+      },
+      "prompt_chars": {
+        "n": 8604,
+        "mean": 11351.95,
+        "min": 2.0,
+        "p50": 995.5,
+        "p90": 34911.9,
+        "p95": 54461.1,
+        "p99": 97169.26,
+        "max": 556071.0
+      },
+      "answer_chars": {
+        "n": 8604,
+        "mean": 2098.7,
+        "min": 2.0,
+        "p50": 844.0,
+        "p90": 4540.8,
+        "p95": 8060.5,
+        "p99": 20530.91,
+        "max": 68374.0
+      },
+      "message_count": {
+        "n": 8604,
+        "mean": 1.67,
+        "min": 1.0,
+        "p50": 1.0,
+        "p90": 3.0,
+        "p95": 5.0,
+        "p99": 15.0,
+        "max": 69.0
+      },
+      "roles": {
+        "user": 11467,
+        "assistant": 2863
+      },
+      "answer_equals_ground_truth": 8604,
+      "quality_flags": {
+        "empty:article_payload": 18,
+        "empty:extra_info.question": 11,
+        "empty:message_content": 26,
+        "article_is_publisher_boilerplate": 2,
+        "empty:extra_info.function_call": 6
+      },
+      "prompt_char_thresholds": {
+        "4000": 3472,
+        "8000": 2734,
+        "16000": 1903,
+        "32000": 958,
+        "64000": 301,
+        "100000": 81
+      },
+      "max_prompt_rows": [
+        {
+          "split": "train",
+          "row": 7141,
+          "source": "arxiv-summarization",
+          "chars": 556071
+        },
+        {
+          "split": "train",
+          "row": 4491,
+          "source": "govreport-summarization",
+          "chars": 441802
+        },
+        {
+          "split": "train",
+          "row": 3623,
+          "source": "govreport-summarization",
+          "chars": 340905
+        },
+        {
+          "split": "train",
+          "row": 5346,
+          "source": "govreport-summarization",
+          "chars": 297609
+        },
+        {
+          "split": "train",
+          "row": 4474,
+          "source": "govreport-summarization",
+          "chars": 268122
+        },
+        {
+          "split": "train",
+          "row": 6276,
+          "source": "arxiv-summarization",
+          "chars": 263116
+        },
+        {
+          "split": "train",
+          "row": 6261,
+          "source": "arxiv-summarization",
+          "chars": 261340
+        },
+        {
+          "split": "train",
+          "row": 5181,
+          "source": "govreport-summarization",
+          "chars": 188441
+        },
+        {
+          "split": "train",
+          "row": 5965,
+          "source": "govreport-summarization",
+          "chars": 181400
+        },
+        {
+          "split": "train",
+          "row": 2007,
+          "source": "arxiv-summarization",
+          "chars": 176891
+        }
+      ]
+    },
+    "valid": {
+      "sources": {
+        "english-french-translation_en-fr": 19,
+        "allenai-WildChat-1M-multiturn": 36,
+        "arxiv-summarization": 21,
+        "govreport-summarization": 20,
+        "english-french-translation_fr-en": 33,
+        "essay_infilling": 28,
+        "essay_abs2text": 28,
+        "pubmed-summarization": 22,
+        "tulu3-sft-reused-on-policy-8b": 28,
+        "gsm8k": 30
+      },
+      "abilities": {
+        "translation": 52,
+        "multi-turn": 36,
+        "summarization": 63,
+        "infilling": 28,
+        "writing": 28,
+        "rlhf": 28,
+        "math": 30
+      },
+      "styles": {
+        "bleu": 171,
+        "model": 94
+      },
+      "functions": {
+        "compute_seed_score": 56,
+        "compute_skywork_llama_score": 142,
+        "compute_deberta_reward_score": 25,
+        "explicit_irrelevance": 5,
+        "compute_reward_reward_score": 35,
+        "topic_classifier": 1,
+        "final_answer_correctness": 1
+      },
+      "metadata_split": {
+        "train": 235,
+        "test": 30
+      },
+      "prompt_chars": {
+        "n": 265,
+        "mean": 10140.78,
+        "min": 20.0,
+        "p50": 917.0,
+        "p90": 34073.8,
+        "p95": 47692.4,
+        "p99": 94280.8,
+        "max": 123118.0
+      },
+      "answer_chars": {
+        "n": 265,
+        "mean": 2220.11,
+        "min": 8.0,
+        "p50": 776.0,
+        "p90": 4718.0,
+        "p95": 7921.2,
+        "p99": 26688.16,
+        "max": 50361.0
+      },
+      "message_count": {
+        "n": 265,
+        "mean": 1.84,
+        "min": 1.0,
+        "p50": 1.0,
+        "p90": 3.0,
+        "p95": 5.0,
+        "p99": 13.72,
+        "max": 49.0
+      },
+      "roles": {
+        "user": 376,
+        "assistant": 111
+      },
+      "answer_equals_ground_truth": 265,
+      "quality_flags": {},
+      "prompt_char_thresholds": {
+        "4000": 102,
+        "8000": 77,
+        "16000": 52,
+        "32000": 28,
+        "64000": 7,
+        "100000": 3
+      },
+      "max_prompt_rows": [
+        {
+          "split": "valid",
+          "row": 59,
+          "source": "govreport-summarization",
+          "chars": 123118
+        },
+        {
+          "split": "valid",
+          "row": 198,
+          "source": "govreport-summarization",
+          "chars": 117711
+        },
+        {
+          "split": "valid",
+          "row": 129,
+          "source": "govreport-summarization",
+          "chars": 100732
+        },
+        {
+          "split": "valid",
+          "row": 131,
+          "source": "govreport-summarization",
+          "chars": 90652
+        },
+        {
+          "split": "valid",
+          "row": 83,
+          "source": "govreport-summarization",
+          "chars": 87252
+        },
+        {
+          "split": "valid",
+          "row": 166,
+          "source": "govreport-summarization",
+          "chars": 87146
+        },
+        {
+          "split": "valid",
+          "row": 27,
+          "source": "arxiv-summarization",
+          "chars": 81239
+        },
+        {
+          "split": "valid",
+          "row": 37,
+          "source": "arxiv-summarization",
+          "chars": 61823
+        },
+        {
+          "split": "valid",
+          "row": 12,
+          "source": "arxiv-summarization",
+          "chars": 54806
+        },
+        {
+          "split": "valid",
+          "row": 106,
+          "source": "govreport-summarization",
+          "chars": 51586
+        }
+      ]
+    }
+  },
+  "duplicates": {
+    "prompt_exact": {
+      "train": {
+        "duplicate_groups": 2,
+        "rows_in_duplicate_groups": 19,
+        "redundant_rows": 17
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 0,
+        "train_rows": 0,
+        "valid_rows": 0
+      }
+    },
+    "prompt_normalized": {
+      "train": {
+        "duplicate_groups": 2,
+        "rows_in_duplicate_groups": 20,
+        "redundant_rows": 18
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 0,
+        "train_rows": 0,
+        "valid_rows": 0
+      }
+    },
+    "question_normalized_nonempty": {
+      "train": {
+        "duplicate_groups": 5,
+        "rows_in_duplicate_groups": 27,
+        "redundant_rows": 22
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 1,
+        "train_rows": 1,
+        "valid_rows": 1
+      }
+    },
+    "answer_normalized": {
+      "train": {
+        "duplicate_groups": 2,
+        "rows_in_duplicate_groups": 4,
+        "redundant_rows": 2
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 0,
+        "train_rows": 0,
+        "valid_rows": 0
+      }
+    },
+    "sample_without_split_or_function": {
+      "train": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 0,
+        "train_rows": 0,
+        "valid_rows": 0
+      }
+    },
+    "wildchat_first_user_message": {
+      "train": {
+        "duplicate_groups": 7,
+        "rows_in_duplicate_groups": 36,
+        "redundant_rows": 29
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 1,
+        "train_rows": 10,
+        "valid_rows": 1
+      }
+    },
+    "translation_pair_direction_invariant": {
+      "train": {
+        "duplicate_groups": 80,
+        "rows_in_duplicate_groups": 160,
+        "redundant_rows": 80
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 4,
+        "train_rows": 4,
+        "valid_rows": 4
+      }
+    },
+    "essay_title_candidate": {
+      "train": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "valid": {
+        "duplicate_groups": 0,
+        "rows_in_duplicate_groups": 0,
+        "redundant_rows": 0
+      },
+      "cross": {
+        "shared_keys": 0,
+        "train_rows": 0,
+        "valid_rows": 0
+      }
+    }
+  },
+  "same_prompt_different_answer_groups": 2,
+  "distribution_comparison": {
+    "source_total_variation": 0.05895941334877152,
+    "source_js_divergence_bits": 0.004053451861182779,
+    "source_chi_square": {
+      "statistic": 6.296953951583766,
+      "pvalue": 0.7098691957556931,
+      "dof": 9
+    },
+    "prompt_length_ks_by_source": {
+      "allenai-WildChat-1M-multiturn": {
+        "statistic": 0.10161964472309293,
+        "pvalue_unadjusted": 0.829822418336983
+      },
+      "arxiv-summarization": {
+        "statistic": 0.1531954887218045,
+        "pvalue_unadjusted": 0.6670932340826677
+      },
+      "english-french-translation_en-fr": {
+        "statistic": 0.12045503635970911,
+        "pvalue_unadjusted": 0.9211198485915973
+      },
+      "english-french-translation_fr-en": {
+        "statistic": 0.13046704154951583,
+        "pvalue_unadjusted": 0.6064082514328645
+      },
+      "essay_abs2text": {
+        "statistic": 0.17849487061705716,
+        "pvalue_unadjusted": 0.3123620773142916
+      },
+      "essay_infilling": {
+        "statistic": 0.21255574350299866,
+        "pvalue_unadjusted": 0.14756745794505313
+      },
+      "govreport-summarization": {
+        "statistic": 0.18605898123324394,
+        "pvalue_unadjusted": 0.45479672001965726
+      },
+      "gsm8k": {
+        "statistic": 0.11333333333333334,
+        "pvalue_unadjusted": 0.8083124491166265
+      },
+      "pubmed-summarization": {
+        "statistic": 0.2069044879171461,
+        "pvalue_unadjusted": 0.27739833195430935
+      },
+      "tulu3-sft-reused-on-policy-8b": {
+        "statistic": 0.1259819610125109,
+        "pvalue_unadjusted": 0.7329711057360532
+      }
+    }
+  },
+  "near_duplicate_screen": {
+    "0.8": 0,
+    "0.9": 0,
+    "0.95": 0,
+    "0.99": 0
+  },
+  "versions": {
+    "numpy": "2.5.3",
+    "pyarrow": "25.0.1",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  }
+}

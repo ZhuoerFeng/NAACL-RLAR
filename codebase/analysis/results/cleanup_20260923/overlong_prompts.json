@@ -1,0 +1,5625 @@
+{
+  "threshold": 10000,
+  "condition": "prompt_tokens_thinking > 10000",
+  "user_decision": "Keep all overlong examples; record lengths only. Confirmed on 2026-09-23.",
+  "train": [
+    {
+      "split": "train",
+      "row": 52,
+      "original_row": 58,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12409,
+      "prompt_tokens_nonthinking": 12413,
+      "reference_tokens": 530
+    },
+    {
+      "split": "train",
+      "row": 77,
+      "original_row": 86,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11978,
+      "prompt_tokens_nonthinking": 11982,
+      "reference_tokens": 632
+    },
+    {
+      "split": "train",
+      "row": 79,
+      "original_row": 88,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24496,
+      "prompt_tokens_nonthinking": 24500,
+      "reference_tokens": 469
+    },
+    {
+      "split": "train",
+      "row": 98,
+      "original_row": 110,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 14546,
+      "prompt_tokens_nonthinking": 14550,
+      "reference_tokens": 463
+    },
+    {
+      "split": "train",
+      "row": 116,
+      "original_row": 132,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17817,
+      "prompt_tokens_nonthinking": 17821,
+      "reference_tokens": 420
+    },
+    {
+      "split": "train",
+      "row": 125,
+      "original_row": 141,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19063,
+      "prompt_tokens_nonthinking": 19067,
+      "reference_tokens": 221
+    },
+    {
+      "split": "train",
+      "row": 127,
+      "original_row": 143,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15771,
+      "prompt_tokens_nonthinking": 15775,
+      "reference_tokens": 203
+    },
+    {
+      "split": "train",
+      "row": 133,
+      "original_row": 150,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15076,
+      "prompt_tokens_nonthinking": 15080,
+      "reference_tokens": 548
+    },
+    {
+      "split": "train",
+      "row": 147,
+      "original_row": 165,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13923,
+      "prompt_tokens_nonthinking": 13927,
+      "reference_tokens": 758
+    },
+    {
+      "split": "train",
+      "row": 149,
+      "original_row": 167,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15221,
+      "prompt_tokens_nonthinking": 15225,
+      "reference_tokens": 2191
+    },
+    {
+      "split": "train",
+      "row": 154,
+      "original_row": 172,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11413,
+      "prompt_tokens_nonthinking": 11417,
+      "reference_tokens": 212
+    },
+    {
+      "split": "train",
+      "row": 157,
+      "original_row": 176,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16311,
+      "prompt_tokens_nonthinking": 16315,
+      "reference_tokens": 951
+    },
+    {
+      "split": "train",
+      "row": 160,
+      "original_row": 179,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13336,
+      "prompt_tokens_nonthinking": 13340,
+      "reference_tokens": 303
+    },
+    {
+      "split": "train",
+      "row": 162,
+      "original_row": 182,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24817,
+      "prompt_tokens_nonthinking": 24821,
+      "reference_tokens": 469
+    },
+    {
+      "split": "train",
+      "row": 164,
+      "original_row": 184,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18397,
+      "prompt_tokens_nonthinking": 18401,
+      "reference_tokens": 184
+    },
+    {
+      "split": "train",
+      "row": 171,
+      "original_row": 192,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11278,
+      "prompt_tokens_nonthinking": 11282,
+      "reference_tokens": 720
+    },
+    {
+      "split": "train",
+      "row": 175,
+      "original_row": 196,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11425,
+      "prompt_tokens_nonthinking": 11429,
+      "reference_tokens": 389
+    },
+    {
+      "split": "train",
+      "row": 180,
+      "original_row": 201,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12041,
+      "prompt_tokens_nonthinking": 12045,
+      "reference_tokens": 354
+    },
+    {
+      "split": "train",
+      "row": 194,
+      "original_row": 218,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 27181,
+      "prompt_tokens_nonthinking": 27185,
+      "reference_tokens": 379
+    },
+    {
+      "split": "train",
+      "row": 199,
+      "original_row": 223,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 35139,
+      "prompt_tokens_nonthinking": 35143,
+      "reference_tokens": 837
+    },
+    {
+      "split": "train",
+      "row": 211,
+      "original_row": 235,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14250,
+      "prompt_tokens_nonthinking": 14254,
+      "reference_tokens": 907
+    },
+    {
+      "split": "train",
+      "row": 233,
+      "original_row": 258,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11130,
+      "prompt_tokens_nonthinking": 11134,
+      "reference_tokens": 472
+    },
+    {
+      "split": "train",
+      "row": 240,
+      "original_row": 266,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11087,
+      "prompt_tokens_nonthinking": 11091,
+      "reference_tokens": 156
+    },
+    {
+      "split": "train",
+      "row": 251,
+      "original_row": 278,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20461,
+      "prompt_tokens_nonthinking": 20465,
+      "reference_tokens": 791
+    },
+    {
+      "split": "train",
+      "row": 254,
+      "original_row": 281,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 48928,
+      "prompt_tokens_nonthinking": 48932,
+      "reference_tokens": 1033
+    },
+    {
+      "split": "train",
+      "row": 271,
+      "original_row": 299,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12415,
+      "prompt_tokens_nonthinking": 12419,
+      "reference_tokens": 768
+    },
+    {
+      "split": "train",
+      "row": 289,
+      "original_row": 320,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10628,
+      "prompt_tokens_nonthinking": 10632,
+      "reference_tokens": 529
+    },
+    {
+      "split": "train",
+      "row": 310,
+      "original_row": 344,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17600,
+      "prompt_tokens_nonthinking": 17604,
+      "reference_tokens": 352
+    },
+    {
+      "split": "train",
+      "row": 313,
+      "original_row": 348,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 19407,
+      "prompt_tokens_nonthinking": 19411,
+      "reference_tokens": 993
+    },
+    {
+      "split": "train",
+      "row": 343,
+      "original_row": 383,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11720,
+      "prompt_tokens_nonthinking": 11724,
+      "reference_tokens": 455
+    },
+    {
+      "split": "train",
+      "row": 348,
+      "original_row": 388,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11884,
+      "prompt_tokens_nonthinking": 11888,
+      "reference_tokens": 766
+    },
+    {
+      "split": "train",
+      "row": 370,
+      "original_row": 414,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 18366,
+      "prompt_tokens_nonthinking": 18370,
+      "reference_tokens": 170
+    },
+    {
+      "split": "train",
+      "row": 378,
+      "original_row": 422,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14158,
+      "prompt_tokens_nonthinking": 14162,
+      "reference_tokens": 650
+    },
+    {
+      "split": "train",
+      "row": 408,
+      "original_row": 458,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 24008,
+      "prompt_tokens_nonthinking": 24012,
+      "reference_tokens": 807
+    },
+    {
+      "split": "train",
+      "row": 413,
+      "original_row": 463,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12430,
+      "prompt_tokens_nonthinking": 12434,
+      "reference_tokens": 238
+    },
+    {
+      "split": "train",
+      "row": 428,
+      "original_row": 480,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15860,
+      "prompt_tokens_nonthinking": 15864,
+      "reference_tokens": 439
+    },
+    {
+      "split": "train",
+      "row": 431,
+      "original_row": 483,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11602,
+      "prompt_tokens_nonthinking": 11606,
+      "reference_tokens": 246
+    },
+    {
+      "split": "train",
+      "row": 456,
+      "original_row": 512,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14975,
+      "prompt_tokens_nonthinking": 14979,
+      "reference_tokens": 366
+    },
+    {
+      "split": "train",
+      "row": 458,
+      "original_row": 514,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11516,
+      "prompt_tokens_nonthinking": 11520,
+      "reference_tokens": 700
+    },
+    {
+      "split": "train",
+      "row": 469,
+      "original_row": 526,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 14558,
+      "prompt_tokens_nonthinking": 14562,
+      "reference_tokens": 255
+    },
+    {
+      "split": "train",
+      "row": 475,
+      "original_row": 532,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10718,
+      "prompt_tokens_nonthinking": 10722,
+      "reference_tokens": 509
+    },
+    {
+      "split": "train",
+      "row": 493,
+      "original_row": 551,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13371,
+      "prompt_tokens_nonthinking": 13375,
+      "reference_tokens": 342
+    },
+    {
+      "split": "train",
+      "row": 497,
+      "original_row": 557,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16351,
+      "prompt_tokens_nonthinking": 16355,
+      "reference_tokens": 944
+    },
+    {
+      "split": "train",
+      "row": 505,
+      "original_row": 567,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22725,
+      "prompt_tokens_nonthinking": 22729,
+      "reference_tokens": 905
+    },
+    {
+      "split": "train",
+      "row": 511,
+      "original_row": 574,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20819,
+      "prompt_tokens_nonthinking": 20823,
+      "reference_tokens": 306
+    },
+    {
+      "split": "train",
+      "row": 515,
+      "original_row": 579,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11092,
+      "prompt_tokens_nonthinking": 11096,
+      "reference_tokens": 731
+    },
+    {
+      "split": "train",
+      "row": 524,
+      "original_row": 591,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16607,
+      "prompt_tokens_nonthinking": 16611,
+      "reference_tokens": 384
+    },
+    {
+      "split": "train",
+      "row": 528,
+      "original_row": 595,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11390,
+      "prompt_tokens_nonthinking": 11394,
+      "reference_tokens": 834
+    },
+    {
+      "split": "train",
+      "row": 548,
+      "original_row": 622,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 37888,
+      "prompt_tokens_nonthinking": 37892,
+      "reference_tokens": 881
+    },
+    {
+      "split": "train",
+      "row": 552,
+      "original_row": 627,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16756,
+      "prompt_tokens_nonthinking": 16760,
+      "reference_tokens": 722
+    },
+    {
+      "split": "train",
+      "row": 557,
+      "original_row": 632,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16516,
+      "prompt_tokens_nonthinking": 16520,
+      "reference_tokens": 387
+    },
+    {
+      "split": "train",
+      "row": 569,
+      "original_row": 645,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11992,
+      "prompt_tokens_nonthinking": 11996,
+      "reference_tokens": 218
+    },
+    {
+      "split": "train",
+      "row": 570,
+      "original_row": 647,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13981,
+      "prompt_tokens_nonthinking": 13985,
+      "reference_tokens": 184
+    },
+    {
+      "split": "train",
+      "row": 572,
+      "original_row": 649,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12671,
+      "prompt_tokens_nonthinking": 12675,
+      "reference_tokens": 606
+    },
+    {
+      "split": "train",
+      "row": 576,
+      "original_row": 653,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 19343,
+      "prompt_tokens_nonthinking": 19347,
+      "reference_tokens": 769
+    },
+    {
+      "split": "train",
+      "row": 578,
+      "original_row": 655,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18394,
+      "prompt_tokens_nonthinking": 18398,
+      "reference_tokens": 810
+    },
+    {
+      "split": "train",
+      "row": 579,
+      "original_row": 656,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10377,
+      "prompt_tokens_nonthinking": 10381,
+      "reference_tokens": 206
+    },
+    {
+      "split": "train",
+      "row": 588,
+      "original_row": 666,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19605,
+      "prompt_tokens_nonthinking": 19609,
+      "reference_tokens": 347
+    },
+    {
+      "split": "train",
+      "row": 608,
+      "original_row": 687,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19516,
+      "prompt_tokens_nonthinking": 19520,
+      "reference_tokens": 1858
+    },
+    {
+      "split": "train",
+      "row": 629,
+      "original_row": 714,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14888,
+      "prompt_tokens_nonthinking": 14892,
+      "reference_tokens": 327
+    },
+    {
+      "split": "train",
+      "row": 632,
+      "original_row": 717,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11807,
+      "prompt_tokens_nonthinking": 11811,
+      "reference_tokens": 994
+    },
+    {
+      "split": "train",
+      "row": 636,
+      "original_row": 721,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11437,
+      "prompt_tokens_nonthinking": 11441,
+      "reference_tokens": 389
+    },
+    {
+      "split": "train",
+      "row": 640,
+      "original_row": 726,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22906,
+      "prompt_tokens_nonthinking": 22910,
+      "reference_tokens": 290
+    },
+    {
+      "split": "train",
+      "row": 675,
+      "original_row": 770,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12626,
+      "prompt_tokens_nonthinking": 12630,
+      "reference_tokens": 251
+    },
+    {
+      "split": "train",
+      "row": 712,
+      "original_row": 812,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17915,
+      "prompt_tokens_nonthinking": 17919,
+      "reference_tokens": 204
+    },
+    {
+      "split": "train",
+      "row": 721,
+      "original_row": 821,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10313,
+      "prompt_tokens_nonthinking": 10317,
+      "reference_tokens": 383
+    },
+    {
+      "split": "train",
+      "row": 727,
+      "original_row": 827,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12634,
+      "prompt_tokens_nonthinking": 12638,
+      "reference_tokens": 763
+    },
+    {
+      "split": "train",
+      "row": 738,
+      "original_row": 840,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15310,
+      "prompt_tokens_nonthinking": 15314,
+      "reference_tokens": 251
+    },
+    {
+      "split": "train",
+      "row": 746,
+      "original_row": 849,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19577,
+      "prompt_tokens_nonthinking": 19581,
+      "reference_tokens": 140
+    },
+    {
+      "split": "train",
+      "row": 786,
+      "original_row": 896,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11780,
+      "prompt_tokens_nonthinking": 11784,
+      "reference_tokens": 689
+    },
+    {
+      "split": "train",
+      "row": 787,
+      "original_row": 898,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10231,
+      "prompt_tokens_nonthinking": 10235,
+      "reference_tokens": 802
+    },
+    {
+      "split": "train",
+      "row": 798,
+      "original_row": 909,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13911,
+      "prompt_tokens_nonthinking": 13915,
+      "reference_tokens": 915
+    },
+    {
+      "split": "train",
+      "row": 800,
+      "original_row": 911,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11912,
+      "prompt_tokens_nonthinking": 11916,
+      "reference_tokens": 118
+    },
+    {
+      "split": "train",
+      "row": 803,
+      "original_row": 914,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12403,
+      "prompt_tokens_nonthinking": 12407,
+      "reference_tokens": 549
+    },
+    {
+      "split": "train",
+      "row": 811,
+      "original_row": 923,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22134,
+      "prompt_tokens_nonthinking": 22138,
+      "reference_tokens": 326
+    },
+    {
+      "split": "train",
+      "row": 820,
+      "original_row": 933,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10974,
+      "prompt_tokens_nonthinking": 10978,
+      "reference_tokens": 599
+    },
+    {
+      "split": "train",
+      "row": 823,
+      "original_row": 936,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13033,
+      "prompt_tokens_nonthinking": 13037,
+      "reference_tokens": 434
+    },
+    {
+      "split": "train",
+      "row": 835,
+      "original_row": 950,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10588,
+      "prompt_tokens_nonthinking": 10592,
+      "reference_tokens": 255
+    },
+    {
+      "split": "train",
+      "row": 836,
+      "original_row": 951,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13849,
+      "prompt_tokens_nonthinking": 13853,
+      "reference_tokens": 198
+    },
+    {
+      "split": "train",
+      "row": 837,
+      "original_row": 952,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13132,
+      "prompt_tokens_nonthinking": 13136,
+      "reference_tokens": 948
+    },
+    {
+      "split": "train",
+      "row": 839,
+      "original_row": 956,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10785,
+      "prompt_tokens_nonthinking": 10789,
+      "reference_tokens": 144
+    },
+    {
+      "split": "train",
+      "row": 841,
+      "original_row": 959,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15767,
+      "prompt_tokens_nonthinking": 15771,
+      "reference_tokens": 400
+    },
+    {
+      "split": "train",
+      "row": 856,
+      "original_row": 981,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13798,
+      "prompt_tokens_nonthinking": 13802,
+      "reference_tokens": 587
+    },
+    {
+      "split": "train",
+      "row": 858,
+      "original_row": 985,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 13404,
+      "prompt_tokens_nonthinking": 13408,
+      "reference_tokens": 629
+    },
+    {
+      "split": "train",
+      "row": 887,
+      "original_row": 1026,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 29398,
+      "prompt_tokens_nonthinking": 29402,
+      "reference_tokens": 709
+    },
+    {
+      "split": "train",
+      "row": 896,
+      "original_row": 1037,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14074,
+      "prompt_tokens_nonthinking": 14078,
+      "reference_tokens": 120
+    },
+    {
+      "split": "train",
+      "row": 898,
+      "original_row": 1039,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14142,
+      "prompt_tokens_nonthinking": 14146,
+      "reference_tokens": 121
+    },
+    {
+      "split": "train",
+      "row": 901,
+      "original_row": 1043,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15756,
+      "prompt_tokens_nonthinking": 15760,
+      "reference_tokens": 622
+    },
+    {
+      "split": "train",
+      "row": 904,
+      "original_row": 1049,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10115,
+      "prompt_tokens_nonthinking": 10119,
+      "reference_tokens": 587
+    },
+    {
+      "split": "train",
+      "row": 912,
+      "original_row": 1057,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10999,
+      "prompt_tokens_nonthinking": 11003,
+      "reference_tokens": 432
+    },
+    {
+      "split": "train",
+      "row": 914,
+      "original_row": 1059,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10288,
+      "prompt_tokens_nonthinking": 10292,
+      "reference_tokens": 820
+    },
+    {
+      "split": "train",
+      "row": 940,
+      "original_row": 1090,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18705,
+      "prompt_tokens_nonthinking": 18709,
+      "reference_tokens": 757
+    },
+    {
+      "split": "train",
+      "row": 950,
+      "original_row": 1101,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13623,
+      "prompt_tokens_nonthinking": 13627,
+      "reference_tokens": 321
+    },
+    {
+      "split": "train",
+      "row": 954,
+      "original_row": 1105,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24835,
+      "prompt_tokens_nonthinking": 24839,
+      "reference_tokens": 334
+    },
+    {
+      "split": "train",
+      "row": 956,
+      "original_row": 1108,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12108,
+      "prompt_tokens_nonthinking": 12112,
+      "reference_tokens": 768
+    },
+    {
+      "split": "train",
+      "row": 972,
+      "original_row": 1128,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 15111,
+      "prompt_tokens_nonthinking": 15115,
+      "reference_tokens": 291
+    },
+    {
+      "split": "train",
+      "row": 978,
+      "original_row": 1136,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14731,
+      "prompt_tokens_nonthinking": 14735,
+      "reference_tokens": 216
+    },
+    {
+      "split": "train",
+      "row": 988,
+      "original_row": 1146,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10129,
+      "prompt_tokens_nonthinking": 10133,
+      "reference_tokens": 915
+    },
+    {
+      "split": "train",
+      "row": 1000,
+      "original_row": 1159,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10954,
+      "prompt_tokens_nonthinking": 10958,
+      "reference_tokens": 292
+    },
+    {
+      "split": "train",
+      "row": 1009,
+      "original_row": 1169,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10747,
+      "prompt_tokens_nonthinking": 10751,
+      "reference_tokens": 822
+    },
+    {
+      "split": "train",
+      "row": 1010,
+      "original_row": 1171,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13581,
+      "prompt_tokens_nonthinking": 13585,
+      "reference_tokens": 195
+    },
+    {
+      "split": "train",
+      "row": 1016,
+      "original_row": 1178,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 45386,
+      "prompt_tokens_nonthinking": 45390,
+      "reference_tokens": 142
+    },
+    {
+      "split": "train",
+      "row": 1020,
+      "original_row": 1183,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11860,
+      "prompt_tokens_nonthinking": 11864,
+      "reference_tokens": 772
+    },
+    {
+      "split": "train",
+      "row": 1040,
+      "original_row": 1209,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17380,
+      "prompt_tokens_nonthinking": 17384,
+      "reference_tokens": 516
+    },
+    {
+      "split": "train",
+      "row": 1045,
+      "original_row": 1216,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22002,
+      "prompt_tokens_nonthinking": 22006,
+      "reference_tokens": 389
+    },
+    {
+      "split": "train",
+      "row": 1059,
+      "original_row": 1232,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11741,
+      "prompt_tokens_nonthinking": 11745,
+      "reference_tokens": 231
+    },
+    {
+      "split": "train",
+      "row": 1074,
+      "original_row": 1249,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13460,
+      "prompt_tokens_nonthinking": 13464,
+      "reference_tokens": 629
+    },
+    {
+      "split": "train",
+      "row": 1093,
+      "original_row": 1272,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10591,
+      "prompt_tokens_nonthinking": 10595,
+      "reference_tokens": 88
+    },
+    {
+      "split": "train",
+      "row": 1100,
+      "original_row": 1279,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12123,
+      "prompt_tokens_nonthinking": 12127,
+      "reference_tokens": 119
+    },
+    {
+      "split": "train",
+      "row": 1101,
+      "original_row": 1280,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 10406,
+      "prompt_tokens_nonthinking": 10410,
+      "reference_tokens": 2829
+    },
+    {
+      "split": "train",
+      "row": 1130,
+      "original_row": 1313,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10419,
+      "prompt_tokens_nonthinking": 10423,
+      "reference_tokens": 1013
+    },
+    {
+      "split": "train",
+      "row": 1143,
+      "original_row": 1326,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 16063,
+      "prompt_tokens_nonthinking": 16067,
+      "reference_tokens": 544
+    },
+    {
+      "split": "train",
+      "row": 1158,
+      "original_row": 1342,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 20099,
+      "prompt_tokens_nonthinking": 20103,
+      "reference_tokens": 285
+    },
+    {
+      "split": "train",
+      "row": 1182,
+      "original_row": 1370,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16970,
+      "prompt_tokens_nonthinking": 16974,
+      "reference_tokens": 302
+    },
+    {
+      "split": "train",
+      "row": 1187,
+      "original_row": 1375,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 19401,
+      "prompt_tokens_nonthinking": 19405,
+      "reference_tokens": 729
+    },
+    {
+      "split": "train",
+      "row": 1211,
+      "original_row": 1408,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15087,
+      "prompt_tokens_nonthinking": 15091,
+      "reference_tokens": 729
+    },
+    {
+      "split": "train",
+      "row": 1215,
+      "original_row": 1412,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10671,
+      "prompt_tokens_nonthinking": 10675,
+      "reference_tokens": 468
+    },
+    {
+      "split": "train",
+      "row": 1218,
+      "original_row": 1415,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11828,
+      "prompt_tokens_nonthinking": 11832,
+      "reference_tokens": 637
+    },
+    {
+      "split": "train",
+      "row": 1274,
+      "original_row": 1477,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17549,
+      "prompt_tokens_nonthinking": 17553,
+      "reference_tokens": 169
+    },
+    {
+      "split": "train",
+      "row": 1281,
+      "original_row": 1484,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 23393,
+      "prompt_tokens_nonthinking": 23397,
+      "reference_tokens": 562
+    },
+    {
+      "split": "train",
+      "row": 1288,
+      "original_row": 1492,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11327,
+      "prompt_tokens_nonthinking": 11331,
+      "reference_tokens": 217
+    },
+    {
+      "split": "train",
+      "row": 1291,
+      "original_row": 1497,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16576,
+      "prompt_tokens_nonthinking": 16580,
+      "reference_tokens": 416
+    },
+    {
+      "split": "train",
+      "row": 1304,
+      "original_row": 1510,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16565,
+      "prompt_tokens_nonthinking": 16569,
+      "reference_tokens": 508
+    },
+    {
+      "split": "train",
+      "row": 1306,
+      "original_row": 1512,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12244,
+      "prompt_tokens_nonthinking": 12248,
+      "reference_tokens": 706
+    },
+    {
+      "split": "train",
+      "row": 1313,
+      "original_row": 1523,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14172,
+      "prompt_tokens_nonthinking": 14176,
+      "reference_tokens": 164
+    },
+    {
+      "split": "train",
+      "row": 1328,
+      "original_row": 1540,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14779,
+      "prompt_tokens_nonthinking": 14783,
+      "reference_tokens": 665
+    },
+    {
+      "split": "train",
+      "row": 1331,
+      "original_row": 1544,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11828,
+      "prompt_tokens_nonthinking": 11832,
+      "reference_tokens": 94
+    },
+    {
+      "split": "train",
+      "row": 1341,
+      "original_row": 1555,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22169,
+      "prompt_tokens_nonthinking": 22173,
+      "reference_tokens": 751
+    },
+    {
+      "split": "train",
+      "row": 1345,
+      "original_row": 1559,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11053,
+      "prompt_tokens_nonthinking": 11057,
+      "reference_tokens": 954
+    },
+    {
+      "split": "train",
+      "row": 1351,
+      "original_row": 1566,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18749,
+      "prompt_tokens_nonthinking": 18753,
+      "reference_tokens": 338
+    },
+    {
+      "split": "train",
+      "row": 1353,
+      "original_row": 1568,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12924,
+      "prompt_tokens_nonthinking": 12928,
+      "reference_tokens": 234
+    },
+    {
+      "split": "train",
+      "row": 1354,
+      "original_row": 1569,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12251,
+      "prompt_tokens_nonthinking": 12255,
+      "reference_tokens": 734
+    },
+    {
+      "split": "train",
+      "row": 1355,
+      "original_row": 1570,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13637,
+      "prompt_tokens_nonthinking": 13641,
+      "reference_tokens": 397
+    },
+    {
+      "split": "train",
+      "row": 1371,
+      "original_row": 1590,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19961,
+      "prompt_tokens_nonthinking": 19965,
+      "reference_tokens": 161
+    },
+    {
+      "split": "train",
+      "row": 1373,
+      "original_row": 1592,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16219,
+      "prompt_tokens_nonthinking": 16223,
+      "reference_tokens": 823
+    },
+    {
+      "split": "train",
+      "row": 1376,
+      "original_row": 1595,
+      "source": "essay_infilling",
+      "prompt_tokens_thinking": 20298,
+      "prompt_tokens_nonthinking": 20302,
+      "reference_tokens": 162
+    },
+    {
+      "split": "train",
+      "row": 1383,
+      "original_row": 1602,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 35227,
+      "prompt_tokens_nonthinking": 35231,
+      "reference_tokens": 729
+    },
+    {
+      "split": "train",
+      "row": 1415,
+      "original_row": 1638,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10595,
+      "prompt_tokens_nonthinking": 10599,
+      "reference_tokens": 206
+    },
+    {
+      "split": "train",
+      "row": 1417,
+      "original_row": 1640,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14105,
+      "prompt_tokens_nonthinking": 14109,
+      "reference_tokens": 919
+    },
+    {
+      "split": "train",
+      "row": 1430,
+      "original_row": 1653,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13787,
+      "prompt_tokens_nonthinking": 13791,
+      "reference_tokens": 825
+    },
+    {
+      "split": "train",
+      "row": 1470,
+      "original_row": 1695,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 17134,
+      "prompt_tokens_nonthinking": 17138,
+      "reference_tokens": 702
+    },
+    {
+      "split": "train",
+      "row": 1480,
+      "original_row": 1708,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16182,
+      "prompt_tokens_nonthinking": 16186,
+      "reference_tokens": 839
+    },
+    {
+      "split": "train",
+      "row": 1482,
+      "original_row": 1710,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20080,
+      "prompt_tokens_nonthinking": 20084,
+      "reference_tokens": 790
+    },
+    {
+      "split": "train",
+      "row": 1512,
+      "original_row": 1747,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10455,
+      "prompt_tokens_nonthinking": 10459,
+      "reference_tokens": 841
+    },
+    {
+      "split": "train",
+      "row": 1519,
+      "original_row": 1755,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17928,
+      "prompt_tokens_nonthinking": 17932,
+      "reference_tokens": 140
+    },
+    {
+      "split": "train",
+      "row": 1542,
+      "original_row": 1783,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11199,
+      "prompt_tokens_nonthinking": 11203,
+      "reference_tokens": 265
+    },
+    {
+      "split": "train",
+      "row": 1543,
+      "original_row": 1785,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16890,
+      "prompt_tokens_nonthinking": 16894,
+      "reference_tokens": 743
+    },
+    {
+      "split": "train",
+      "row": 1562,
+      "original_row": 1810,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12134,
+      "prompt_tokens_nonthinking": 12138,
+      "reference_tokens": 444
+    },
+    {
+      "split": "train",
+      "row": 1563,
+      "original_row": 1811,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17218,
+      "prompt_tokens_nonthinking": 17222,
+      "reference_tokens": 161
+    },
+    {
+      "split": "train",
+      "row": 1565,
+      "original_row": 1813,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16231,
+      "prompt_tokens_nonthinking": 16235,
+      "reference_tokens": 705
+    },
+    {
+      "split": "train",
+      "row": 1572,
+      "original_row": 1823,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12344,
+      "prompt_tokens_nonthinking": 12348,
+      "reference_tokens": 303
+    },
+    {
+      "split": "train",
+      "row": 1606,
+      "original_row": 1861,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10209,
+      "prompt_tokens_nonthinking": 10213,
+      "reference_tokens": 192
+    },
+    {
+      "split": "train",
+      "row": 1660,
+      "original_row": 1921,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16234,
+      "prompt_tokens_nonthinking": 16238,
+      "reference_tokens": 875
+    },
+    {
+      "split": "train",
+      "row": 1661,
+      "original_row": 1922,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21037,
+      "prompt_tokens_nonthinking": 21041,
+      "reference_tokens": 294
+    },
+    {
+      "split": "train",
+      "row": 1662,
+      "original_row": 1923,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10623,
+      "prompt_tokens_nonthinking": 10627,
+      "reference_tokens": 187
+    },
+    {
+      "split": "train",
+      "row": 1680,
+      "original_row": 1945,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13040,
+      "prompt_tokens_nonthinking": 13044,
+      "reference_tokens": 970
+    },
+    {
+      "split": "train",
+      "row": 1681,
+      "original_row": 1946,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 28645,
+      "prompt_tokens_nonthinking": 28649,
+      "reference_tokens": 268
+    },
+    {
+      "split": "train",
+      "row": 1704,
+      "original_row": 1969,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10056,
+      "prompt_tokens_nonthinking": 10060,
+      "reference_tokens": 268
+    },
+    {
+      "split": "train",
+      "row": 1710,
+      "original_row": 1975,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14453,
+      "prompt_tokens_nonthinking": 14457,
+      "reference_tokens": 279
+    },
+    {
+      "split": "train",
+      "row": 1718,
+      "original_row": 1983,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11408,
+      "prompt_tokens_nonthinking": 11412,
+      "reference_tokens": 489
+    },
+    {
+      "split": "train",
+      "row": 1736,
+      "original_row": 2007,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 41898,
+      "prompt_tokens_nonthinking": 41902,
+      "reference_tokens": 319
+    },
+    {
+      "split": "train",
+      "row": 1755,
+      "original_row": 2030,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21891,
+      "prompt_tokens_nonthinking": 21895,
+      "reference_tokens": 553
+    },
+    {
+      "split": "train",
+      "row": 1763,
+      "original_row": 2039,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10950,
+      "prompt_tokens_nonthinking": 10954,
+      "reference_tokens": 610
+    },
+    {
+      "split": "train",
+      "row": 1768,
+      "original_row": 2045,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10117,
+      "prompt_tokens_nonthinking": 10121,
+      "reference_tokens": 92
+    },
+    {
+      "split": "train",
+      "row": 1788,
+      "original_row": 2067,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 22139,
+      "prompt_tokens_nonthinking": 22143,
+      "reference_tokens": 272
+    },
+    {
+      "split": "train",
+      "row": 1792,
+      "original_row": 2072,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11344,
+      "prompt_tokens_nonthinking": 11348,
+      "reference_tokens": 147
+    },
+    {
+      "split": "train",
+      "row": 1796,
+      "original_row": 2077,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17884,
+      "prompt_tokens_nonthinking": 17888,
+      "reference_tokens": 125
+    },
+    {
+      "split": "train",
+      "row": 1802,
+      "original_row": 2083,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17243,
+      "prompt_tokens_nonthinking": 17247,
+      "reference_tokens": 337
+    },
+    {
+      "split": "train",
+      "row": 1810,
+      "original_row": 2091,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11291,
+      "prompt_tokens_nonthinking": 11295,
+      "reference_tokens": 715
+    },
+    {
+      "split": "train",
+      "row": 1819,
+      "original_row": 2100,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14085,
+      "prompt_tokens_nonthinking": 14089,
+      "reference_tokens": 190
+    },
+    {
+      "split": "train",
+      "row": 1837,
+      "original_row": 2119,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 23056,
+      "prompt_tokens_nonthinking": 23060,
+      "reference_tokens": 213
+    },
+    {
+      "split": "train",
+      "row": 1846,
+      "original_row": 2129,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14960,
+      "prompt_tokens_nonthinking": 14964,
+      "reference_tokens": 130
+    },
+    {
+      "split": "train",
+      "row": 1848,
+      "original_row": 2131,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 21868,
+      "prompt_tokens_nonthinking": 21872,
+      "reference_tokens": 572
+    },
+    {
+      "split": "train",
+      "row": 1850,
+      "original_row": 2133,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14032,
+      "prompt_tokens_nonthinking": 14036,
+      "reference_tokens": 880
+    },
+    {
+      "split": "train",
+      "row": 1895,
+      "original_row": 2186,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 21640,
+      "prompt_tokens_nonthinking": 21644,
+      "reference_tokens": 750
+    },
+    {
+      "split": "train",
+      "row": 1903,
+      "original_row": 2197,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12478,
+      "prompt_tokens_nonthinking": 12482,
+      "reference_tokens": 279
+    },
+    {
+      "split": "train",
+      "row": 1917,
+      "original_row": 2213,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12496,
+      "prompt_tokens_nonthinking": 12500,
+      "reference_tokens": 350
+    },
+    {
+      "split": "train",
+      "row": 1935,
+      "original_row": 2232,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17353,
+      "prompt_tokens_nonthinking": 17357,
+      "reference_tokens": 560
+    },
+    {
+      "split": "train",
+      "row": 1986,
+      "original_row": 2295,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12534,
+      "prompt_tokens_nonthinking": 12538,
+      "reference_tokens": 152
+    },
+    {
+      "split": "train",
+      "row": 2017,
+      "original_row": 2331,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12189,
+      "prompt_tokens_nonthinking": 12193,
+      "reference_tokens": 100
+    },
+    {
+      "split": "train",
+      "row": 2021,
+      "original_row": 2335,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10469,
+      "prompt_tokens_nonthinking": 10473,
+      "reference_tokens": 902
+    },
+    {
+      "split": "train",
+      "row": 2022,
+      "original_row": 2336,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14211,
+      "prompt_tokens_nonthinking": 14215,
+      "reference_tokens": 578
+    },
+    {
+      "split": "train",
+      "row": 2028,
+      "original_row": 2343,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13138,
+      "prompt_tokens_nonthinking": 13142,
+      "reference_tokens": 732
+    },
+    {
+      "split": "train",
+      "row": 2035,
+      "original_row": 2353,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21878,
+      "prompt_tokens_nonthinking": 21882,
+      "reference_tokens": 292
+    },
+    {
+      "split": "train",
+      "row": 2050,
+      "original_row": 2371,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 13837,
+      "prompt_tokens_nonthinking": 13841,
+      "reference_tokens": 234
+    },
+    {
+      "split": "train",
+      "row": 2051,
+      "original_row": 2372,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12548,
+      "prompt_tokens_nonthinking": 12552,
+      "reference_tokens": 260
+    },
+    {
+      "split": "train",
+      "row": 2058,
+      "original_row": 2379,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12410,
+      "prompt_tokens_nonthinking": 12414,
+      "reference_tokens": 264
+    },
+    {
+      "split": "train",
+      "row": 2076,
+      "original_row": 2403,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16479,
+      "prompt_tokens_nonthinking": 16483,
+      "reference_tokens": 247
+    },
+    {
+      "split": "train",
+      "row": 2082,
+      "original_row": 2412,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13378,
+      "prompt_tokens_nonthinking": 13382,
+      "reference_tokens": 299
+    },
+    {
+      "split": "train",
+      "row": 2091,
+      "original_row": 2425,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 25612,
+      "prompt_tokens_nonthinking": 25616,
+      "reference_tokens": 650
+    },
+    {
+      "split": "train",
+      "row": 2103,
+      "original_row": 2439,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13658,
+      "prompt_tokens_nonthinking": 13662,
+      "reference_tokens": 1031
+    },
+    {
+      "split": "train",
+      "row": 2115,
+      "original_row": 2454,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12250,
+      "prompt_tokens_nonthinking": 12254,
+      "reference_tokens": 706
+    },
+    {
+      "split": "train",
+      "row": 2122,
+      "original_row": 2463,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10938,
+      "prompt_tokens_nonthinking": 10942,
+      "reference_tokens": 229
+    },
+    {
+      "split": "train",
+      "row": 2125,
+      "original_row": 2466,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10527,
+      "prompt_tokens_nonthinking": 10531,
+      "reference_tokens": 187
+    },
+    {
+      "split": "train",
+      "row": 2161,
+      "original_row": 2508,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14224,
+      "prompt_tokens_nonthinking": 14228,
+      "reference_tokens": 692
+    },
+    {
+      "split": "train",
+      "row": 2168,
+      "original_row": 2518,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21403,
+      "prompt_tokens_nonthinking": 21407,
+      "reference_tokens": 972
+    },
+    {
+      "split": "train",
+      "row": 2175,
+      "original_row": 2529,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14279,
+      "prompt_tokens_nonthinking": 14283,
+      "reference_tokens": 348
+    },
+    {
+      "split": "train",
+      "row": 2177,
+      "original_row": 2531,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10519,
+      "prompt_tokens_nonthinking": 10523,
+      "reference_tokens": 211
+    },
+    {
+      "split": "train",
+      "row": 2186,
+      "original_row": 2540,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13741,
+      "prompt_tokens_nonthinking": 13745,
+      "reference_tokens": 211
+    },
+    {
+      "split": "train",
+      "row": 2201,
+      "original_row": 2560,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18525,
+      "prompt_tokens_nonthinking": 18529,
+      "reference_tokens": 634
+    },
+    {
+      "split": "train",
+      "row": 2228,
+      "original_row": 2595,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18852,
+      "prompt_tokens_nonthinking": 18856,
+      "reference_tokens": 426
+    },
+    {
+      "split": "train",
+      "row": 2243,
+      "original_row": 2614,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13319,
+      "prompt_tokens_nonthinking": 13323,
+      "reference_tokens": 592
+    },
+    {
+      "split": "train",
+      "row": 2246,
+      "original_row": 2618,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14491,
+      "prompt_tokens_nonthinking": 14495,
+      "reference_tokens": 50
+    },
+    {
+      "split": "train",
+      "row": 2255,
+      "original_row": 2627,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 31307,
+      "prompt_tokens_nonthinking": 31311,
+      "reference_tokens": 209
+    },
+    {
+      "split": "train",
+      "row": 2272,
+      "original_row": 2647,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12159,
+      "prompt_tokens_nonthinking": 12163,
+      "reference_tokens": 237
+    },
+    {
+      "split": "train",
+      "row": 2276,
+      "original_row": 2652,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 18121,
+      "prompt_tokens_nonthinking": 18125,
+      "reference_tokens": 391
+    },
+    {
+      "split": "train",
+      "row": 2281,
+      "original_row": 2657,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11112,
+      "prompt_tokens_nonthinking": 11116,
+      "reference_tokens": 394
+    },
+    {
+      "split": "train",
+      "row": 2294,
+      "original_row": 2675,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22682,
+      "prompt_tokens_nonthinking": 22686,
+      "reference_tokens": 502
+    },
+    {
+      "split": "train",
+      "row": 2297,
+      "original_row": 2678,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 43608,
+      "prompt_tokens_nonthinking": 43612,
+      "reference_tokens": 511
+    },
+    {
+      "split": "train",
+      "row": 2304,
+      "original_row": 2686,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13467,
+      "prompt_tokens_nonthinking": 13471,
+      "reference_tokens": 718
+    },
+    {
+      "split": "train",
+      "row": 2318,
+      "original_row": 2702,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11160,
+      "prompt_tokens_nonthinking": 11164,
+      "reference_tokens": 93
+    },
+    {
+      "split": "train",
+      "row": 2382,
+      "original_row": 2777,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14041,
+      "prompt_tokens_nonthinking": 14045,
+      "reference_tokens": 840
+    },
+    {
+      "split": "train",
+      "row": 2383,
+      "original_row": 2778,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11926,
+      "prompt_tokens_nonthinking": 11930,
+      "reference_tokens": 94
+    },
+    {
+      "split": "train",
+      "row": 2396,
+      "original_row": 2795,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 18492,
+      "prompt_tokens_nonthinking": 18496,
+      "reference_tokens": 423
+    },
+    {
+      "split": "train",
+      "row": 2402,
+      "original_row": 2802,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20290,
+      "prompt_tokens_nonthinking": 20294,
+      "reference_tokens": 627
+    },
+    {
+      "split": "train",
+      "row": 2407,
+      "original_row": 2810,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19605,
+      "prompt_tokens_nonthinking": 19609,
+      "reference_tokens": 387
+    },
+    {
+      "split": "train",
+      "row": 2417,
+      "original_row": 2821,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 44707,
+      "prompt_tokens_nonthinking": 44711,
+      "reference_tokens": 285
+    },
+    {
+      "split": "train",
+      "row": 2432,
+      "original_row": 2840,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 25819,
+      "prompt_tokens_nonthinking": 25823,
+      "reference_tokens": 641
+    },
+    {
+      "split": "train",
+      "row": 2433,
+      "original_row": 2841,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 26503,
+      "prompt_tokens_nonthinking": 26507,
+      "reference_tokens": 990
+    },
+    {
+      "split": "train",
+      "row": 2502,
+      "original_row": 2924,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21397,
+      "prompt_tokens_nonthinking": 21401,
+      "reference_tokens": 237
+    },
+    {
+      "split": "train",
+      "row": 2505,
+      "original_row": 2927,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14593,
+      "prompt_tokens_nonthinking": 14597,
+      "reference_tokens": 815
+    },
+    {
+      "split": "train",
+      "row": 2513,
+      "original_row": 2937,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18961,
+      "prompt_tokens_nonthinking": 18965,
+      "reference_tokens": 474
+    },
+    {
+      "split": "train",
+      "row": 2515,
+      "original_row": 2939,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16782,
+      "prompt_tokens_nonthinking": 16786,
+      "reference_tokens": 815
+    },
+    {
+      "split": "train",
+      "row": 2523,
+      "original_row": 2948,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16312,
+      "prompt_tokens_nonthinking": 16316,
+      "reference_tokens": 170
+    },
+    {
+      "split": "train",
+      "row": 2526,
+      "original_row": 2951,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 10806,
+      "prompt_tokens_nonthinking": 10810,
+      "reference_tokens": 665
+    },
+    {
+      "split": "train",
+      "row": 2531,
+      "original_row": 2957,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 11445,
+      "prompt_tokens_nonthinking": 11449,
+      "reference_tokens": 294
+    },
+    {
+      "split": "train",
+      "row": 2565,
+      "original_row": 2995,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21696,
+      "prompt_tokens_nonthinking": 21700,
+      "reference_tokens": 517
+    },
+    {
+      "split": "train",
+      "row": 2601,
+      "original_row": 3033,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17219,
+      "prompt_tokens_nonthinking": 17223,
+      "reference_tokens": 553
+    },
+    {
+      "split": "train",
+      "row": 2610,
+      "original_row": 3042,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10078,
+      "prompt_tokens_nonthinking": 10082,
+      "reference_tokens": 331
+    },
+    {
+      "split": "train",
+      "row": 2636,
+      "original_row": 3074,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11735,
+      "prompt_tokens_nonthinking": 11739,
+      "reference_tokens": 687
+    },
+    {
+      "split": "train",
+      "row": 2639,
+      "original_row": 3077,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 20711,
+      "prompt_tokens_nonthinking": 20715,
+      "reference_tokens": 375
+    },
+    {
+      "split": "train",
+      "row": 2647,
+      "original_row": 3087,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15877,
+      "prompt_tokens_nonthinking": 15881,
+      "reference_tokens": 97
+    },
+    {
+      "split": "train",
+      "row": 2652,
+      "original_row": 3092,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22840,
+      "prompt_tokens_nonthinking": 22844,
+      "reference_tokens": 575
+    },
+    {
+      "split": "train",
+      "row": 2659,
+      "original_row": 3100,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 23833,
+      "prompt_tokens_nonthinking": 23837,
+      "reference_tokens": 309
+    },
+    {
+      "split": "train",
+      "row": 2685,
+      "original_row": 3129,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17907,
+      "prompt_tokens_nonthinking": 17911,
+      "reference_tokens": 514
+    },
+    {
+      "split": "train",
+      "row": 2691,
+      "original_row": 3136,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21087,
+      "prompt_tokens_nonthinking": 21091,
+      "reference_tokens": 249
+    },
+    {
+      "split": "train",
+      "row": 2695,
+      "original_row": 3140,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13301,
+      "prompt_tokens_nonthinking": 13305,
+      "reference_tokens": 722
+    },
+    {
+      "split": "train",
+      "row": 2708,
+      "original_row": 3153,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13246,
+      "prompt_tokens_nonthinking": 13250,
+      "reference_tokens": 161
+    },
+    {
+      "split": "train",
+      "row": 2709,
+      "original_row": 3155,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11454,
+      "prompt_tokens_nonthinking": 11458,
+      "reference_tokens": 357
+    },
+    {
+      "split": "train",
+      "row": 2718,
+      "original_row": 3164,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14208,
+      "prompt_tokens_nonthinking": 14212,
+      "reference_tokens": 142
+    },
+    {
+      "split": "train",
+      "row": 2723,
+      "original_row": 3169,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15638,
+      "prompt_tokens_nonthinking": 15642,
+      "reference_tokens": 963
+    },
+    {
+      "split": "train",
+      "row": 2736,
+      "original_row": 3182,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11462,
+      "prompt_tokens_nonthinking": 11466,
+      "reference_tokens": 136
+    },
+    {
+      "split": "train",
+      "row": 2760,
+      "original_row": 3207,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16432,
+      "prompt_tokens_nonthinking": 16436,
+      "reference_tokens": 171
+    },
+    {
+      "split": "train",
+      "row": 2785,
+      "original_row": 3237,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15004,
+      "prompt_tokens_nonthinking": 15008,
+      "reference_tokens": 744
+    },
+    {
+      "split": "train",
+      "row": 2786,
+      "original_row": 3239,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16754,
+      "prompt_tokens_nonthinking": 16758,
+      "reference_tokens": 958
+    },
+    {
+      "split": "train",
+      "row": 2819,
+      "original_row": 3273,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12684,
+      "prompt_tokens_nonthinking": 12688,
+      "reference_tokens": 289
+    },
+    {
+      "split": "train",
+      "row": 2826,
+      "original_row": 3281,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14231,
+      "prompt_tokens_nonthinking": 14235,
+      "reference_tokens": 768
+    },
+    {
+      "split": "train",
+      "row": 2837,
+      "original_row": 3295,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11872,
+      "prompt_tokens_nonthinking": 11876,
+      "reference_tokens": 335
+    },
+    {
+      "split": "train",
+      "row": 2844,
+      "original_row": 3306,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 12063,
+      "prompt_tokens_nonthinking": 12067,
+      "reference_tokens": 947
+    },
+    {
+      "split": "train",
+      "row": 2854,
+      "original_row": 3316,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12474,
+      "prompt_tokens_nonthinking": 12478,
+      "reference_tokens": 965
+    },
+    {
+      "split": "train",
+      "row": 2863,
+      "original_row": 3325,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 18783,
+      "prompt_tokens_nonthinking": 18787,
+      "reference_tokens": 23
+    },
+    {
+      "split": "train",
+      "row": 2875,
+      "original_row": 3338,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12595,
+      "prompt_tokens_nonthinking": 12599,
+      "reference_tokens": 114
+    },
+    {
+      "split": "train",
+      "row": 2901,
+      "original_row": 3367,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11831,
+      "prompt_tokens_nonthinking": 11835,
+      "reference_tokens": 558
+    },
+    {
+      "split": "train",
+      "row": 2906,
+      "original_row": 3372,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14520,
+      "prompt_tokens_nonthinking": 14524,
+      "reference_tokens": 152
+    },
+    {
+      "split": "train",
+      "row": 2914,
+      "original_row": 3382,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10167,
+      "prompt_tokens_nonthinking": 10171,
+      "reference_tokens": 303
+    },
+    {
+      "split": "train",
+      "row": 2930,
+      "original_row": 3403,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13531,
+      "prompt_tokens_nonthinking": 13535,
+      "reference_tokens": 1012
+    },
+    {
+      "split": "train",
+      "row": 2932,
+      "original_row": 3406,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11648,
+      "prompt_tokens_nonthinking": 11652,
+      "reference_tokens": 240
+    },
+    {
+      "split": "train",
+      "row": 2941,
+      "original_row": 3415,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11220,
+      "prompt_tokens_nonthinking": 11224,
+      "reference_tokens": 274
+    },
+    {
+      "split": "train",
+      "row": 2943,
+      "original_row": 3418,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13058,
+      "prompt_tokens_nonthinking": 13062,
+      "reference_tokens": 1474
+    },
+    {
+      "split": "train",
+      "row": 2949,
+      "original_row": 3426,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20595,
+      "prompt_tokens_nonthinking": 20599,
+      "reference_tokens": 174
+    },
+    {
+      "split": "train",
+      "row": 2955,
+      "original_row": 3432,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11640,
+      "prompt_tokens_nonthinking": 11644,
+      "reference_tokens": 204
+    },
+    {
+      "split": "train",
+      "row": 2969,
+      "original_row": 3446,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12150,
+      "prompt_tokens_nonthinking": 12154,
+      "reference_tokens": 787
+    },
+    {
+      "split": "train",
+      "row": 2973,
+      "original_row": 3450,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10608,
+      "prompt_tokens_nonthinking": 10612,
+      "reference_tokens": 241
+    },
+    {
+      "split": "train",
+      "row": 2994,
+      "original_row": 3476,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12441,
+      "prompt_tokens_nonthinking": 12445,
+      "reference_tokens": 287
+    },
+    {
+      "split": "train",
+      "row": 3017,
+      "original_row": 3504,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10515,
+      "prompt_tokens_nonthinking": 10519,
+      "reference_tokens": 239
+    },
+    {
+      "split": "train",
+      "row": 3019,
+      "original_row": 3506,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15674,
+      "prompt_tokens_nonthinking": 15678,
+      "reference_tokens": 890
+    },
+    {
+      "split": "train",
+      "row": 3021,
+      "original_row": 3508,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15240,
+      "prompt_tokens_nonthinking": 15244,
+      "reference_tokens": 392
+    },
+    {
+      "split": "train",
+      "row": 3030,
+      "original_row": 3519,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14671,
+      "prompt_tokens_nonthinking": 14675,
+      "reference_tokens": 664
+    },
+    {
+      "split": "train",
+      "row": 3036,
+      "original_row": 3526,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11158,
+      "prompt_tokens_nonthinking": 11162,
+      "reference_tokens": 736
+    },
+    {
+      "split": "train",
+      "row": 3050,
+      "original_row": 3544,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12089,
+      "prompt_tokens_nonthinking": 12093,
+      "reference_tokens": 618
+    },
+    {
+      "split": "train",
+      "row": 3060,
+      "original_row": 3556,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13696,
+      "prompt_tokens_nonthinking": 13700,
+      "reference_tokens": 817
+    },
+    {
+      "split": "train",
+      "row": 3061,
+      "original_row": 3557,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11425,
+      "prompt_tokens_nonthinking": 11429,
+      "reference_tokens": 719
+    },
+    {
+      "split": "train",
+      "row": 3074,
+      "original_row": 3572,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 27066,
+      "prompt_tokens_nonthinking": 27070,
+      "reference_tokens": 384
+    },
+    {
+      "split": "train",
+      "row": 3086,
+      "original_row": 3585,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10502,
+      "prompt_tokens_nonthinking": 10506,
+      "reference_tokens": 682
+    },
+    {
+      "split": "train",
+      "row": 3092,
+      "original_row": 3592,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14418,
+      "prompt_tokens_nonthinking": 14422,
+      "reference_tokens": 668
+    },
+    {
+      "split": "train",
+      "row": 3093,
+      "original_row": 3593,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11520,
+      "prompt_tokens_nonthinking": 11524,
+      "reference_tokens": 109
+    },
+    {
+      "split": "train",
+      "row": 3122,
+      "original_row": 3623,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 73414,
+      "prompt_tokens_nonthinking": 73418,
+      "reference_tokens": 728
+    },
+    {
+      "split": "train",
+      "row": 3151,
+      "original_row": 3655,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 25230,
+      "prompt_tokens_nonthinking": 25234,
+      "reference_tokens": 512
+    },
+    {
+      "split": "train",
+      "row": 3152,
+      "original_row": 3656,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17683,
+      "prompt_tokens_nonthinking": 17687,
+      "reference_tokens": 79
+    },
+    {
+      "split": "train",
+      "row": 3170,
+      "original_row": 3676,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11671,
+      "prompt_tokens_nonthinking": 11675,
+      "reference_tokens": 352
+    },
+    {
+      "split": "train",
+      "row": 3179,
+      "original_row": 3688,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15840,
+      "prompt_tokens_nonthinking": 15844,
+      "reference_tokens": 232
+    },
+    {
+      "split": "train",
+      "row": 3220,
+      "original_row": 3732,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11172,
+      "prompt_tokens_nonthinking": 11176,
+      "reference_tokens": 288
+    },
+    {
+      "split": "train",
+      "row": 3225,
+      "original_row": 3738,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10341,
+      "prompt_tokens_nonthinking": 10345,
+      "reference_tokens": 572
+    },
+    {
+      "split": "train",
+      "row": 3241,
+      "original_row": 3757,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11779,
+      "prompt_tokens_nonthinking": 11783,
+      "reference_tokens": 499
+    },
+    {
+      "split": "train",
+      "row": 3269,
+      "original_row": 3789,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10081,
+      "prompt_tokens_nonthinking": 10085,
+      "reference_tokens": 510
+    },
+    {
+      "split": "train",
+      "row": 3297,
+      "original_row": 3822,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10182,
+      "prompt_tokens_nonthinking": 10186,
+      "reference_tokens": 189
+    },
+    {
+      "split": "train",
+      "row": 3299,
+      "original_row": 3824,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12963,
+      "prompt_tokens_nonthinking": 12967,
+      "reference_tokens": 596
+    },
+    {
+      "split": "train",
+      "row": 3301,
+      "original_row": 3826,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 12501,
+      "prompt_tokens_nonthinking": 12505,
+      "reference_tokens": 334
+    },
+    {
+      "split": "train",
+      "row": 3308,
+      "original_row": 3833,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 15476,
+      "prompt_tokens_nonthinking": 15480,
+      "reference_tokens": 1119
+    },
+    {
+      "split": "train",
+      "row": 3314,
+      "original_row": 3839,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11314,
+      "prompt_tokens_nonthinking": 11318,
+      "reference_tokens": 605
+    },
+    {
+      "split": "train",
+      "row": 3332,
+      "original_row": 3861,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14715,
+      "prompt_tokens_nonthinking": 14719,
+      "reference_tokens": 900
+    },
+    {
+      "split": "train",
+      "row": 3340,
+      "original_row": 3869,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11491,
+      "prompt_tokens_nonthinking": 11495,
+      "reference_tokens": 594
+    },
+    {
+      "split": "train",
+      "row": 3344,
+      "original_row": 3874,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11222,
+      "prompt_tokens_nonthinking": 11226,
+      "reference_tokens": 218
+    },
+    {
+      "split": "train",
+      "row": 3348,
+      "original_row": 3878,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11191,
+      "prompt_tokens_nonthinking": 11195,
+      "reference_tokens": 493
+    },
+    {
+      "split": "train",
+      "row": 3356,
+      "original_row": 3887,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12616,
+      "prompt_tokens_nonthinking": 12620,
+      "reference_tokens": 780
+    },
+    {
+      "split": "train",
+      "row": 3365,
+      "original_row": 3896,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12620,
+      "prompt_tokens_nonthinking": 12624,
+      "reference_tokens": 324
+    },
+    {
+      "split": "train",
+      "row": 3374,
+      "original_row": 3907,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13377,
+      "prompt_tokens_nonthinking": 13381,
+      "reference_tokens": 539
+    },
+    {
+      "split": "train",
+      "row": 3378,
+      "original_row": 3912,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10333,
+      "prompt_tokens_nonthinking": 10337,
+      "reference_tokens": 345
+    },
+    {
+      "split": "train",
+      "row": 3382,
+      "original_row": 3917,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24346,
+      "prompt_tokens_nonthinking": 24350,
+      "reference_tokens": 187
+    },
+    {
+      "split": "train",
+      "row": 3386,
+      "original_row": 3922,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11855,
+      "prompt_tokens_nonthinking": 11859,
+      "reference_tokens": 129
+    },
+    {
+      "split": "train",
+      "row": 3393,
+      "original_row": 3930,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10023,
+      "prompt_tokens_nonthinking": 10027,
+      "reference_tokens": 438
+    },
+    {
+      "split": "train",
+      "row": 3401,
+      "original_row": 3938,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 31929,
+      "prompt_tokens_nonthinking": 31933,
+      "reference_tokens": 841
+    },
+    {
+      "split": "train",
+      "row": 3414,
+      "original_row": 3955,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 19226,
+      "prompt_tokens_nonthinking": 19230,
+      "reference_tokens": 236
+    },
+    {
+      "split": "train",
+      "row": 3422,
+      "original_row": 3963,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10550,
+      "prompt_tokens_nonthinking": 10554,
+      "reference_tokens": 946
+    },
+    {
+      "split": "train",
+      "row": 3425,
+      "original_row": 3966,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 13742,
+      "prompt_tokens_nonthinking": 13746,
+      "reference_tokens": 292
+    },
+    {
+      "split": "train",
+      "row": 3431,
+      "original_row": 3973,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12159,
+      "prompt_tokens_nonthinking": 12163,
+      "reference_tokens": 558
+    },
+    {
+      "split": "train",
+      "row": 3436,
+      "original_row": 3978,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13800,
+      "prompt_tokens_nonthinking": 13804,
+      "reference_tokens": 272
+    },
+    {
+      "split": "train",
+      "row": 3444,
+      "original_row": 3989,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18514,
+      "prompt_tokens_nonthinking": 18518,
+      "reference_tokens": 226
+    },
+    {
+      "split": "train",
+      "row": 3458,
+      "original_row": 4006,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10537,
+      "prompt_tokens_nonthinking": 10541,
+      "reference_tokens": 828
+    },
+    {
+      "split": "train",
+      "row": 3476,
+      "original_row": 4028,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18668,
+      "prompt_tokens_nonthinking": 18672,
+      "reference_tokens": 320
+    },
+    {
+      "split": "train",
+      "row": 3477,
+      "original_row": 4029,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14631,
+      "prompt_tokens_nonthinking": 14635,
+      "reference_tokens": 291
+    },
+    {
+      "split": "train",
+      "row": 3482,
+      "original_row": 4035,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12620,
+      "prompt_tokens_nonthinking": 12624,
+      "reference_tokens": 778
+    },
+    {
+      "split": "train",
+      "row": 3505,
+      "original_row": 4062,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15803,
+      "prompt_tokens_nonthinking": 15807,
+      "reference_tokens": 331
+    },
+    {
+      "split": "train",
+      "row": 3522,
+      "original_row": 4080,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24370,
+      "prompt_tokens_nonthinking": 24374,
+      "reference_tokens": 184
+    },
+    {
+      "split": "train",
+      "row": 3527,
+      "original_row": 4089,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21661,
+      "prompt_tokens_nonthinking": 21665,
+      "reference_tokens": 136
+    },
+    {
+      "split": "train",
+      "row": 3530,
+      "original_row": 4093,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 29843,
+      "prompt_tokens_nonthinking": 29847,
+      "reference_tokens": 746
+    },
+    {
+      "split": "train",
+      "row": 3545,
+      "original_row": 4109,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11549,
+      "prompt_tokens_nonthinking": 11553,
+      "reference_tokens": 586
+    },
+    {
+      "split": "train",
+      "row": 3555,
+      "original_row": 4121,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10336,
+      "prompt_tokens_nonthinking": 10340,
+      "reference_tokens": 671
+    },
+    {
+      "split": "train",
+      "row": 3576,
+      "original_row": 4143,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11406,
+      "prompt_tokens_nonthinking": 11410,
+      "reference_tokens": 809
+    },
+    {
+      "split": "train",
+      "row": 3583,
+      "original_row": 4154,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10033,
+      "prompt_tokens_nonthinking": 10037,
+      "reference_tokens": 266
+    },
+    {
+      "split": "train",
+      "row": 3585,
+      "original_row": 4157,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16412,
+      "prompt_tokens_nonthinking": 16416,
+      "reference_tokens": 895
+    },
+    {
+      "split": "train",
+      "row": 3589,
+      "original_row": 4161,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 20633,
+      "prompt_tokens_nonthinking": 20637,
+      "reference_tokens": 242
+    },
+    {
+      "split": "train",
+      "row": 3597,
+      "original_row": 4169,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 12422,
+      "prompt_tokens_nonthinking": 12426,
+      "reference_tokens": 317
+    },
+    {
+      "split": "train",
+      "row": 3598,
+      "original_row": 4171,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21413,
+      "prompt_tokens_nonthinking": 21417,
+      "reference_tokens": 161
+    },
+    {
+      "split": "train",
+      "row": 3622,
+      "original_row": 4196,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16473,
+      "prompt_tokens_nonthinking": 16477,
+      "reference_tokens": 238
+    },
+    {
+      "split": "train",
+      "row": 3627,
+      "original_row": 4202,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14300,
+      "prompt_tokens_nonthinking": 14304,
+      "reference_tokens": 252
+    },
+    {
+      "split": "train",
+      "row": 3635,
+      "original_row": 4210,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11395,
+      "prompt_tokens_nonthinking": 11399,
+      "reference_tokens": 229
+    },
+    {
+      "split": "train",
+      "row": 3640,
+      "original_row": 4215,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12987,
+      "prompt_tokens_nonthinking": 12991,
+      "reference_tokens": 795
+    },
+    {
+      "split": "train",
+      "row": 3673,
+      "original_row": 4249,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13141,
+      "prompt_tokens_nonthinking": 13145,
+      "reference_tokens": 148
+    },
+    {
+      "split": "train",
+      "row": 3687,
+      "original_row": 4264,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10664,
+      "prompt_tokens_nonthinking": 10668,
+      "reference_tokens": 267
+    },
+    {
+      "split": "train",
+      "row": 3691,
+      "original_row": 4268,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10238,
+      "prompt_tokens_nonthinking": 10242,
+      "reference_tokens": 305
+    },
+    {
+      "split": "train",
+      "row": 3696,
+      "original_row": 4274,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16122,
+      "prompt_tokens_nonthinking": 16126,
+      "reference_tokens": 620
+    },
+    {
+      "split": "train",
+      "row": 3704,
+      "original_row": 4282,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10342,
+      "prompt_tokens_nonthinking": 10346,
+      "reference_tokens": 350
+    },
+    {
+      "split": "train",
+      "row": 3713,
+      "original_row": 4292,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10558,
+      "prompt_tokens_nonthinking": 10562,
+      "reference_tokens": 231
+    },
+    {
+      "split": "train",
+      "row": 3731,
+      "original_row": 4312,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 12125,
+      "prompt_tokens_nonthinking": 12129,
+      "reference_tokens": 238
+    },
+    {
+      "split": "train",
+      "row": 3746,
+      "original_row": 4327,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20837,
+      "prompt_tokens_nonthinking": 20841,
+      "reference_tokens": 352
+    },
+    {
+      "split": "train",
+      "row": 3749,
+      "original_row": 4333,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16664,
+      "prompt_tokens_nonthinking": 16668,
+      "reference_tokens": 665
+    },
+    {
+      "split": "train",
+      "row": 3751,
+      "original_row": 4336,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10013,
+      "prompt_tokens_nonthinking": 10017,
+      "reference_tokens": 836
+    },
+    {
+      "split": "train",
+      "row": 3758,
+      "original_row": 4344,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10185,
+      "prompt_tokens_nonthinking": 10189,
+      "reference_tokens": 905
+    },
+    {
+      "split": "train",
+      "row": 3760,
+      "original_row": 4346,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19584,
+      "prompt_tokens_nonthinking": 19588,
+      "reference_tokens": 196
+    },
+    {
+      "split": "train",
+      "row": 3793,
+      "original_row": 4380,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 36316,
+      "prompt_tokens_nonthinking": 36320,
+      "reference_tokens": 517
+    },
+    {
+      "split": "train",
+      "row": 3802,
+      "original_row": 4391,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17462,
+      "prompt_tokens_nonthinking": 17466,
+      "reference_tokens": 884
+    },
+    {
+      "split": "train",
+      "row": 3816,
+      "original_row": 4407,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12031,
+      "prompt_tokens_nonthinking": 12035,
+      "reference_tokens": 349
+    },
+    {
+      "split": "train",
+      "row": 3820,
+      "original_row": 4411,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13643,
+      "prompt_tokens_nonthinking": 13647,
+      "reference_tokens": 256
+    },
+    {
+      "split": "train",
+      "row": 3828,
+      "original_row": 4420,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11489,
+      "prompt_tokens_nonthinking": 11493,
+      "reference_tokens": 558
+    },
+    {
+      "split": "train",
+      "row": 3832,
+      "original_row": 4425,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16448,
+      "prompt_tokens_nonthinking": 16452,
+      "reference_tokens": 633
+    },
+    {
+      "split": "train",
+      "row": 3844,
+      "original_row": 4441,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11301,
+      "prompt_tokens_nonthinking": 11305,
+      "reference_tokens": 132
+    },
+    {
+      "split": "train",
+      "row": 3847,
+      "original_row": 4444,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20313,
+      "prompt_tokens_nonthinking": 20317,
+      "reference_tokens": 153
+    },
+    {
+      "split": "train",
+      "row": 3866,
+      "original_row": 4464,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21093,
+      "prompt_tokens_nonthinking": 21097,
+      "reference_tokens": 825
+    },
+    {
+      "split": "train",
+      "row": 3867,
+      "original_row": 4466,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17116,
+      "prompt_tokens_nonthinking": 17120,
+      "reference_tokens": 865
+    },
+    {
+      "split": "train",
+      "row": 3871,
+      "original_row": 4471,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12177,
+      "prompt_tokens_nonthinking": 12181,
+      "reference_tokens": 211
+    },
+    {
+      "split": "train",
+      "row": 3874,
+      "original_row": 4474,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 58248,
+      "prompt_tokens_nonthinking": 58252,
+      "reference_tokens": 595
+    },
+    {
+      "split": "train",
+      "row": 3889,
+      "original_row": 4491,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 87246,
+      "prompt_tokens_nonthinking": 87250,
+      "reference_tokens": 499
+    },
+    {
+      "split": "train",
+      "row": 3900,
+      "original_row": 4505,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11532,
+      "prompt_tokens_nonthinking": 11536,
+      "reference_tokens": 193
+    },
+    {
+      "split": "train",
+      "row": 3912,
+      "original_row": 4517,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13336,
+      "prompt_tokens_nonthinking": 13340,
+      "reference_tokens": 401
+    },
+    {
+      "split": "train",
+      "row": 3926,
+      "original_row": 4534,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18969,
+      "prompt_tokens_nonthinking": 18973,
+      "reference_tokens": 659
+    },
+    {
+      "split": "train",
+      "row": 3937,
+      "original_row": 4545,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12809,
+      "prompt_tokens_nonthinking": 12813,
+      "reference_tokens": 644
+    },
+    {
+      "split": "train",
+      "row": 3954,
+      "original_row": 4567,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12631,
+      "prompt_tokens_nonthinking": 12635,
+      "reference_tokens": 262
+    },
+    {
+      "split": "train",
+      "row": 3959,
+      "original_row": 4574,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 25966,
+      "prompt_tokens_nonthinking": 25970,
+      "reference_tokens": 114
+    },
+    {
+      "split": "train",
+      "row": 3966,
+      "original_row": 4584,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 29147,
+      "prompt_tokens_nonthinking": 29151,
+      "reference_tokens": 566
+    },
+    {
+      "split": "train",
+      "row": 3971,
+      "original_row": 4589,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11575,
+      "prompt_tokens_nonthinking": 11579,
+      "reference_tokens": 624
+    },
+    {
+      "split": "train",
+      "row": 3990,
+      "original_row": 4609,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18588,
+      "prompt_tokens_nonthinking": 18592,
+      "reference_tokens": 850
+    },
+    {
+      "split": "train",
+      "row": 3996,
+      "original_row": 4616,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19825,
+      "prompt_tokens_nonthinking": 19829,
+      "reference_tokens": 278
+    },
+    {
+      "split": "train",
+      "row": 4009,
+      "original_row": 4633,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 25770,
+      "prompt_tokens_nonthinking": 25774,
+      "reference_tokens": 693
+    },
+    {
+      "split": "train",
+      "row": 4021,
+      "original_row": 4646,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16450,
+      "prompt_tokens_nonthinking": 16454,
+      "reference_tokens": 341
+    },
+    {
+      "split": "train",
+      "row": 4032,
+      "original_row": 4660,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 46033,
+      "prompt_tokens_nonthinking": 46037,
+      "reference_tokens": 466
+    },
+    {
+      "split": "train",
+      "row": 4046,
+      "original_row": 4674,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11192,
+      "prompt_tokens_nonthinking": 11196,
+      "reference_tokens": 502
+    },
+    {
+      "split": "train",
+      "row": 4051,
+      "original_row": 4680,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14498,
+      "prompt_tokens_nonthinking": 14502,
+      "reference_tokens": 156
+    },
+    {
+      "split": "train",
+      "row": 4061,
+      "original_row": 4694,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13176,
+      "prompt_tokens_nonthinking": 13180,
+      "reference_tokens": 625
+    },
+    {
+      "split": "train",
+      "row": 4063,
+      "original_row": 4696,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 30866,
+      "prompt_tokens_nonthinking": 30870,
+      "reference_tokens": 526
+    },
+    {
+      "split": "train",
+      "row": 4070,
+      "original_row": 4706,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17842,
+      "prompt_tokens_nonthinking": 17846,
+      "reference_tokens": 773
+    },
+    {
+      "split": "train",
+      "row": 4087,
+      "original_row": 4728,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12145,
+      "prompt_tokens_nonthinking": 12149,
+      "reference_tokens": 342
+    },
+    {
+      "split": "train",
+      "row": 4107,
+      "original_row": 4749,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 15123,
+      "prompt_tokens_nonthinking": 15127,
+      "reference_tokens": 419
+    },
+    {
+      "split": "train",
+      "row": 4118,
+      "original_row": 4761,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10351,
+      "prompt_tokens_nonthinking": 10355,
+      "reference_tokens": 383
+    },
+    {
+      "split": "train",
+      "row": 4128,
+      "original_row": 4773,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 12464,
+      "prompt_tokens_nonthinking": 12468,
+      "reference_tokens": 964
+    },
+    {
+      "split": "train",
+      "row": 4129,
+      "original_row": 4774,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10640,
+      "prompt_tokens_nonthinking": 10644,
+      "reference_tokens": 352
+    },
+    {
+      "split": "train",
+      "row": 4140,
+      "original_row": 4785,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15127,
+      "prompt_tokens_nonthinking": 15131,
+      "reference_tokens": 677
+    },
+    {
+      "split": "train",
+      "row": 4154,
+      "original_row": 4800,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19162,
+      "prompt_tokens_nonthinking": 19166,
+      "reference_tokens": 283
+    },
+    {
+      "split": "train",
+      "row": 4186,
+      "original_row": 4835,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 26931,
+      "prompt_tokens_nonthinking": 26935,
+      "reference_tokens": 708
+    },
+    {
+      "split": "train",
+      "row": 4188,
+      "original_row": 4837,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11387,
+      "prompt_tokens_nonthinking": 11391,
+      "reference_tokens": 778
+    },
+    {
+      "split": "train",
+      "row": 4197,
+      "original_row": 4847,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13607,
+      "prompt_tokens_nonthinking": 13611,
+      "reference_tokens": 254
+    },
+    {
+      "split": "train",
+      "row": 4199,
+      "original_row": 4850,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24877,
+      "prompt_tokens_nonthinking": 24881,
+      "reference_tokens": 533
+    },
+    {
+      "split": "train",
+      "row": 4201,
+      "original_row": 4852,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16525,
+      "prompt_tokens_nonthinking": 16529,
+      "reference_tokens": 217
+    },
+    {
+      "split": "train",
+      "row": 4203,
+      "original_row": 4854,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11090,
+      "prompt_tokens_nonthinking": 11094,
+      "reference_tokens": 302
+    },
+    {
+      "split": "train",
+      "row": 4222,
+      "original_row": 4876,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11281,
+      "prompt_tokens_nonthinking": 11285,
+      "reference_tokens": 654
+    },
+    {
+      "split": "train",
+      "row": 4229,
+      "original_row": 4883,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11559,
+      "prompt_tokens_nonthinking": 11563,
+      "reference_tokens": 645
+    },
+    {
+      "split": "train",
+      "row": 4236,
+      "original_row": 4892,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10186,
+      "prompt_tokens_nonthinking": 10190,
+      "reference_tokens": 184
+    },
+    {
+      "split": "train",
+      "row": 4242,
+      "original_row": 4900,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12031,
+      "prompt_tokens_nonthinking": 12035,
+      "reference_tokens": 360
+    },
+    {
+      "split": "train",
+      "row": 4268,
+      "original_row": 4927,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12314,
+      "prompt_tokens_nonthinking": 12318,
+      "reference_tokens": 632
+    },
+    {
+      "split": "train",
+      "row": 4279,
+      "original_row": 4939,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24323,
+      "prompt_tokens_nonthinking": 24327,
+      "reference_tokens": 351
+    },
+    {
+      "split": "train",
+      "row": 4322,
+      "original_row": 4987,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19545,
+      "prompt_tokens_nonthinking": 19549,
+      "reference_tokens": 555
+    },
+    {
+      "split": "train",
+      "row": 4344,
+      "original_row": 5012,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 22696,
+      "prompt_tokens_nonthinking": 22700,
+      "reference_tokens": 313
+    },
+    {
+      "split": "train",
+      "row": 4346,
+      "original_row": 5014,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12402,
+      "prompt_tokens_nonthinking": 12406,
+      "reference_tokens": 646
+    },
+    {
+      "split": "train",
+      "row": 4353,
+      "original_row": 5023,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 28387,
+      "prompt_tokens_nonthinking": 28391,
+      "reference_tokens": 601
+    },
+    {
+      "split": "train",
+      "row": 4360,
+      "original_row": 5032,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11191,
+      "prompt_tokens_nonthinking": 11195,
+      "reference_tokens": 713
+    },
+    {
+      "split": "train",
+      "row": 4374,
+      "original_row": 5050,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20698,
+      "prompt_tokens_nonthinking": 20702,
+      "reference_tokens": 687
+    },
+    {
+      "split": "train",
+      "row": 4383,
+      "original_row": 5059,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 23648,
+      "prompt_tokens_nonthinking": 23652,
+      "reference_tokens": 222
+    },
+    {
+      "split": "train",
+      "row": 4390,
+      "original_row": 5066,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 16580,
+      "prompt_tokens_nonthinking": 16584,
+      "reference_tokens": 357
+    },
+    {
+      "split": "train",
+      "row": 4394,
+      "original_row": 5070,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 29138,
+      "prompt_tokens_nonthinking": 29142,
+      "reference_tokens": 833
+    },
+    {
+      "split": "train",
+      "row": 4406,
+      "original_row": 5086,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10984,
+      "prompt_tokens_nonthinking": 10988,
+      "reference_tokens": 931
+    },
+    {
+      "split": "train",
+      "row": 4416,
+      "original_row": 5098,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17763,
+      "prompt_tokens_nonthinking": 17767,
+      "reference_tokens": 789
+    },
+    {
+      "split": "train",
+      "row": 4427,
+      "original_row": 5111,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 26542,
+      "prompt_tokens_nonthinking": 26546,
+      "reference_tokens": 801
+    },
+    {
+      "split": "train",
+      "row": 4439,
+      "original_row": 5127,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22417,
+      "prompt_tokens_nonthinking": 22421,
+      "reference_tokens": 661
+    },
+    {
+      "split": "train",
+      "row": 4486,
+      "original_row": 5181,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 35597,
+      "prompt_tokens_nonthinking": 35601,
+      "reference_tokens": 586
+    },
+    {
+      "split": "train",
+      "row": 4488,
+      "original_row": 5184,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16934,
+      "prompt_tokens_nonthinking": 16938,
+      "reference_tokens": 327
+    },
+    {
+      "split": "train",
+      "row": 4490,
+      "original_row": 5187,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19734,
+      "prompt_tokens_nonthinking": 19738,
+      "reference_tokens": 273
+    },
+    {
+      "split": "train",
+      "row": 4491,
+      "original_row": 5188,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17985,
+      "prompt_tokens_nonthinking": 17989,
+      "reference_tokens": 373
+    },
+    {
+      "split": "train",
+      "row": 4492,
+      "original_row": 5189,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11191,
+      "prompt_tokens_nonthinking": 11195,
+      "reference_tokens": 348
+    },
+    {
+      "split": "train",
+      "row": 4500,
+      "original_row": 5198,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17786,
+      "prompt_tokens_nonthinking": 17790,
+      "reference_tokens": 515
+    },
+    {
+      "split": "train",
+      "row": 4503,
+      "original_row": 5203,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11899,
+      "prompt_tokens_nonthinking": 11903,
+      "reference_tokens": 270
+    },
+    {
+      "split": "train",
+      "row": 4531,
+      "original_row": 5238,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13125,
+      "prompt_tokens_nonthinking": 13129,
+      "reference_tokens": 327
+    },
+    {
+      "split": "train",
+      "row": 4535,
+      "original_row": 5242,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12785,
+      "prompt_tokens_nonthinking": 12789,
+      "reference_tokens": 898
+    },
+    {
+      "split": "train",
+      "row": 4539,
+      "original_row": 5246,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14043,
+      "prompt_tokens_nonthinking": 14047,
+      "reference_tokens": 73
+    },
+    {
+      "split": "train",
+      "row": 4553,
+      "original_row": 5262,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 19239,
+      "prompt_tokens_nonthinking": 19243,
+      "reference_tokens": 314
+    },
+    {
+      "split": "train",
+      "row": 4562,
+      "original_row": 5273,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14796,
+      "prompt_tokens_nonthinking": 14800,
+      "reference_tokens": 145
+    },
+    {
+      "split": "train",
+      "row": 4582,
+      "original_row": 5299,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 24620,
+      "prompt_tokens_nonthinking": 24624,
+      "reference_tokens": 725
+    },
+    {
+      "split": "train",
+      "row": 4585,
+      "original_row": 5303,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14819,
+      "prompt_tokens_nonthinking": 14823,
+      "reference_tokens": 161
+    },
+    {
+      "split": "train",
+      "row": 4589,
+      "original_row": 5307,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11241,
+      "prompt_tokens_nonthinking": 11245,
+      "reference_tokens": 140
+    },
+    {
+      "split": "train",
+      "row": 4592,
+      "original_row": 5310,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15244,
+      "prompt_tokens_nonthinking": 15248,
+      "reference_tokens": 243
+    },
+    {
+      "split": "train",
+      "row": 4602,
+      "original_row": 5322,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15138,
+      "prompt_tokens_nonthinking": 15142,
+      "reference_tokens": 227
+    },
+    {
+      "split": "train",
+      "row": 4615,
+      "original_row": 5336,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14007,
+      "prompt_tokens_nonthinking": 14011,
+      "reference_tokens": 343
+    },
+    {
+      "split": "train",
+      "row": 4624,
+      "original_row": 5346,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 63377,
+      "prompt_tokens_nonthinking": 63381,
+      "reference_tokens": 682
+    },
+    {
+      "split": "train",
+      "row": 4631,
+      "original_row": 5355,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15614,
+      "prompt_tokens_nonthinking": 15618,
+      "reference_tokens": 498
+    },
+    {
+      "split": "train",
+      "row": 4634,
+      "original_row": 5359,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10149,
+      "prompt_tokens_nonthinking": 10153,
+      "reference_tokens": 134
+    },
+    {
+      "split": "train",
+      "row": 4640,
+      "original_row": 5366,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 12083,
+      "prompt_tokens_nonthinking": 12087,
+      "reference_tokens": 285
+    },
+    {
+      "split": "train",
+      "row": 4648,
+      "original_row": 5375,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14417,
+      "prompt_tokens_nonthinking": 14421,
+      "reference_tokens": 730
+    },
+    {
+      "split": "train",
+      "row": 4653,
+      "original_row": 5382,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10044,
+      "prompt_tokens_nonthinking": 10048,
+      "reference_tokens": 693
+    },
+    {
+      "split": "train",
+      "row": 4672,
+      "original_row": 5403,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12154,
+      "prompt_tokens_nonthinking": 12158,
+      "reference_tokens": 868
+    },
+    {
+      "split": "train",
+      "row": 4676,
+      "original_row": 5408,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13075,
+      "prompt_tokens_nonthinking": 13079,
+      "reference_tokens": 148
+    },
+    {
+      "split": "train",
+      "row": 4685,
+      "original_row": 5417,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14847,
+      "prompt_tokens_nonthinking": 14851,
+      "reference_tokens": 920
+    },
+    {
+      "split": "train",
+      "row": 4691,
+      "original_row": 5424,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13383,
+      "prompt_tokens_nonthinking": 13387,
+      "reference_tokens": 552
+    },
+    {
+      "split": "train",
+      "row": 4708,
+      "original_row": 5441,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10435,
+      "prompt_tokens_nonthinking": 10439,
+      "reference_tokens": 129
+    },
+    {
+      "split": "train",
+      "row": 4711,
+      "original_row": 5444,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13851,
+      "prompt_tokens_nonthinking": 13855,
+      "reference_tokens": 726
+    },
+    {
+      "split": "train",
+      "row": 4716,
+      "original_row": 5450,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12763,
+      "prompt_tokens_nonthinking": 12767,
+      "reference_tokens": 101
+    },
+    {
+      "split": "train",
+      "row": 4726,
+      "original_row": 5462,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13471,
+      "prompt_tokens_nonthinking": 13475,
+      "reference_tokens": 232
+    },
+    {
+      "split": "train",
+      "row": 4732,
+      "original_row": 5469,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 65668,
+      "prompt_tokens_nonthinking": 65672,
+      "reference_tokens": 830
+    },
+    {
+      "split": "train",
+      "row": 4745,
+      "original_row": 5487,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15238,
+      "prompt_tokens_nonthinking": 15242,
+      "reference_tokens": 192
+    },
+    {
+      "split": "train",
+      "row": 4747,
+      "original_row": 5490,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11605,
+      "prompt_tokens_nonthinking": 11609,
+      "reference_tokens": 101
+    },
+    {
+      "split": "train",
+      "row": 4748,
+      "original_row": 5491,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14987,
+      "prompt_tokens_nonthinking": 14991,
+      "reference_tokens": 728
+    },
+    {
+      "split": "train",
+      "row": 4755,
+      "original_row": 5498,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 26573,
+      "prompt_tokens_nonthinking": 26577,
+      "reference_tokens": 927
+    },
+    {
+      "split": "train",
+      "row": 4765,
+      "original_row": 5510,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13283,
+      "prompt_tokens_nonthinking": 13287,
+      "reference_tokens": 608
+    },
+    {
+      "split": "train",
+      "row": 4772,
+      "original_row": 5519,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11420,
+      "prompt_tokens_nonthinking": 11424,
+      "reference_tokens": 34
+    },
+    {
+      "split": "train",
+      "row": 4778,
+      "original_row": 5525,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 12697,
+      "prompt_tokens_nonthinking": 12701,
+      "reference_tokens": 78
+    },
+    {
+      "split": "train",
+      "row": 4787,
+      "original_row": 5534,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12691,
+      "prompt_tokens_nonthinking": 12695,
+      "reference_tokens": 549
+    },
+    {
+      "split": "train",
+      "row": 4790,
+      "original_row": 5537,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15809,
+      "prompt_tokens_nonthinking": 15813,
+      "reference_tokens": 917
+    },
+    {
+      "split": "train",
+      "row": 4826,
+      "original_row": 5577,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14968,
+      "prompt_tokens_nonthinking": 14972,
+      "reference_tokens": 893
+    },
+    {
+      "split": "train",
+      "row": 4829,
+      "original_row": 5581,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 19536,
+      "prompt_tokens_nonthinking": 19540,
+      "reference_tokens": 668
+    },
+    {
+      "split": "train",
+      "row": 4836,
+      "original_row": 5588,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 16696,
+      "prompt_tokens_nonthinking": 16700,
+      "reference_tokens": 57
+    },
+    {
+      "split": "train",
+      "row": 4839,
+      "original_row": 5591,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17491,
+      "prompt_tokens_nonthinking": 17495,
+      "reference_tokens": 396
+    },
+    {
+      "split": "train",
+      "row": 4860,
+      "original_row": 5617,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11871,
+      "prompt_tokens_nonthinking": 11875,
+      "reference_tokens": 376
+    },
+    {
+      "split": "train",
+      "row": 4872,
+      "original_row": 5630,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16621,
+      "prompt_tokens_nonthinking": 16625,
+      "reference_tokens": 722
+    },
+    {
+      "split": "train",
+      "row": 4885,
+      "original_row": 5645,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10374,
+      "prompt_tokens_nonthinking": 10378,
+      "reference_tokens": 774
+    },
+    {
+      "split": "train",
+      "row": 4897,
+      "original_row": 5658,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12223,
+      "prompt_tokens_nonthinking": 12227,
+      "reference_tokens": 171
+    },
+    {
+      "split": "train",
+      "row": 4901,
+      "original_row": 5664,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17761,
+      "prompt_tokens_nonthinking": 17765,
+      "reference_tokens": 519
+    },
+    {
+      "split": "train",
+      "row": 4928,
+      "original_row": 5697,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10213,
+      "prompt_tokens_nonthinking": 10217,
+      "reference_tokens": 258
+    },
+    {
+      "split": "train",
+      "row": 4929,
+      "original_row": 5699,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11671,
+      "prompt_tokens_nonthinking": 11675,
+      "reference_tokens": 593
+    },
+    {
+      "split": "train",
+      "row": 4945,
+      "original_row": 5716,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12240,
+      "prompt_tokens_nonthinking": 12244,
+      "reference_tokens": 814
+    },
+    {
+      "split": "train",
+      "row": 4962,
+      "original_row": 5735,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20031,
+      "prompt_tokens_nonthinking": 20035,
+      "reference_tokens": 554
+    },
+    {
+      "split": "train",
+      "row": 4966,
+      "original_row": 5739,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13715,
+      "prompt_tokens_nonthinking": 13719,
+      "reference_tokens": 338
+    },
+    {
+      "split": "train",
+      "row": 4983,
+      "original_row": 5757,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17848,
+      "prompt_tokens_nonthinking": 17852,
+      "reference_tokens": 177
+    },
+    {
+      "split": "train",
+      "row": 4989,
+      "original_row": 5763,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11483,
+      "prompt_tokens_nonthinking": 11487,
+      "reference_tokens": 170
+    },
+    {
+      "split": "train",
+      "row": 4994,
+      "original_row": 5769,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 24567,
+      "prompt_tokens_nonthinking": 24571,
+      "reference_tokens": 607
+    },
+    {
+      "split": "train",
+      "row": 5005,
+      "original_row": 5781,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10255,
+      "prompt_tokens_nonthinking": 10259,
+      "reference_tokens": 741
+    },
+    {
+      "split": "train",
+      "row": 5022,
+      "original_row": 5800,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11897,
+      "prompt_tokens_nonthinking": 11901,
+      "reference_tokens": 442
+    },
+    {
+      "split": "train",
+      "row": 5025,
+      "original_row": 5804,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14754,
+      "prompt_tokens_nonthinking": 14758,
+      "reference_tokens": 689
+    },
+    {
+      "split": "train",
+      "row": 5027,
+      "original_row": 5806,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21301,
+      "prompt_tokens_nonthinking": 21305,
+      "reference_tokens": 206
+    },
+    {
+      "split": "train",
+      "row": 5029,
+      "original_row": 5808,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17192,
+      "prompt_tokens_nonthinking": 17196,
+      "reference_tokens": 110
+    },
+    {
+      "split": "train",
+      "row": 5031,
+      "original_row": 5810,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14991,
+      "prompt_tokens_nonthinking": 14995,
+      "reference_tokens": 623
+    },
+    {
+      "split": "train",
+      "row": 5036,
+      "original_row": 5815,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14029,
+      "prompt_tokens_nonthinking": 14033,
+      "reference_tokens": 335
+    },
+    {
+      "split": "train",
+      "row": 5044,
+      "original_row": 5826,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18234,
+      "prompt_tokens_nonthinking": 18238,
+      "reference_tokens": 818
+    },
+    {
+      "split": "train",
+      "row": 5063,
+      "original_row": 5846,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13967,
+      "prompt_tokens_nonthinking": 13971,
+      "reference_tokens": 760
+    },
+    {
+      "split": "train",
+      "row": 5071,
+      "original_row": 5854,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18124,
+      "prompt_tokens_nonthinking": 18128,
+      "reference_tokens": 98
+    },
+    {
+      "split": "train",
+      "row": 5081,
+      "original_row": 5865,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11559,
+      "prompt_tokens_nonthinking": 11563,
+      "reference_tokens": 284
+    },
+    {
+      "split": "train",
+      "row": 5096,
+      "original_row": 5883,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12037,
+      "prompt_tokens_nonthinking": 12041,
+      "reference_tokens": 191
+    },
+    {
+      "split": "train",
+      "row": 5097,
+      "original_row": 5885,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15176,
+      "prompt_tokens_nonthinking": 15180,
+      "reference_tokens": 384
+    },
+    {
+      "split": "train",
+      "row": 5102,
+      "original_row": 5892,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13910,
+      "prompt_tokens_nonthinking": 13914,
+      "reference_tokens": 276
+    },
+    {
+      "split": "train",
+      "row": 5104,
+      "original_row": 5894,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16895,
+      "prompt_tokens_nonthinking": 16899,
+      "reference_tokens": 833
+    },
+    {
+      "split": "train",
+      "row": 5109,
+      "original_row": 5900,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14073,
+      "prompt_tokens_nonthinking": 14077,
+      "reference_tokens": 941
+    },
+    {
+      "split": "train",
+      "row": 5121,
+      "original_row": 5916,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20514,
+      "prompt_tokens_nonthinking": 20518,
+      "reference_tokens": 612
+    },
+    {
+      "split": "train",
+      "row": 5164,
+      "original_row": 5965,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 40221,
+      "prompt_tokens_nonthinking": 40225,
+      "reference_tokens": 1140
+    },
+    {
+      "split": "train",
+      "row": 5165,
+      "original_row": 5966,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22138,
+      "prompt_tokens_nonthinking": 22142,
+      "reference_tokens": 697
+    },
+    {
+      "split": "train",
+      "row": 5173,
+      "original_row": 5974,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15458,
+      "prompt_tokens_nonthinking": 15462,
+      "reference_tokens": 795
+    },
+    {
+      "split": "train",
+      "row": 5181,
+      "original_row": 5984,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15306,
+      "prompt_tokens_nonthinking": 15310,
+      "reference_tokens": 191
+    },
+    {
+      "split": "train",
+      "row": 5184,
+      "original_row": 5987,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13111,
+      "prompt_tokens_nonthinking": 13115,
+      "reference_tokens": 866
+    },
+    {
+      "split": "train",
+      "row": 5188,
+      "original_row": 5992,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13712,
+      "prompt_tokens_nonthinking": 13716,
+      "reference_tokens": 691
+    },
+    {
+      "split": "train",
+      "row": 5193,
+      "original_row": 5998,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 28101,
+      "prompt_tokens_nonthinking": 28105,
+      "reference_tokens": 282
+    },
+    {
+      "split": "train",
+      "row": 5215,
+      "original_row": 6022,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15495,
+      "prompt_tokens_nonthinking": 15499,
+      "reference_tokens": 408
+    },
+    {
+      "split": "train",
+      "row": 5251,
+      "original_row": 6065,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11746,
+      "prompt_tokens_nonthinking": 11750,
+      "reference_tokens": 231
+    },
+    {
+      "split": "train",
+      "row": 5259,
+      "original_row": 6073,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24449,
+      "prompt_tokens_nonthinking": 24453,
+      "reference_tokens": 293
+    },
+    {
+      "split": "train",
+      "row": 5277,
+      "original_row": 6098,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20531,
+      "prompt_tokens_nonthinking": 20535,
+      "reference_tokens": 414
+    },
+    {
+      "split": "train",
+      "row": 5282,
+      "original_row": 6104,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10366,
+      "prompt_tokens_nonthinking": 10370,
+      "reference_tokens": 278
+    },
+    {
+      "split": "train",
+      "row": 5294,
+      "original_row": 6119,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14081,
+      "prompt_tokens_nonthinking": 14085,
+      "reference_tokens": 562
+    },
+    {
+      "split": "train",
+      "row": 5307,
+      "original_row": 6136,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13069,
+      "prompt_tokens_nonthinking": 13073,
+      "reference_tokens": 959
+    },
+    {
+      "split": "train",
+      "row": 5309,
+      "original_row": 6138,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11533,
+      "prompt_tokens_nonthinking": 11537,
+      "reference_tokens": 365
+    },
+    {
+      "split": "train",
+      "row": 5330,
+      "original_row": 6162,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18110,
+      "prompt_tokens_nonthinking": 18114,
+      "reference_tokens": 302
+    },
+    {
+      "split": "train",
+      "row": 5336,
+      "original_row": 6169,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15266,
+      "prompt_tokens_nonthinking": 15270,
+      "reference_tokens": 162
+    },
+    {
+      "split": "train",
+      "row": 5362,
+      "original_row": 6197,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 23886,
+      "prompt_tokens_nonthinking": 23890,
+      "reference_tokens": 534
+    },
+    {
+      "split": "train",
+      "row": 5400,
+      "original_row": 6241,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10861,
+      "prompt_tokens_nonthinking": 10865,
+      "reference_tokens": 308
+    },
+    {
+      "split": "train",
+      "row": 5419,
+      "original_row": 6261,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 187328,
+      "prompt_tokens_nonthinking": 187332,
+      "reference_tokens": 280
+    },
+    {
+      "split": "train",
+      "row": 5432,
+      "original_row": 6276,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 81007,
+      "prompt_tokens_nonthinking": 81011,
+      "reference_tokens": 634
+    },
+    {
+      "split": "train",
+      "row": 5441,
+      "original_row": 6285,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20207,
+      "prompt_tokens_nonthinking": 20211,
+      "reference_tokens": 145
+    },
+    {
+      "split": "train",
+      "row": 5445,
+      "original_row": 6290,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 29476,
+      "prompt_tokens_nonthinking": 29480,
+      "reference_tokens": 447
+    },
+    {
+      "split": "train",
+      "row": 5448,
+      "original_row": 6297,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 27650,
+      "prompt_tokens_nonthinking": 27654,
+      "reference_tokens": 719
+    },
+    {
+      "split": "train",
+      "row": 5456,
+      "original_row": 6306,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12078,
+      "prompt_tokens_nonthinking": 12082,
+      "reference_tokens": 199
+    },
+    {
+      "split": "train",
+      "row": 5462,
+      "original_row": 6314,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15166,
+      "prompt_tokens_nonthinking": 15170,
+      "reference_tokens": 951
+    },
+    {
+      "split": "train",
+      "row": 5466,
+      "original_row": 6318,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11735,
+      "prompt_tokens_nonthinking": 11739,
+      "reference_tokens": 188
+    },
+    {
+      "split": "train",
+      "row": 5499,
+      "original_row": 6355,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10468,
+      "prompt_tokens_nonthinking": 10472,
+      "reference_tokens": 166
+    },
+    {
+      "split": "train",
+      "row": 5519,
+      "original_row": 6378,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12790,
+      "prompt_tokens_nonthinking": 12794,
+      "reference_tokens": 207
+    },
+    {
+      "split": "train",
+      "row": 5524,
+      "original_row": 6384,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 20882,
+      "prompt_tokens_nonthinking": 20886,
+      "reference_tokens": 440
+    },
+    {
+      "split": "train",
+      "row": 5548,
+      "original_row": 6414,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13092,
+      "prompt_tokens_nonthinking": 13096,
+      "reference_tokens": 989
+    },
+    {
+      "split": "train",
+      "row": 5572,
+      "original_row": 6443,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11149,
+      "prompt_tokens_nonthinking": 11153,
+      "reference_tokens": 202
+    },
+    {
+      "split": "train",
+      "row": 5580,
+      "original_row": 6451,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13369,
+      "prompt_tokens_nonthinking": 13373,
+      "reference_tokens": 1624
+    },
+    {
+      "split": "train",
+      "row": 5581,
+      "original_row": 6452,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 15071,
+      "prompt_tokens_nonthinking": 15075,
+      "reference_tokens": 407
+    },
+    {
+      "split": "train",
+      "row": 5593,
+      "original_row": 6465,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13370,
+      "prompt_tokens_nonthinking": 13374,
+      "reference_tokens": 263
+    },
+    {
+      "split": "train",
+      "row": 5603,
+      "original_row": 6477,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11914,
+      "prompt_tokens_nonthinking": 11918,
+      "reference_tokens": 480
+    },
+    {
+      "split": "train",
+      "row": 5612,
+      "original_row": 6486,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15969,
+      "prompt_tokens_nonthinking": 15973,
+      "reference_tokens": 346
+    },
+    {
+      "split": "train",
+      "row": 5619,
+      "original_row": 6494,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12157,
+      "prompt_tokens_nonthinking": 12161,
+      "reference_tokens": 193
+    },
+    {
+      "split": "train",
+      "row": 5645,
+      "original_row": 6524,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13467,
+      "prompt_tokens_nonthinking": 13471,
+      "reference_tokens": 825
+    },
+    {
+      "split": "train",
+      "row": 5673,
+      "original_row": 6556,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18490,
+      "prompt_tokens_nonthinking": 18494,
+      "reference_tokens": 286
+    },
+    {
+      "split": "train",
+      "row": 5681,
+      "original_row": 6565,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 24287,
+      "prompt_tokens_nonthinking": 24291,
+      "reference_tokens": 814
+    },
+    {
+      "split": "train",
+      "row": 5696,
+      "original_row": 6585,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13360,
+      "prompt_tokens_nonthinking": 13364,
+      "reference_tokens": 800
+    },
+    {
+      "split": "train",
+      "row": 5720,
+      "original_row": 6610,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10524,
+      "prompt_tokens_nonthinking": 10528,
+      "reference_tokens": 738
+    },
+    {
+      "split": "train",
+      "row": 5729,
+      "original_row": 6622,
+      "source": "essay_infilling",
+      "prompt_tokens_thinking": 28146,
+      "prompt_tokens_nonthinking": 28150,
+      "reference_tokens": 333
+    },
+    {
+      "split": "train",
+      "row": 5731,
+      "original_row": 6625,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14944,
+      "prompt_tokens_nonthinking": 14948,
+      "reference_tokens": 256
+    },
+    {
+      "split": "train",
+      "row": 5746,
+      "original_row": 6641,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14220,
+      "prompt_tokens_nonthinking": 14224,
+      "reference_tokens": 277
+    },
+    {
+      "split": "train",
+      "row": 5753,
+      "original_row": 6648,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16665,
+      "prompt_tokens_nonthinking": 16669,
+      "reference_tokens": 305
+    },
+    {
+      "split": "train",
+      "row": 5765,
+      "original_row": 6664,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 13003,
+      "prompt_tokens_nonthinking": 13007,
+      "reference_tokens": 442
+    },
+    {
+      "split": "train",
+      "row": 5792,
+      "original_row": 6694,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16045,
+      "prompt_tokens_nonthinking": 16049,
+      "reference_tokens": 679
+    },
+    {
+      "split": "train",
+      "row": 5803,
+      "original_row": 6707,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12508,
+      "prompt_tokens_nonthinking": 12512,
+      "reference_tokens": 212
+    },
+    {
+      "split": "train",
+      "row": 5811,
+      "original_row": 6715,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 56677,
+      "prompt_tokens_nonthinking": 56681,
+      "reference_tokens": 133
+    },
+    {
+      "split": "train",
+      "row": 5848,
+      "original_row": 6753,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 21850,
+      "prompt_tokens_nonthinking": 21854,
+      "reference_tokens": 130
+    },
+    {
+      "split": "train",
+      "row": 5850,
+      "original_row": 6757,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10659,
+      "prompt_tokens_nonthinking": 10663,
+      "reference_tokens": 602
+    },
+    {
+      "split": "train",
+      "row": 5851,
+      "original_row": 6758,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 13864,
+      "prompt_tokens_nonthinking": 13868,
+      "reference_tokens": 476
+    },
+    {
+      "split": "train",
+      "row": 5856,
+      "original_row": 6763,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13351,
+      "prompt_tokens_nonthinking": 13355,
+      "reference_tokens": 291
+    },
+    {
+      "split": "train",
+      "row": 5894,
+      "original_row": 6806,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 25887,
+      "prompt_tokens_nonthinking": 25891,
+      "reference_tokens": 709
+    },
+    {
+      "split": "train",
+      "row": 5896,
+      "original_row": 6808,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10405,
+      "prompt_tokens_nonthinking": 10409,
+      "reference_tokens": 539
+    },
+    {
+      "split": "train",
+      "row": 5905,
+      "original_row": 6819,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16200,
+      "prompt_tokens_nonthinking": 16204,
+      "reference_tokens": 481
+    },
+    {
+      "split": "train",
+      "row": 5908,
+      "original_row": 6822,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10119,
+      "prompt_tokens_nonthinking": 10123,
+      "reference_tokens": 310
+    },
+    {
+      "split": "train",
+      "row": 5916,
+      "original_row": 6831,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20416,
+      "prompt_tokens_nonthinking": 20420,
+      "reference_tokens": 471
+    },
+    {
+      "split": "train",
+      "row": 5922,
+      "original_row": 6839,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16442,
+      "prompt_tokens_nonthinking": 16446,
+      "reference_tokens": 381
+    },
+    {
+      "split": "train",
+      "row": 5928,
+      "original_row": 6846,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10841,
+      "prompt_tokens_nonthinking": 10845,
+      "reference_tokens": 808
+    },
+    {
+      "split": "train",
+      "row": 5930,
+      "original_row": 6849,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13630,
+      "prompt_tokens_nonthinking": 13634,
+      "reference_tokens": 355
+    },
+    {
+      "split": "train",
+      "row": 5931,
+      "original_row": 6850,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11064,
+      "prompt_tokens_nonthinking": 11068,
+      "reference_tokens": 138
+    },
+    {
+      "split": "train",
+      "row": 5946,
+      "original_row": 6870,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10021,
+      "prompt_tokens_nonthinking": 10025,
+      "reference_tokens": 831
+    },
+    {
+      "split": "train",
+      "row": 5953,
+      "original_row": 6877,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14236,
+      "prompt_tokens_nonthinking": 14240,
+      "reference_tokens": 206
+    },
+    {
+      "split": "train",
+      "row": 5954,
+      "original_row": 6878,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10609,
+      "prompt_tokens_nonthinking": 10613,
+      "reference_tokens": 683
+    },
+    {
+      "split": "train",
+      "row": 5968,
+      "original_row": 6892,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13353,
+      "prompt_tokens_nonthinking": 13357,
+      "reference_tokens": 1225
+    },
+    {
+      "split": "train",
+      "row": 5974,
+      "original_row": 6898,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 21577,
+      "prompt_tokens_nonthinking": 21581,
+      "reference_tokens": 539
+    },
+    {
+      "split": "train",
+      "row": 5991,
+      "original_row": 6918,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11447,
+      "prompt_tokens_nonthinking": 11451,
+      "reference_tokens": 761
+    },
+    {
+      "split": "train",
+      "row": 5992,
+      "original_row": 6919,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14979,
+      "prompt_tokens_nonthinking": 14983,
+      "reference_tokens": 579
+    },
+    {
+      "split": "train",
+      "row": 6010,
+      "original_row": 6941,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15161,
+      "prompt_tokens_nonthinking": 15165,
+      "reference_tokens": 749
+    },
+    {
+      "split": "train",
+      "row": 6015,
+      "original_row": 6946,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18401,
+      "prompt_tokens_nonthinking": 18405,
+      "reference_tokens": 898
+    },
+    {
+      "split": "train",
+      "row": 6042,
+      "original_row": 6975,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11596,
+      "prompt_tokens_nonthinking": 11600,
+      "reference_tokens": 691
+    },
+    {
+      "split": "train",
+      "row": 6055,
+      "original_row": 6988,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 18776,
+      "prompt_tokens_nonthinking": 18780,
+      "reference_tokens": 651
+    },
+    {
+      "split": "train",
+      "row": 6059,
+      "original_row": 6992,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16043,
+      "prompt_tokens_nonthinking": 16047,
+      "reference_tokens": 495
+    },
+    {
+      "split": "train",
+      "row": 6080,
+      "original_row": 7014,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10137,
+      "prompt_tokens_nonthinking": 10141,
+      "reference_tokens": 390
+    },
+    {
+      "split": "train",
+      "row": 6087,
+      "original_row": 7021,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 12110,
+      "prompt_tokens_nonthinking": 12114,
+      "reference_tokens": 191
+    },
+    {
+      "split": "train",
+      "row": 6092,
+      "original_row": 7030,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14045,
+      "prompt_tokens_nonthinking": 14049,
+      "reference_tokens": 613
+    },
+    {
+      "split": "train",
+      "row": 6102,
+      "original_row": 7041,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13612,
+      "prompt_tokens_nonthinking": 13616,
+      "reference_tokens": 728
+    },
+    {
+      "split": "train",
+      "row": 6108,
+      "original_row": 7048,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17358,
+      "prompt_tokens_nonthinking": 17362,
+      "reference_tokens": 752
+    },
+    {
+      "split": "train",
+      "row": 6118,
+      "original_row": 7060,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 44419,
+      "prompt_tokens_nonthinking": 44423,
+      "reference_tokens": 372
+    },
+    {
+      "split": "train",
+      "row": 6123,
+      "original_row": 7065,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15697,
+      "prompt_tokens_nonthinking": 15701,
+      "reference_tokens": 530
+    },
+    {
+      "split": "train",
+      "row": 6124,
+      "original_row": 7066,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 27115,
+      "prompt_tokens_nonthinking": 27119,
+      "reference_tokens": 254
+    },
+    {
+      "split": "train",
+      "row": 6127,
+      "original_row": 7070,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15359,
+      "prompt_tokens_nonthinking": 15363,
+      "reference_tokens": 532
+    },
+    {
+      "split": "train",
+      "row": 6143,
+      "original_row": 7088,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11036,
+      "prompt_tokens_nonthinking": 11040,
+      "reference_tokens": 803
+    },
+    {
+      "split": "train",
+      "row": 6150,
+      "original_row": 7095,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11950,
+      "prompt_tokens_nonthinking": 11954,
+      "reference_tokens": 531
+    },
+    {
+      "split": "train",
+      "row": 6153,
+      "original_row": 7098,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16472,
+      "prompt_tokens_nonthinking": 16476,
+      "reference_tokens": 295
+    },
+    {
+      "split": "train",
+      "row": 6178,
+      "original_row": 7129,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 14924,
+      "prompt_tokens_nonthinking": 14928,
+      "reference_tokens": 342
+    },
+    {
+      "split": "train",
+      "row": 6188,
+      "original_row": 7141,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 151480,
+      "prompt_tokens_nonthinking": 151484,
+      "reference_tokens": 475
+    },
+    {
+      "split": "train",
+      "row": 6210,
+      "original_row": 7165,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 21171,
+      "prompt_tokens_nonthinking": 21175,
+      "reference_tokens": 523
+    },
+    {
+      "split": "train",
+      "row": 6267,
+      "original_row": 7232,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 14130,
+      "prompt_tokens_nonthinking": 14134,
+      "reference_tokens": 437
+    },
+    {
+      "split": "train",
+      "row": 6272,
+      "original_row": 7239,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18494,
+      "prompt_tokens_nonthinking": 18498,
+      "reference_tokens": 564
+    },
+    {
+      "split": "train",
+      "row": 6280,
+      "original_row": 7247,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10223,
+      "prompt_tokens_nonthinking": 10227,
+      "reference_tokens": 220
+    },
+    {
+      "split": "train",
+      "row": 6283,
+      "original_row": 7250,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14987,
+      "prompt_tokens_nonthinking": 14991,
+      "reference_tokens": 637
+    },
+    {
+      "split": "train",
+      "row": 6284,
+      "original_row": 7251,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 15167,
+      "prompt_tokens_nonthinking": 15171,
+      "reference_tokens": 175
+    },
+    {
+      "split": "train",
+      "row": 6289,
+      "original_row": 7256,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11897,
+      "prompt_tokens_nonthinking": 11901,
+      "reference_tokens": 1021
+    },
+    {
+      "split": "train",
+      "row": 6296,
+      "original_row": 7265,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 33772,
+      "prompt_tokens_nonthinking": 33776,
+      "reference_tokens": 153
+    },
+    {
+      "split": "train",
+      "row": 6302,
+      "original_row": 7274,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10061,
+      "prompt_tokens_nonthinking": 10065,
+      "reference_tokens": 734
+    },
+    {
+      "split": "train",
+      "row": 6311,
+      "original_row": 7284,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 20732,
+      "prompt_tokens_nonthinking": 20736,
+      "reference_tokens": 826
+    },
+    {
+      "split": "train",
+      "row": 6315,
+      "original_row": 7290,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18214,
+      "prompt_tokens_nonthinking": 18218,
+      "reference_tokens": 595
+    },
+    {
+      "split": "train",
+      "row": 6338,
+      "original_row": 7316,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13525,
+      "prompt_tokens_nonthinking": 13529,
+      "reference_tokens": 134
+    },
+    {
+      "split": "train",
+      "row": 6342,
+      "original_row": 7321,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 18314,
+      "prompt_tokens_nonthinking": 18318,
+      "reference_tokens": 497
+    },
+    {
+      "split": "train",
+      "row": 6352,
+      "original_row": 7332,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14500,
+      "prompt_tokens_nonthinking": 14504,
+      "reference_tokens": 962
+    },
+    {
+      "split": "train",
+      "row": 6388,
+      "original_row": 7376,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10819,
+      "prompt_tokens_nonthinking": 10823,
+      "reference_tokens": 303
+    },
+    {
+      "split": "train",
+      "row": 6391,
+      "original_row": 7379,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17713,
+      "prompt_tokens_nonthinking": 17717,
+      "reference_tokens": 227
+    },
+    {
+      "split": "train",
+      "row": 6406,
+      "original_row": 7398,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10759,
+      "prompt_tokens_nonthinking": 10763,
+      "reference_tokens": 272
+    },
+    {
+      "split": "train",
+      "row": 6421,
+      "original_row": 7413,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 12951,
+      "prompt_tokens_nonthinking": 12955,
+      "reference_tokens": 899
+    },
+    {
+      "split": "train",
+      "row": 6426,
+      "original_row": 7419,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 22145,
+      "prompt_tokens_nonthinking": 22149,
+      "reference_tokens": 636
+    },
+    {
+      "split": "train",
+      "row": 6431,
+      "original_row": 7425,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10816,
+      "prompt_tokens_nonthinking": 10820,
+      "reference_tokens": 166
+    },
+    {
+      "split": "train",
+      "row": 6432,
+      "original_row": 7426,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15146,
+      "prompt_tokens_nonthinking": 15150,
+      "reference_tokens": 958
+    },
+    {
+      "split": "train",
+      "row": 6442,
+      "original_row": 7437,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14232,
+      "prompt_tokens_nonthinking": 14236,
+      "reference_tokens": 493
+    },
+    {
+      "split": "train",
+      "row": 6445,
+      "original_row": 7440,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10590,
+      "prompt_tokens_nonthinking": 10594,
+      "reference_tokens": 613
+    },
+    {
+      "split": "train",
+      "row": 6459,
+      "original_row": 7456,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 24911,
+      "prompt_tokens_nonthinking": 24915,
+      "reference_tokens": 136
+    },
+    {
+      "split": "train",
+      "row": 6468,
+      "original_row": 7467,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16773,
+      "prompt_tokens_nonthinking": 16777,
+      "reference_tokens": 429
+    },
+    {
+      "split": "train",
+      "row": 6482,
+      "original_row": 7484,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14694,
+      "prompt_tokens_nonthinking": 14698,
+      "reference_tokens": 563
+    },
+    {
+      "split": "train",
+      "row": 6502,
+      "original_row": 7505,
+      "source": "allenai-WildChat-1M-multiturn",
+      "prompt_tokens_thinking": 10165,
+      "prompt_tokens_nonthinking": 10169,
+      "reference_tokens": 2507
+    },
+    {
+      "split": "train",
+      "row": 6527,
+      "original_row": 7533,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 32648,
+      "prompt_tokens_nonthinking": 32652,
+      "reference_tokens": 329
+    },
+    {
+      "split": "train",
+      "row": 6531,
+      "original_row": 7537,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10213,
+      "prompt_tokens_nonthinking": 10217,
+      "reference_tokens": 40
+    },
+    {
+      "split": "train",
+      "row": 6536,
+      "original_row": 7544,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 13809,
+      "prompt_tokens_nonthinking": 13813,
+      "reference_tokens": 348
+    },
+    {
+      "split": "train",
+      "row": 6542,
+      "original_row": 7550,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11601,
+      "prompt_tokens_nonthinking": 11605,
+      "reference_tokens": 542
+    },
+    {
+      "split": "train",
+      "row": 6547,
+      "original_row": 7555,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11676,
+      "prompt_tokens_nonthinking": 11680,
+      "reference_tokens": 634
+    },
+    {
+      "split": "train",
+      "row": 6564,
+      "original_row": 7573,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 14147,
+      "prompt_tokens_nonthinking": 14151,
+      "reference_tokens": 829
+    },
+    {
+      "split": "train",
+      "row": 6569,
+      "original_row": 7580,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 17229,
+      "prompt_tokens_nonthinking": 17233,
+      "reference_tokens": 304
+    },
+    {
+      "split": "train",
+      "row": 6573,
+      "original_row": 7584,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 13369,
+      "prompt_tokens_nonthinking": 13373,
+      "reference_tokens": 215
+    },
+    {
+      "split": "train",
+      "row": 6594,
+      "original_row": 7607,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10684,
+      "prompt_tokens_nonthinking": 10688,
+      "reference_tokens": 662
+    },
+    {
+      "split": "train",
+      "row": 6602,
+      "original_row": 7615,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10920,
+      "prompt_tokens_nonthinking": 10924,
+      "reference_tokens": 618
+    },
+    {
+      "split": "train",
+      "row": 6634,
+      "original_row": 7647,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 11534,
+      "prompt_tokens_nonthinking": 11538,
+      "reference_tokens": 746
+    }
+  ],
+  "valid": [
+    {
+      "split": "valid",
+      "row": 12,
+      "original_row": 12,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16926,
+      "prompt_tokens_nonthinking": 16930,
+      "reference_tokens": 92
+    },
+    {
+      "split": "valid",
+      "row": 25,
+      "original_row": 27,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 22062,
+      "prompt_tokens_nonthinking": 22066,
+      "reference_tokens": 127
+    },
+    {
+      "split": "valid",
+      "row": 31,
+      "original_row": 34,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 11145,
+      "prompt_tokens_nonthinking": 11149,
+      "reference_tokens": 431
+    },
+    {
+      "split": "valid",
+      "row": 34,
+      "original_row": 37,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 16993,
+      "prompt_tokens_nonthinking": 16997,
+      "reference_tokens": 105
+    },
+    {
+      "split": "valid",
+      "row": 53,
+      "original_row": 59,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 23043,
+      "prompt_tokens_nonthinking": 23047,
+      "reference_tokens": 218
+    },
+    {
+      "split": "valid",
+      "row": 74,
+      "original_row": 83,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 15933,
+      "prompt_tokens_nonthinking": 15937,
+      "reference_tokens": 745
+    },
+    {
+      "split": "valid",
+      "row": 78,
+      "original_row": 88,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10208,
+      "prompt_tokens_nonthinking": 10212,
+      "reference_tokens": 854
+    },
+    {
+      "split": "valid",
+      "row": 94,
+      "original_row": 104,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10597,
+      "prompt_tokens_nonthinking": 10601,
+      "reference_tokens": 346
+    },
+    {
+      "split": "valid",
+      "row": 96,
+      "original_row": 106,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 10558,
+      "prompt_tokens_nonthinking": 10562,
+      "reference_tokens": 722
+    },
+    {
+      "split": "valid",
+      "row": 97,
+      "original_row": 107,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 11721,
+      "prompt_tokens_nonthinking": 11725,
+      "reference_tokens": 589
+    },
+    {
+      "split": "valid",
+      "row": 114,
+      "original_row": 129,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 19216,
+      "prompt_tokens_nonthinking": 19220,
+      "reference_tokens": 187
+    },
+    {
+      "split": "valid",
+      "row": 116,
+      "original_row": 131,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 17552,
+      "prompt_tokens_nonthinking": 17556,
+      "reference_tokens": 1050
+    },
+    {
+      "split": "valid",
+      "row": 123,
+      "original_row": 139,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 14383,
+      "prompt_tokens_nonthinking": 14387,
+      "reference_tokens": 483
+    },
+    {
+      "split": "valid",
+      "row": 149,
+      "original_row": 165,
+      "source": "arxiv-summarization",
+      "prompt_tokens_thinking": 10007,
+      "prompt_tokens_nonthinking": 10011,
+      "reference_tokens": 299
+    },
+    {
+      "split": "valid",
+      "row": 150,
+      "original_row": 166,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 16258,
+      "prompt_tokens_nonthinking": 16262,
+      "reference_tokens": 890
+    },
+    {
+      "split": "valid",
+      "row": 179,
+      "original_row": 198,
+      "source": "govreport-summarization",
+      "prompt_tokens_thinking": 23198,
+      "prompt_tokens_nonthinking": 23202,
+      "reference_tokens": 650
+    },
+    {
+      "split": "valid",
+      "row": 180,
+      "original_row": 200,
+      "source": "pubmed-summarization",
+      "prompt_tokens_thinking": 10627,
+      "prompt_tokens_nonthinking": 10631,
+      "reference_tokens": 215
+    }
+  ]
+}

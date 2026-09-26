@@ -1,0 +1,45 @@
+\section{Historical Reward-Model Selection Study}\label{apd:legacy_routing}
+
+\noindent\textbf{Scope.} This section preserves the selection-only study from the earlier manuscript. It does not evaluate the revised construction loop, its objective test suites, or student training. The reported numbers have not been recomputed for the revised protocol. The pool was drawn from a public leaderboard; label isolation and pool-selection effects require a separate audit.
+
+\subsection{Setup and Previously Reported Results}
+
+
+The earlier study evaluated reward-model selection on \textsc{RewardBench-v2}. Selecting among fixed models is a narrower problem than constructing and testing an executable reward program.
+
+\begin{table}[h]
+    \centering
+    \caption{Historical comparison of agentic selection and reward merging on \textsc{RewardBench-v2}.}
+    \label{tab:rewardbench_results}
+    \small
+    \begin{tabular}{lcccccc}
+    \toprule
+    \textbf{Method} & \textbf{Avg} & \textbf{Precision IF} & \textbf{Math} & \textbf{Safety} & \textbf{Factuality} & \textbf{Focus} \\
+    \midrule
+    SOTA        & 87.19 & 57.14 & 60.00 & 97.12 & 85.29 & 99.13 \\  \midrule
+    \multicolumn{7}{l}{\textit {Agentic Selection within RLAR framework }} \\ 
+    Random           & 78.39 & 40.48 & 60.00 & 89.42 & 75.49 & 90.43 \\
+    GPT-4o    & 88.19 & 57.14 & 68.57 & 96.15 & 87.25 & 99.13 \\
+    GLM-4.6   & 88.69 & 57.14 & 68.57 & 96.15 & 88.24 & 100.0 \\
+    GPT-5.1          & \textbf{90.44} & \textbf{66.67} & \textbf{71.42} & 96.15 & \textbf{90.19} & \textbf{100.0} \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Logits Merging Methods }} \\ 
+    mean@2           & 87.44 & 61.90 & 68.57 & 95.19 & 83.33 & 99.13 \\
+    mean@10          & 77.89 & 47.62 & 57.14 & 84.62 & 76.47 & 90.43 \\
+    mean@50          & 51.51 & 40.48 & 48.57 & 66.35 & 48.04 & 46.09 \\
+    \midrule
+    Post-hoc Pool Oracle & 93.47 & 76.19 & 77.14 & 97.12 & 95.10 & 100.0 \\
+    \bottomrule
+    \end{tabular}
+    % }
+\end{table}
+
+
+\noindent\textbf{Setup.} We utilized a randomly and uniformly sampled subset of 400 instances from the \textsc{RewardBench-v2} test set. Each instance comprises one preferred (chosen) response and three non-preferred (rejected) responses for a given prompt.\footnote{The ``Tie'' category is excluded due to the test's input-output format uniformity.} For each instance, a reward model is required to score all four responses. An instance is considered a \textbf{pass} if the softmax-normalized reward score assigned to the preferred response exceeds a threshold of 0.5.
+
+We leveraged the evaluation records of the top 50 classification models from the official leaderboard. RLAR is tasked with predicting the reward model most likely to pass a given instance, utilizing the query, candidate responses, and the models' metadata. For evaluation simplicity, reward models are presented to the agent as encapsulated tools. We compared the following approaches: \textbf{Backbone LLM Scaling}: Evaluating the impact of different agentic capabilities using GPT-4o, GLM-4.6, and GPT-5.1. \textbf{Reward Logits Merging}: Assessing the effect of ensemble methods by calculating the average scores of the top-$k$ models' predictions on each candidate response (mean@$k$).
+
+
+
+
+\noindent\textbf{Interpretation.} These descriptive results compare selection and raw-logit merging within the reported pool. The post-hoc oracle uses evaluation outcomes and is not a deployable selector. Raw-logit averaging is sensitive to model-specific score scales. Neither the table nor model-card matching establishes the semantic correctness of synthesized reward programs; that requires the independent tests in Section~\ref{sec:verification}.

@@ -1,0 +1,298 @@
+{
+  "_id": "691bede798f265b1387627b7",
+  "id": "allenai/Dolci-Instruct-SFT",
+  "author": "allenai",
+  "sha": "bd3c8f3a9b2cc5a9682e44b96ddd0bb2ff027221",
+  "lastModified": "2026-02-03T00:08:38.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "task_categories:other",
+    "annotations_creators:crowdsourced",
+    "annotations_creators:expert-generated",
+    "annotations_creators:machine-generated",
+    "multilinguality:multilingual",
+    "language:amh",
+    "language:arb",
+    "language:ary",
+    "language:ars",
+    "language:acq",
+    "language:arz",
+    "language:apc",
+    "language:ben",
+    "language:ceb",
+    "language:dan",
+    "language:deu",
+    "language:ell",
+    "language:eng",
+    "language:eus",
+    "language:fil",
+    "language:fin",
+    "language:fra",
+    "language:gle",
+    "language:guj",
+    "language:hat",
+    "language:hau",
+    "language:hin",
+    "language:hun",
+    "language:ibo",
+    "language:ind",
+    "language:ita",
+    "language:jav",
+    "language:jpn",
+    "language:kan",
+    "language:kir",
+    "language:kor",
+    "language:kur",
+    "language:lit",
+    "language:mal",
+    "language:mar",
+    "language:mlg",
+    "language:msa",
+    "language:mya",
+    "language:nep",
+    "language:nld",
+    "language:nso",
+    "language:nya",
+    "language:pan",
+    "language:pes",
+    "language:pol",
+    "language:por",
+    "language:pus",
+    "language:rus",
+    "language:sin",
+    "language:sna",
+    "language:snd",
+    "language:som",
+    "language:spa",
+    "language:sqi",
+    "language:srp",
+    "language:sun",
+    "language:swa",
+    "language:swe",
+    "language:tam",
+    "language:tel",
+    "language:tha",
+    "language:tur",
+    "language:ukr",
+    "language:urd",
+    "language:vie",
+    "language:wol",
+    "language:xho",
+    "language:yor",
+    "language:zho",
+    "language:zul",
+    "license:odc-by",
+    "size_categories:1M<n<10M",
+    "format:parquet",
+    "modality:text",
+    "library:datasets",
+    "library:dask",
+    "library:polars",
+    "library:mlcroissant",
+    "arxiv:2512.13961",
+    "region:us"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tDolci Instruct SFT Mixture\n\t\n\nNote that this collection licensed under ODC-BY. It is intended for research and educational use in accordance with Ai2's Responsible Use Guidelines.\nThe Dolci Instruct SFT mixture was used to train Olmo 3 7B Instruct SFT.\nIt contains 2,152,112 samples from the following sets:\nSources include a mixture of existing prompts:\n\nOpenThoughts 3 (Apache 2.0): Extended to 32K context length and downsampled code prompts to 16X multiple, to 941,166 total prompts\u2026 See the full description on the dataset page: https://huggingface.co/datasets/allenai/Dolci-Instruct-SFT.",
+  "downloads": 2912,
+  "likes": 62,
+  "cardData": {
+    "annotations_creators": [
+      "crowdsourced",
+      "expert-generated",
+      "machine-generated"
+    ],
+    "language": [
+      "amh",
+      "arb",
+      "ary",
+      "ars",
+      "acq",
+      "arz",
+      "apc",
+      "ben",
+      "ceb",
+      "dan",
+      "deu",
+      "ell",
+      "eng",
+      "eus",
+      "fil",
+      "fin",
+      "fra",
+      "gle",
+      "guj",
+      "hat",
+      "hau",
+      "hin",
+      "hun",
+      "ibo",
+      "ind",
+      "ita",
+      "jav",
+      "jpn",
+      "kan",
+      "kir",
+      "kor",
+      "kur",
+      "lit",
+      "mal",
+      "mar",
+      "mlg",
+      "msa",
+      "mya",
+      "nep",
+      "nld",
+      "nso",
+      "nya",
+      "pan",
+      "pes",
+      "pol",
+      "por",
+      "pus",
+      "rus",
+      "sin",
+      "sna",
+      "snd",
+      "som",
+      "spa",
+      "sqi",
+      "srp",
+      "sun",
+      "swa",
+      "swe",
+      "tam",
+      "tel",
+      "tha",
+      "tur",
+      "ukr",
+      "urd",
+      "vie",
+      "wol",
+      "xho",
+      "yor",
+      "zho",
+      "zul"
+    ],
+    "license": "odc-by",
+    "multilinguality": [
+      "multilingual"
+    ],
+    "task_categories": [
+      "other"
+    ],
+    "dataset_info": {
+      "features": [
+        {
+          "name": "id",
+          "dtype": "string"
+        },
+        {
+          "name": "messages",
+          "list": [
+            {
+              "name": "content",
+              "dtype": "string"
+            },
+            {
+              "name": "function_calls",
+              "dtype": "string"
+            },
+            {
+              "name": "functions",
+              "dtype": "string"
+            },
+            {
+              "name": "role",
+              "dtype": "string"
+            }
+          ]
+        },
+        {
+          "name": "source_dataset",
+          "dtype": "string"
+        },
+        {
+          "name": "domain",
+          "dtype": "string"
+        }
+      ],
+      "splits": [
+        {
+          "name": "train",
+          "num_bytes": 7006978580,
+          "num_examples": 2152112
+        }
+      ],
+      "download_size": 3061427649,
+      "dataset_size": 7006978580
+    },
+    "configs": [
+      {
+        "config_name": "default",
+        "data_files": [
+          {
+            "split": "train",
+            "path": "data/train-*"
+          }
+        ]
+      }
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "data/train-00000-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00001-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00002-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00003-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00004-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00005-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00006-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00007-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00008-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00009-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00010-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00011-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00012-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00013-of-00015.parquet"
+    },
+    {
+      "rfilename": "data/train-00014-of-00015.parquet"
+    }
+  ],
+  "createdAt": "2025-11-18T03:54:15.000Z",
+  "usedStorage": 6139060804
+}

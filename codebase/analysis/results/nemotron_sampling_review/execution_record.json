@@ -1,0 +1,11 @@
+{
+  "status": "executed",
+  "completed_utc": "2026-09-23T13:54:51.166208+00:00",
+  "approved_scope": "English reasoning_off, 680 single-turn / 320 two-turn",
+  "rows": 1000,
+  "seed": 20260923,
+  "output_directory": "/Users/andrewfeng/Desktop/overleaf_projects/202605_RLAR/codebase/data/nemotron_english_off_1000",
+  "no_train_valid_merge": true,
+  "sample_jsonl_sha256": "bcf17378efbde557d59304bec236af5999ba820bfa51b1935882d3f175229565",
+  "validation_status": "passed"
+}

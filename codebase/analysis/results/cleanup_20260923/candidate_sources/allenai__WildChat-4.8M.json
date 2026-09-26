@@ -1,0 +1,839 @@
+{
+  "_id": "689629e0f60856afd8fa16ec",
+  "id": "allenai/WildChat-4.8M",
+  "author": "allenai",
+  "sha": "c827c6df8fcf008219ffaffa4d1dd77491099367",
+  "lastModified": "2025-08-11T15:12:58.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "task_categories:text-generation",
+    "task_categories:question-answering",
+    "license:odc-by",
+    "size_categories:1M<n<10M",
+    "format:parquet",
+    "modality:text",
+    "library:datasets",
+    "library:dask",
+    "library:mlcroissant",
+    "library:polars",
+    "arxiv:2405.01470",
+    "arxiv:2409.03753",
+    "arxiv:2406.04770",
+    "arxiv:2406.08464",
+    "region:us",
+    "instruction-finetuning"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Card for WildChat-4.8M\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Description\n\t\n\n\nInteractive Search Tool: https://wildvisualizer.com  \nWildChat paper: https://arxiv.org/abs/2405.01470  \nWildVis paper: https://arxiv.org/abs/2409.03753  \nPoint of Contact: Yuntian Deng\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Summary\n\t\n\nWildChat-4.8M is a collection of 3,199,860 conversations between human users and ChatGPT. This version only contains non-toxic user inputs and ChatGPT responses, as flagged by the OpenAI Moderations… See the full description on the dataset page: https://huggingface.co/datasets/allenai/WildChat-4.8M.",
+  "downloads": 8813,
+  "likes": 198,
+  "cardData": {
+    "license": "odc-by",
+    "size_categories": [
+      "1M<n<10M"
+    ],
+    "task_categories": [
+      "text-generation",
+      "question-answering"
+    ],
+    "pretty_name": "WildChat-4.8M",
+    "dataset_info": {
+      "features": [
+        {
+          "name": "conversation_hash",
+          "dtype": "string"
+        },
+        {
+          "name": "model",
+          "dtype": "string"
+        },
+        {
+          "name": "timestamp",
+          "dtype": "timestamp[us]"
+        },
+        {
+          "name": "conversation",
+          "list": [
+            {
+              "name": "content",
+              "dtype": "string"
+            },
+            {
+              "name": "created",
+              "dtype": "int64"
+            },
+            {
+              "name": "header",
+              "struct": [
+                {
+                  "name": "accept-language",
+                  "dtype": "string"
+                },
+                {
+                  "name": "user-agent",
+                  "dtype": "string"
+                }
+              ]
+            },
+            {
+              "name": "hashed_ip",
+              "dtype": "string"
+            },
+            {
+              "name": "country",
+              "dtype": "string"
+            },
+            {
+              "name": "toxic",
+              "dtype": "bool"
+            },
+            {
+              "name": "redacted",
+              "dtype": "bool"
+            },
+            {
+              "name": "state",
+              "dtype": "string"
+            },
+            {
+              "name": "language",
+              "dtype": "string"
+            },
+            {
+              "name": "openai_id",
+              "dtype": "string"
+            },
+            {
+              "name": "role",
+              "dtype": "string"
+            },
+            {
+              "name": "temperature",
+              "dtype": "float64"
+            },
+            {
+              "name": "timestamp",
+              "dtype": "timestamp[us]"
+            },
+            {
+              "name": "token_counter",
+              "dtype": "int64"
+            },
+            {
+              "name": "top_p",
+              "dtype": "float64"
+            },
+            {
+              "name": "turn_identifier",
+              "dtype": "int64"
+            },
+            {
+              "name": "system_fingerprint",
+              "dtype": "string"
+            },
+            {
+              "name": "usage",
+              "struct": [
+                {
+                  "name": "completion_tokens",
+                  "dtype": "int64"
+                },
+                {
+                  "name": "completion_tokens_details",
+                  "struct": [
+                    {
+                      "name": "reasoning_tokens",
+                      "dtype": "int64"
+                    },
+                    {
+                      "name": "text_tokens",
+                      "dtype": "int64"
+                    },
+                    {
+                      "name": "audio_tokens",
+                      "dtype": "int64"
+                    },
+                    {
+                      "name": "accepted_prediction_tokens",
+                      "dtype": "int64"
+                    },
+                    {
+                      "name": "rejected_prediction_tokens",
+                      "dtype": "int64"
+                    }
+                  ]
+                },
+                {
+                  "name": "prompt_tokens",
+                  "dtype": "int64"
+                },
+                {
+                  "name": "total_tokens",
+                  "dtype": "int64"
+                },
+                {
+                  "name": "prompt_tokens_details",
+                  "struct": [
+                    {
+                      "name": "cached_tokens",
+                      "dtype": "int64"
+                    },
+                    {
+                      "name": "audio_tokens",
+                      "dtype": "int64"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "turn",
+          "dtype": "int64"
+        },
+        {
+          "name": "language",
+          "dtype": "string"
+        },
+        {
+          "name": "openai_moderation",
+          "list": [
+            {
+              "name": "categories",
+              "struct": [
+                {
+                  "name": "harassment",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "harassment/threatening",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "harassment_threatening",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "hate",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "hate/threatening",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "hate_threatening",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "illicit",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "illicit/violent",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "illicit_violent",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self-harm",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self-harm/instructions",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self-harm/intent",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self_harm",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self_harm_instructions",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "self_harm_intent",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "sexual",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "sexual/minors",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "sexual_minors",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "violence",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "violence/graphic",
+                  "dtype": "bool"
+                },
+                {
+                  "name": "violence_graphic",
+                  "dtype": "bool"
+                }
+              ]
+            },
+            {
+              "name": "category_applied_input_types",
+              "struct": [
+                {
+                  "name": "harassment",
+                  "list": "string"
+                },
+                {
+                  "name": "harassment/threatening",
+                  "list": "string"
+                },
+                {
+                  "name": "harassment_threatening",
+                  "list": "string"
+                },
+                {
+                  "name": "hate",
+                  "list": "string"
+                },
+                {
+                  "name": "hate/threatening",
+                  "list": "string"
+                },
+                {
+                  "name": "hate_threatening",
+                  "list": "string"
+                },
+                {
+                  "name": "illicit",
+                  "list": "string"
+                },
+                {
+                  "name": "illicit/violent",
+                  "list": "string"
+                },
+                {
+                  "name": "illicit_violent",
+                  "list": "string"
+                },
+                {
+                  "name": "self-harm",
+                  "list": "string"
+                },
+                {
+                  "name": "self-harm/instructions",
+                  "list": "string"
+                },
+                {
+                  "name": "self-harm/intent",
+                  "list": "string"
+                },
+                {
+                  "name": "self_harm",
+                  "list": "string"
+                },
+                {
+                  "name": "self_harm_instructions",
+                  "list": "string"
+                },
+                {
+                  "name": "self_harm_intent",
+                  "list": "string"
+                },
+                {
+                  "name": "sexual",
+                  "list": "string"
+                },
+                {
+                  "name": "sexual/minors",
+                  "list": "string"
+                },
+                {
+                  "name": "sexual_minors",
+                  "list": "string"
+                },
+                {
+                  "name": "violence",
+                  "list": "string"
+                },
+                {
+                  "name": "violence/graphic",
+                  "list": "string"
+                },
+                {
+                  "name": "violence_graphic",
+                  "list": "string"
+                }
+              ]
+            },
+            {
+              "name": "category_scores",
+              "struct": [
+                {
+                  "name": "harassment",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "harassment/threatening",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "harassment_threatening",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "hate",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "hate/threatening",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "hate_threatening",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "illicit",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "illicit/violent",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "illicit_violent",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self-harm",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self-harm/instructions",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self-harm/intent",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self_harm",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self_harm_instructions",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "self_harm_intent",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "sexual",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "sexual/minors",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "sexual_minors",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "violence",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "violence/graphic",
+                  "dtype": "float64"
+                },
+                {
+                  "name": "violence_graphic",
+                  "dtype": "float64"
+                }
+              ]
+            },
+            {
+              "name": "flagged",
+              "dtype": "bool"
+            }
+          ]
+        },
+        {
+          "name": "detoxify_moderation",
+          "list": [
+            {
+              "name": "identity_attack",
+              "dtype": "float64"
+            },
+            {
+              "name": "insult",
+              "dtype": "float64"
+            },
+            {
+              "name": "obscene",
+              "dtype": "float64"
+            },
+            {
+              "name": "severe_toxicity",
+              "dtype": "float64"
+            },
+            {
+              "name": "sexual_explicit",
+              "dtype": "float64"
+            },
+            {
+              "name": "threat",
+              "dtype": "float64"
+            },
+            {
+              "name": "toxicity",
+              "dtype": "float64"
+            }
+          ]
+        },
+        {
+          "name": "toxic",
+          "dtype": "bool"
+        },
+        {
+          "name": "redacted",
+          "dtype": "bool"
+        },
+        {
+          "name": "state",
+          "dtype": "string"
+        },
+        {
+          "name": "country",
+          "dtype": "string"
+        },
+        {
+          "name": "hashed_ip",
+          "dtype": "string"
+        },
+        {
+          "name": "header",
+          "struct": [
+            {
+              "name": "accept-language",
+              "dtype": "string"
+            },
+            {
+              "name": "user-agent",
+              "dtype": "string"
+            }
+          ]
+        }
+      ],
+      "splits": [
+        {
+          "name": "train",
+          "num_bytes": 42645714270.23995,
+          "num_examples": 3199860
+        }
+      ],
+      "download_size": 15282293424,
+      "dataset_size": 42645714270.23995
+    },
+    "configs": [
+      {
+        "config_name": "default",
+        "data_files": [
+          {
+            "split": "train",
+            "path": "data/train-*"
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "instruction-finetuning"
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "LICENSE.md"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "data/train-00000-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00001-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00002-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00003-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00004-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00005-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00006-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00007-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00008-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00009-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00010-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00011-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00012-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00013-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00014-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00015-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00016-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00017-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00018-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00019-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00020-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00021-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00022-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00023-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00024-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00025-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00026-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00027-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00028-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00029-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00030-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00031-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00032-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00033-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00034-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00035-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00036-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00037-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00038-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00039-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00040-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00041-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00042-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00043-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00044-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00045-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00046-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00047-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00048-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00049-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00050-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00051-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00052-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00053-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00054-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00055-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00056-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00057-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00058-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00059-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00060-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00061-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00062-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00063-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00064-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00065-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00066-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00067-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00068-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00069-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00070-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00071-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00072-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00073-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00074-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00075-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00076-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00077-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00078-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00079-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00080-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00081-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00082-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00083-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00084-of-00086.parquet"
+    },
+    {
+      "rfilename": "data/train-00085-of-00086.parquet"
+    }
+  ],
+  "createdAt": "2025-08-08T16:46:24.000Z",
+  "usedStorage": 15282293424
+}

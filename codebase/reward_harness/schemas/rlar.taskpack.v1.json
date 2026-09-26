@@ -1,0 +1,210 @@
+{
+  "$defs": {
+    "AcceptancePolicy": {
+      "additionalProperties": false,
+      "description": "Pre-declared thresholds. Never inferred at runtime.",
+      "properties": {
+        "score_threshold": {
+          "default": 0.5,
+          "title": "Score Threshold",
+          "type": "number"
+        },
+        "tie_tolerance": {
+          "default": 1e-09,
+          "title": "Tie Tolerance",
+          "type": "number"
+        },
+        "max_false_accept_rate": {
+          "default": 0.0,
+          "title": "Max False Accept Rate",
+          "type": "number"
+        },
+        "max_false_reject_rate": {
+          "default": 0.0,
+          "title": "Max False Reject Rate",
+          "type": "number"
+        },
+        "max_execution_error_rate": {
+          "default": 0.0,
+          "title": "Max Execution Error Rate",
+          "type": "number"
+        },
+        "min_ranking_accuracy": {
+          "default": 1.0,
+          "title": "Min Ranking Accuracy",
+          "type": "number"
+        },
+        "max_invariance_violation_rate": {
+          "default": 0.0,
+          "title": "Max Invariance Violation Rate",
+          "type": "number"
+        },
+        "min_coverage": {
+          "default": 1.0,
+          "title": "Min Coverage",
+          "type": "number"
+        },
+        "allow_partial_component_mask": {
+          "default": false,
+          "title": "Allow Partial Component Mask",
+          "type": "boolean"
+        }
+      },
+      "title": "AcceptancePolicy",
+      "type": "object"
+    },
+    "ApplicabilityRule": {
+      "additionalProperties": false,
+      "description": "Trusted, deterministic reuse rule. Text tags alone are never enough.",
+      "properties": {
+        "task_contract_digest": {
+          "title": "Task Contract Digest",
+          "type": "string"
+        },
+        "permitted_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Permitted Inputs",
+          "type": "array"
+        },
+        "mode_constraints": {
+          "items": {
+            "enum": [
+              "single",
+              "checklist"
+            ],
+            "type": "string"
+          },
+          "title": "Mode Constraints",
+          "type": "array"
+        },
+        "runtime_fingerprint": {
+          "title": "Runtime Fingerprint",
+          "type": "string"
+        },
+        "task_tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Task Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "task_contract_digest",
+        "permitted_inputs",
+        "mode_constraints",
+        "runtime_fingerprint"
+      ],
+      "title": "ApplicabilityRule",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.taskpack.v1",
+      "default": "rlar.taskpack.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "task_contract": {
+      "title": "Task Contract",
+      "type": "string"
+    },
+    "applicability_rule": {
+      "$ref": "#/$defs/ApplicabilityRule"
+    },
+    "permitted_inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Permitted Inputs",
+      "type": "array"
+    },
+    "permitted_apis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Permitted Apis",
+      "type": "array"
+    },
+    "mode_constraints": {
+      "items": {
+        "enum": [
+          "single",
+          "checklist"
+        ],
+        "type": "string"
+      },
+      "title": "Mode Constraints",
+      "type": "array"
+    },
+    "dev_suite_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dev Suite Ref"
+    },
+    "verifier_version": {
+      "title": "Verifier Version",
+      "type": "string"
+    },
+    "acceptance_policy": {
+      "$ref": "#/$defs/AcceptancePolicy"
+    },
+    "report_policy": {
+      "additionalProperties": true,
+      "title": "Report Policy",
+      "type": "object"
+    },
+    "normalization_mappings": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Normalization Mappings",
+      "type": "object"
+    },
+    "max_components": {
+      "default": 8,
+      "title": "Max Components",
+      "type": "integer"
+    },
+    "resources": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Resources",
+      "type": "object"
+    }
+  },
+  "required": [
+    "profile_id",
+    "version",
+    "task_contract",
+    "applicability_rule",
+    "permitted_inputs",
+    "permitted_apis",
+    "mode_constraints",
+    "verifier_version",
+    "acceptance_policy"
+  ],
+  "title": "TaskPack",
+  "type": "object"
+}

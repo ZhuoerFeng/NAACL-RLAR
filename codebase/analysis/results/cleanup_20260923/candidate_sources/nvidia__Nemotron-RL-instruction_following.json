@@ -1,0 +1,33 @@
+{
+  "_id": "6916ce654710b6720e576049",
+  "id": "nvidia/Nemotron-RL-instruction_following",
+  "author": "nvidia",
+  "sha": "3b253899665cb71334bb54c14eb5d91751beaad7",
+  "lastModified": "2026-01-12T23:55:48.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "license:odc-by",
+    "region:us"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Description:\n\t\n\nThe Nemotron-RL-instruction_following is a dataset created by combining prompts from the WildChat-1M dataset (made available under the ODC Attribution License) with instructions from the Open-Instruct code base. The instructions are designed to be easily verifiable, such as requiring responses under 200 words. This makes the dataset well-suited for evaluating and training models on objective instruction adherence.\nThis dataset is released as part of NVIDIA… See the full description on the dataset page: https://huggingface.co/datasets/nvidia/Nemotron-RL-instruction_following.",
+  "downloads": 839,
+  "likes": 18,
+  "cardData": {
+    "license": "odc-by"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "instruction_following.jsonl"
+    }
+  ],
+  "createdAt": "2025-11-14T06:38:29.000Z",
+  "usedStorage": 77880361
+}

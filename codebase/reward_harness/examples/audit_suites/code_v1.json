@@ -1,0 +1,134 @@
+{
+  "suite_id": "audit_code_v1",
+  "version": "prototype-1",
+  "cases": [
+    {
+      "case_id": "yes",
+      "kind": "correct",
+      "is_correct": true,
+      "group_id": "abs",
+      "base_case_id": null,
+      "example": {
+        "query": "Implement abs_int(n)",
+        "response": "def abs_int(n):\n    return abs(n)\n",
+        "task_tests": [
+          {
+            "args": [
+              -999
+            ],
+            "expected": 999
+          },
+          {
+            "args": [
+              0
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              999
+            ],
+            "expected": 999
+          }
+        ],
+        "task_entrypoint": "abs_int"
+      }
+    },
+    {
+      "case_id": "no",
+      "kind": "incorrect",
+      "is_correct": false,
+      "group_id": "abs",
+      "base_case_id": null,
+      "example": {
+        "query": "Implement abs_int(n)",
+        "response": "def abs_int(n):\n    return n\n",
+        "task_tests": [
+          {
+            "args": [
+              -999
+            ],
+            "expected": 999
+          },
+          {
+            "args": [
+              0
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              999
+            ],
+            "expected": 999
+          }
+        ],
+        "task_entrypoint": "abs_int"
+      }
+    },
+    {
+      "case_id": "boundary",
+      "kind": "perturbation",
+      "is_correct": false,
+      "group_id": "abs",
+      "base_case_id": null,
+      "example": {
+        "query": "Implement abs_int(n)",
+        "response": "def abs_int(n):\n    return 1 if n == 0 else abs(n)\n",
+        "task_tests": [
+          {
+            "args": [
+              -999
+            ],
+            "expected": 999
+          },
+          {
+            "args": [
+              0
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              999
+            ],
+            "expected": 999
+          }
+        ],
+        "task_entrypoint": "abs_int"
+      }
+    },
+    {
+      "case_id": "equivalent",
+      "kind": "invariance",
+      "is_correct": true,
+      "group_id": "abs",
+      "base_case_id": "yes",
+      "example": {
+        "query": "Implement abs_int(n)",
+        "response": "def abs_int(n):\n    return n if n >= 0 else -n\n",
+        "task_tests": [
+          {
+            "args": [
+              -999
+            ],
+            "expected": 999
+          },
+          {
+            "args": [
+              0
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              999
+            ],
+            "expected": 999
+          }
+        ],
+        "task_entrypoint": "abs_int"
+      }
+    }
+  ]
+}

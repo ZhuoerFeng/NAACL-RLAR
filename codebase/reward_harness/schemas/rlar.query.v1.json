@@ -1,0 +1,64 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.query.v1",
+      "default": "rlar.query.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "query_id": {
+      "minLength": 1,
+      "title": "Query Id",
+      "type": "string"
+    },
+    "query": {
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "task_profile_id": {
+      "minLength": 1,
+      "title": "Task Profile Id",
+      "type": "string"
+    },
+    "reference": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reference"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "reward_mode": {
+      "anyOf": [
+        {
+          "enum": [
+            "single",
+            "checklist"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reward Mode"
+    }
+  },
+  "required": [
+    "query_id",
+    "query",
+    "task_profile_id"
+  ],
+  "title": "QueryRecord",
+  "type": "object"
+}

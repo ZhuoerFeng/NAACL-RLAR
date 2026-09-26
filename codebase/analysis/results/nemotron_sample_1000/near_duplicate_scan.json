@@ -1,0 +1,5 @@
+{
+  "method": "TF-IDF word 1/2-grams fitted on existing cleaned last-user inputs; first/last 4000 characters; max_features 100000; flag cosine >=0.85 and candidate >=120 chars. Approximate screening, not exhaustive semantic deduplication.",
+  "existing_rows": 7828,
+  "candidate_rows": 1700
+}

@@ -1,0 +1,78 @@
+{
+  "suite_id": "audit_math_v1",
+  "version": "prototype-1",
+  "cases": [
+    {
+      "case_id": "m0_yes",
+      "kind": "correct",
+      "is_correct": true,
+      "group_id": "m0",
+      "base_case_id": null,
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2/2}",
+        "reference": "1"
+      }
+    },
+    {
+      "case_id": "m0_no",
+      "kind": "incorrect",
+      "is_correct": false,
+      "group_id": "m0",
+      "base_case_id": null,
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2}",
+        "reference": "1"
+      }
+    },
+    {
+      "case_id": "m0_equivalent",
+      "kind": "invariance",
+      "is_correct": true,
+      "group_id": "m0",
+      "base_case_id": "m0_yes",
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2/2}",
+        "reference": "1"
+      }
+    },
+    {
+      "case_id": "m1_yes",
+      "kind": "correct",
+      "is_correct": true,
+      "group_id": "m1",
+      "base_case_id": null,
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2/2}",
+        "reference": "1"
+      }
+    },
+    {
+      "case_id": "m1_no",
+      "kind": "incorrect",
+      "is_correct": false,
+      "group_id": "m1",
+      "base_case_id": null,
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2}",
+        "reference": "1"
+      }
+    },
+    {
+      "case_id": "m1_equivalent",
+      "kind": "invariance",
+      "is_correct": true,
+      "group_id": "m1",
+      "base_case_id": "m1_yes",
+      "example": {
+        "query": "Compute 7/9 + 2/9",
+        "response": "\\boxed{2/2}",
+        "reference": "1"
+      }
+    }
+  ]
+}

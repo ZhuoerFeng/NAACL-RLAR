@@ -1,0 +1,921 @@
+{
+  "$defs": {
+    "AcceptancePolicy": {
+      "additionalProperties": false,
+      "description": "Pre-declared thresholds. Never inferred at runtime.",
+      "properties": {
+        "score_threshold": {
+          "default": 0.5,
+          "title": "Score Threshold",
+          "type": "number"
+        },
+        "tie_tolerance": {
+          "default": 1e-09,
+          "title": "Tie Tolerance",
+          "type": "number"
+        },
+        "max_false_accept_rate": {
+          "default": 0.0,
+          "title": "Max False Accept Rate",
+          "type": "number"
+        },
+        "max_false_reject_rate": {
+          "default": 0.0,
+          "title": "Max False Reject Rate",
+          "type": "number"
+        },
+        "max_execution_error_rate": {
+          "default": 0.0,
+          "title": "Max Execution Error Rate",
+          "type": "number"
+        },
+        "min_ranking_accuracy": {
+          "default": 1.0,
+          "title": "Min Ranking Accuracy",
+          "type": "number"
+        },
+        "max_invariance_violation_rate": {
+          "default": 0.0,
+          "title": "Max Invariance Violation Rate",
+          "type": "number"
+        },
+        "min_coverage": {
+          "default": 1.0,
+          "title": "Min Coverage",
+          "type": "number"
+        },
+        "allow_partial_component_mask": {
+          "default": false,
+          "title": "Allow Partial Component Mask",
+          "type": "boolean"
+        }
+      },
+      "title": "AcceptancePolicy",
+      "type": "object"
+    },
+    "BudgetConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "run": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Run",
+          "type": "object"
+        },
+        "episode": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Episode",
+          "type": "object"
+        },
+        "retry": {
+          "$ref": "#/$defs/RetryConfig"
+        },
+        "no_progress_threshold": {
+          "default": 3,
+          "title": "No Progress Threshold",
+          "type": "integer"
+        },
+        "absolute_deadline_utc": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Absolute Deadline Utc"
+        },
+        "wall_deadline_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wall Deadline S"
+        },
+        "max_attempts_per_query": {
+          "default": 1,
+          "title": "Max Attempts Per Query",
+          "type": "integer"
+        },
+        "per_tool_timeout_s": {
+          "default": 30.0,
+          "title": "Per Tool Timeout S",
+          "type": "number"
+        }
+      },
+      "title": "BudgetConfig",
+      "type": "object"
+    },
+    "ConstructionConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "strategy": {
+          "default": "agentic",
+          "enum": [
+            "agentic",
+            "single_completion"
+          ],
+          "title": "Strategy",
+          "type": "string"
+        },
+        "reward_mode": {
+          "default": "checklist",
+          "enum": [
+            "single",
+            "checklist"
+          ],
+          "title": "Reward Mode",
+          "type": "string"
+        },
+        "allow_row_mode_override": {
+          "default": false,
+          "title": "Allow Row Mode Override",
+          "type": "boolean"
+        },
+        "on_pass": {
+          "default": "submit",
+          "enum": [
+            "submit",
+            "return"
+          ],
+          "title": "On Pass",
+          "type": "string"
+        },
+        "candidate_selector": {
+          "const": "best_metric_then_reward_key",
+          "default": "best_metric_then_reward_key",
+          "title": "Candidate Selector",
+          "type": "string"
+        },
+        "selector_metric": {
+          "default": "false_accept_rate",
+          "title": "Selector Metric",
+          "type": "string"
+        },
+        "seed": {
+          "default": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "reuse_enabled": {
+          "default": true,
+          "title": "Reuse Enabled",
+          "type": "boolean"
+        },
+        "library_mode": {
+          "default": "heldout",
+          "enum": [
+            "heldout",
+            "continual"
+          ],
+          "title": "Library Mode",
+          "type": "string"
+        },
+        "max_components": {
+          "default": 8,
+          "title": "Max Components",
+          "type": "integer"
+        }
+      },
+      "title": "ConstructionConfig",
+      "type": "object"
+    },
+    "DataConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "input_adapter": {
+          "default": "jsonl",
+          "enum": [
+            "jsonl",
+            "parquet"
+          ],
+          "title": "Input Adapter",
+          "type": "string"
+        },
+        "input_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Path"
+        },
+        "column_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Column Mapping",
+          "type": "object"
+        },
+        "batch_size": {
+          "default": 256,
+          "title": "Batch Size",
+          "type": "integer"
+        },
+        "task_pack_root": {
+          "title": "Task Pack Root",
+          "type": "string"
+        },
+        "split": {
+          "default": "train",
+          "title": "Split",
+          "type": "string"
+        },
+        "output_layout": {
+          "default": "inline",
+          "enum": [
+            "inline",
+            "reference"
+          ],
+          "title": "Output Layout",
+          "type": "string"
+        },
+        "input_digest_policy": {
+          "const": "strict",
+          "default": "strict",
+          "title": "Input Digest Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_pack_root"
+      ],
+      "title": "DataConfig",
+      "type": "object"
+    },
+    "ExecutionConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "runner_type": {
+          "const": "subprocess",
+          "default": "subprocess",
+          "title": "Runner Type",
+          "type": "string"
+        },
+        "runner_profile": {
+          "default": "prototype",
+          "enum": [
+            "prototype",
+            "formal"
+          ],
+          "title": "Runner Profile",
+          "type": "string"
+        },
+        "required_capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Capabilities",
+          "type": "array"
+        },
+        "runtime_fingerprint": {
+          "default": "py3.11-stdlib-v1",
+          "title": "Runtime Fingerprint",
+          "type": "string"
+        },
+        "wall_timeout_s": {
+          "default": 5.0,
+          "title": "Wall Timeout S",
+          "type": "number"
+        },
+        "cpu_timeout_s": {
+          "default": 5.0,
+          "title": "Cpu Timeout S",
+          "type": "number"
+        },
+        "memory_limit_mb": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 512,
+          "title": "Memory Limit Mb"
+        },
+        "max_processes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Processes"
+        },
+        "max_output_bytes": {
+          "default": 65536,
+          "title": "Max Output Bytes",
+          "type": "integer"
+        },
+        "max_return_bytes": {
+          "default": 262144,
+          "title": "Max Return Bytes",
+          "type": "integer"
+        },
+        "allow_untrusted_code": {
+          "default": false,
+          "title": "Allow Untrusted Code",
+          "type": "boolean"
+        },
+        "max_concurrent_actions": {
+          "default": 4,
+          "title": "Max Concurrent Actions",
+          "type": "integer"
+        }
+      },
+      "title": "ExecutionConfig",
+      "type": "object"
+    },
+    "HarnessConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "rlar.config.v1",
+          "default": "rlar.config.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "run_label": {
+          "default": "run",
+          "title": "Run Label",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/DataConfig"
+        },
+        "construction": {
+          "$ref": "#/$defs/ConstructionConfig"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelConfig"
+        },
+        "execution": {
+          "$ref": "#/$defs/ExecutionConfig"
+        },
+        "rm": {
+          "$ref": "#/$defs/RMConfig"
+        },
+        "budget": {
+          "$ref": "#/$defs/BudgetConfig"
+        },
+        "validation": {
+          "$ref": "#/$defs/ValidationConfig"
+        },
+        "logging": {
+          "$ref": "#/$defs/LoggingConfig"
+        },
+        "profile_kind": {
+          "default": "offline_demo",
+          "enum": [
+            "offline_demo",
+            "real"
+          ],
+          "title": "Profile Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "model",
+        "validation"
+      ],
+      "title": "HarnessConfig",
+      "type": "object"
+    },
+    "LoggingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "max_observation_chars": {
+          "default": 4000,
+          "title": "Max Observation Chars",
+          "type": "integer"
+        },
+        "max_blob_bytes": {
+          "default": 4000000,
+          "title": "Max Blob Bytes",
+          "type": "integer"
+        },
+        "message_format_version": {
+          "default": "harness_observation.v1",
+          "title": "Message Format Version",
+          "type": "string"
+        },
+        "single_writer_lock": {
+          "default": true,
+          "title": "Single Writer Lock",
+          "type": "boolean"
+        },
+        "truncation_marker": {
+          "default": "\n...[truncated]...",
+          "title": "Truncation Marker",
+          "type": "string"
+        }
+      },
+      "title": "LoggingConfig",
+      "type": "object"
+    },
+    "ModelConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "provider_adapter": {
+          "default": "scripted",
+          "enum": [
+            "scripted",
+            "http_chat_json_v1"
+          ],
+          "title": "Provider Adapter",
+          "type": "string"
+        },
+        "scripted_responses": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scripted Responses"
+        },
+        "endpoint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint"
+        },
+        "model": {
+          "default": "REQUIRED",
+          "title": "Model",
+          "type": "string"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        },
+        "api_key_env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key Env"
+        },
+        "temperature": {
+          "default": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "max_output_tokens": {
+          "default": 2048,
+          "title": "Max Output Tokens",
+          "type": "integer"
+        },
+        "context_limit_tokens": {
+          "default": 32768,
+          "title": "Context Limit Tokens",
+          "type": "integer"
+        },
+        "token_counter": {
+          "default": "chars_div4_conservative",
+          "enum": [
+            "chars_div4_conservative",
+            "adapter"
+          ],
+          "title": "Token Counter",
+          "type": "string"
+        },
+        "connect_timeout_s": {
+          "default": 10.0,
+          "title": "Connect Timeout S",
+          "type": "number"
+        },
+        "read_timeout_s": {
+          "default": 60.0,
+          "title": "Read Timeout S",
+          "type": "number"
+        },
+        "total_timeout_s": {
+          "default": 120.0,
+          "title": "Total Timeout S",
+          "type": "number"
+        },
+        "adapter_version": {
+          "default": "http_chat_json_v1",
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "context_reserve_tokens": {
+          "default": 4096,
+          "title": "Context Reserve Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "ModelConfig",
+      "type": "object"
+    },
+    "RMCatalogueEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "string"
+        },
+        "model_card_ref": {
+          "title": "Model Card Ref",
+          "type": "string"
+        },
+        "supported_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Supported Inputs",
+          "type": "array"
+        },
+        "score_semantics": {
+          "title": "Score Semantics",
+          "type": "string"
+        },
+        "normalization_id": {
+          "title": "Normalization Id",
+          "type": "string"
+        },
+        "endpoint_ref": {
+          "title": "Endpoint Ref",
+          "type": "string"
+        },
+        "api_key_env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key Env"
+        },
+        "timeout_s": {
+          "default": 30.0,
+          "title": "Timeout S",
+          "type": "number"
+        },
+        "max_calls_per_score": {
+          "default": 2,
+          "title": "Max Calls Per Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "model_id",
+        "revision",
+        "model_card_ref",
+        "supported_inputs",
+        "score_semantics",
+        "normalization_id",
+        "endpoint_ref"
+      ],
+      "title": "RMCatalogueEntry",
+      "type": "object"
+    },
+    "RMConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "catalogue": {
+          "items": {
+            "$ref": "#/$defs/RMCatalogueEntry"
+          },
+          "title": "Catalogue",
+          "type": "array"
+        },
+        "normalization_mappings": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Normalization Mappings",
+          "type": "object"
+        },
+        "max_scoring_requests_per_run": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Scoring Requests Per Run"
+        }
+      },
+      "title": "RMConfig",
+      "type": "object"
+    },
+    "RetryConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "max_transport_attempts": {
+          "default": 3,
+          "title": "Max Transport Attempts",
+          "type": "integer"
+        },
+        "backoff_initial_s": {
+          "default": 0.01,
+          "title": "Backoff Initial S",
+          "type": "number"
+        },
+        "backoff_multiplier": {
+          "default": 2.0,
+          "title": "Backoff Multiplier",
+          "type": "number"
+        },
+        "backoff_max_s": {
+          "default": 1.0,
+          "title": "Backoff Max S",
+          "type": "number"
+        },
+        "circuit_breaker_threshold": {
+          "default": 3,
+          "title": "Circuit Breaker Threshold",
+          "type": "integer"
+        }
+      },
+      "title": "RetryConfig",
+      "type": "object"
+    },
+    "ValidationConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "dev_suite_root": {
+          "title": "Dev Suite Root",
+          "type": "string"
+        },
+        "oracle_version": {
+          "title": "Oracle Version",
+          "type": "string"
+        },
+        "acceptance_policy_override": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AcceptancePolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "audit_suite_root": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audit Suite Root"
+        },
+        "audit_required_assurance": {
+          "default": "isolated",
+          "enum": [
+            "static",
+            "behavioral_prototype",
+            "isolated"
+          ],
+          "title": "Audit Required Assurance",
+          "type": "string"
+        },
+        "evaluator_integrity_env": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evaluator Integrity Env"
+        }
+      },
+      "required": [
+        "dev_suite_root",
+        "oracle_version"
+      ],
+      "title": "ValidationConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.manifest.v1",
+      "default": "rlar.manifest.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/$defs/HarnessConfig"
+    },
+    "config_digest": {
+      "title": "Config Digest",
+      "type": "string"
+    },
+    "input_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Input Path"
+    },
+    "input_digest": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Input Digest"
+    },
+    "split": {
+      "title": "Split",
+      "type": "string"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    },
+    "deadline_utc": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Deadline Utc"
+    },
+    "harness_version": {
+      "title": "Harness Version",
+      "type": "string"
+    },
+    "platform": {
+      "title": "Platform",
+      "type": "string"
+    },
+    "runner_capabilities": {
+      "additionalProperties": true,
+      "title": "Runner Capabilities",
+      "type": "object"
+    },
+    "profile_kind": {
+      "default": "offline_demo",
+      "title": "Profile Kind",
+      "type": "string"
+    },
+    "resolved_paths": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": "Resolved Paths",
+      "type": "object"
+    },
+    "resource_fingerprints": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Resource Fingerprints",
+      "type": "object"
+    },
+    "initial_library_snapshot": {
+      "default": "",
+      "title": "Initial Library Snapshot",
+      "type": "string"
+    },
+    "supersedes_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes Run Id"
+    },
+    "supersedes_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes Reason"
+    }
+  },
+  "required": [
+    "run_id",
+    "created_at",
+    "config",
+    "config_digest",
+    "input_path",
+    "input_digest",
+    "split",
+    "seed",
+    "deadline_utc",
+    "harness_version",
+    "platform"
+  ],
+  "title": "RunManifest",
+  "type": "object"
+}

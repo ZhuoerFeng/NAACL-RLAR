@@ -1,0 +1,96 @@
+{
+  "features": [
+    {
+      "feature_idx": 0,
+      "name": "id",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 1,
+      "name": "messages",
+      "type": {
+        "feature": {
+          "content": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "role": {
+            "dtype": "string",
+            "_type": "Value"
+          }
+        },
+        "_type": "List"
+      }
+    },
+    {
+      "feature_idx": 2,
+      "name": "source",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "row_idx": 0,
+      "row": {
+        "id": "personas_math_26ts6mqd3ipqzum75d8qf56e",
+        "messages": [
+          {
+            "content": "A real estate agent, Emma, encourages financial literacy among her clients by directing them to post-purchase classes. She has observed that attending these classes significantly impacts the clients' ability to manage their new mortgage efficiently. Over the past year, Emma has sold 20 houses and noted the following data:\n\n1. The average mortgage amount for these 20 houses was $350,000. The standard deviation of the mortgage amounts was $50,000. Assuming the mortgage amounts are normally distributed, calculate the probability that a randomly selected mortgage amount from these 20 houses is between $300,000 and $400,000.\n\n2. Out of the clients who attended the financial literacy classes, 85% managed to reduce their monthly expenses by an average of $200 within the first six months. Suppose 15 clients attended the classes. Assuming that the reduction in monthly expenses follows a normal distribution with a standard deviation of $50, what is the probability that a randomly selected client from those who attended the classes will reduce their expenses by more than $250 per month?\n\nNote: Use appropriate statistical and probabilistic methods to solve the above sub-problems.",
+            "role": "user"
+          },
+          {
+            "content": "### Problem 1: Probability of Mortgage Amount between $300,000 and $400,000\n\nWe need to calculate the probability that a randomly selected mortgage amount is between $300,000 and $400,000 given that the mortgage amounts are normally distributed with a mean (\\(\\mu\\)) of $350,000 and a standard deviation (\\(\\sigma\\)) of $50,000.\n\n1. **Convert the mortgage amounts to z-scores:**\n\n\\[\nz = \\frac{x - \\mu}{\\sigma}\n\\]\n\nFor \\(x = 300,000\\):\n\n\\[\nz_1 = \\frac{300,000 - 350,000}{50,000} = \\frac{-50,000}{50,000} = -1\n\\]\n\nFor \\(x = 400,000\\):\n\n\\[\nz_2 = \\frac{400,000 - 350,000}{50,000} = \\frac{50,000}{50,000} = 1\n\\]\n\n2. **Find the probability using the standard normal distribution table or a calculator:**\n\n\\[\nP(z_1 < Z < z_2) = P(-1 < Z < 1)\n\\]\n\nUsing the standard normal distribution table:\n\n\\[\nP(Z < 1) \\approx 0.8413\n\\]\n\\[\nP(Z < -1) \\approx 0.1587\n\\]\n\nSo,\n\n\\[\nP(-1 < Z < 1) = P(Z < 1) - P(Z < -1) = 0.8413 - 0.1587 = 0.6826\n\\]\n\n### Problem 2: Probability of Reducing Monthly Expenses by More Than $250\n\nGiven:\n- Mean reduction in monthly expenses (\\(\\mu\\)) = $200\n- Standard deviation (\\(\\sigma\\)) = $50\n- We need to find the probability that the reduction is more than $250.\n\n1. **Convert the expense reduction amount to a z-score:**\n\n\\[\nz = \\frac{x - \\mu}{\\sigma}\n\\]\n\nFor \\(x = 250\\):\n\n\\[\nz = \\frac{250 - 200}{50} = \\frac{50}{50} = 1\n\\]\n\n2. **Find the probability using the standard normal distribution table or a calculator:**\n\n\\[\nP(X > 250) = P(Z > 1)\n\\]\n\nUsing the standard normal distribution table:\n\n\\[\nP(Z < 1) \\approx 0.8413\n\\]\n\nSince we need \\(P(Z > 1)\\):\n\n\\[\nP(Z > 1) = 1 - P(Z < 1) = 1 - 0.8413 = 0.1587\n\\]\n\n### Final Answers\n\n1. The probability that a randomly selected mortgage amount is between $300,000 and $400,000 is approximately 0.6826.\n2. The probability that a randomly selected client will reduce their expenses by more than $250 per month is approximately 0.1587.\n\nFinal Answer: The final answers are 0.6826 for the first part and 0.1587 for the second part. I hope it is correct.",
+            "role": "assistant"
+          }
+        ],
+        "source": "allenai/olmo-3-instruct-sft-no-tools-final-tagged-topic-ade-keyword-filtered-no-wildchat-reasoning"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 1,
+      "row": {
+        "id": "allenai/OpenThoughts3-full-filtered-science-no-cot-decontam-v2_tmp_ids_89195",
+        "messages": [
+          {
+            "content": "Crystals of *p*-chloronitrobenzene are monoclinic with \\( a = 3.84 \\), \\( b = 6.80 \\), \\( c = 13.35 \\, \\text{Å} \\), and \\( \\beta = 97^\\circ 31' \\). The systematic absences are \\( h0\\ell \\) with \\(\\ell\\) odd, \\( 0k0 \\) with \\( k \\) odd. The density measured by flotation in aqueous potassium iodide is \\( 1.52 \\, \\text{g cm}^{-3} \\). What information can be deduced from these data?",
+            "role": "user"
+          },
+          {
+            "content": "The key information deduced from the given data on p-chloronitrobenzene crystals is as follows:\n\n1. **Lattice Type and Unit Cell Content**:  \n   - The crystal system is **monoclinic**, with lattice parameters \\(a = 3.84\\, \\text{Å}\\), \\(b = 6.80\\, \\text{Å}\\), \\(c = 13.35\\, \\text{Å}\\), and \\(β = 97^\\circ 31'\\).  \n   - The unit cell is **C-centered** (base-centered), meaning it belongs to the **centric monoclinic** Bravais lattice.  \n   - **Z = 2**, indicating there are **2 molecules of p-chloronitrobenzene per unit cell**. This was determined using the density formula:  \n     \\[\n     Z = \\frac{\\rho \\cdot N_A \\cdot V}{\\text{Molar Mass}}\n     \\]  \n     where \\(V\\) is computed as \\(a \\cdot b \\cdot c \\cdot \\sin(\\beta) \\approx 345.6\\, \\text{Å}^3\\).\n\n2. **Systematic Absences and Space Group**:  \n   - The **systematic absences** \\(h0\\ell \\,(\\ell \\text{ odd})\\) and \\(0k0\\, (k \\text{ odd})\\) indicate:\n     - **C-centering extinction condition**: Requires \\(h + k\\) to be even, explaining the absence of reflections with \\(k \\text{ odd}\\) (e.g., \\(0k0\\) when \\(k\\) is odd).  \n     - **additional extinction from screw/glide elements**: A screw axis \\(2_1\\) along the \\(b\\)-axis (the unique monoclinic axis) and glide planes impose conditions leading to the absence of \\(h0\\ell\\) when \\(\\ell\\) is odd.  \n   - These absences are consistent with the **space group C2/c** (No. 15), which combines a C-centered lattice, a \\(2_1\\) screw axis along \\(b\\), and glide planes. This space group ensures reflections are absent when \\(\\ell\\) is odd (due to glide plane effects) or \\(k\\) is odd (due to the screw axis).\n\n### Summary of Deduced Information:\n- **Unit cell parameters**: Monoclinic with \\(a = 3.84\\), \\(b = 6.80\\), \\(c = 13.35\\, \\text{Å}\\), \\(β = 97^\\circ 31'\\), and **C-centering (base-centered)**.  \n- **Molecules per unit cell**: **\\(Z = 2\\)**, derived from the measured density.  \n- **Space group**: Likely **C2/c**, inferred from systematic absences caused by the combination of C-centering and symmetry elements (screw axis \\(2_1\\) and glide planes).  \n- **Systematic extinction rules**: Regulated by \\(h + k \\text{ even}\\) (C-centering) and \\(\\ell \\text{ even}\\) (due to glide planes/screw).  \n\nThese deductions confirm the crystal’s structural symmetry and unit cell composition.",
+            "role": "assistant"
+          }
+        ],
+        "source": "allenai/olmo-3-instruct-sft-no-tools-final-tagged-topic-ade-keyword-filtered-no-wildchat-reasoning"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 2,
+      "row": {
+        "id": "89021",
+        "messages": [
+          {
+            "content": "س266- ما الذي يعتمد عليه التقويم الهجري ؟\n In your entire response, refrain from the use of ! (i.e. exclamation marks) as punctuation and in general.",
+            "role": "user"
+          },
+          {
+            "content": "التقويم الهجري يعتمد على الحسابات القمرية، حيث تبدأ كل شهر من ليلة تولد الهلال. بدأ هذا التقويم من هجرة الرسول محمد صلى الله عليه وسلم من مكة المكرمة إلى المدينة المنورة في العام الذي يُعتبر مُفتتحاً للعصر الإسلامي. يتكون التقويم الهجري من اثني عشر شهراً على الترتيل: محرم، صفر، ربيع الأول، ربيع الثاني، جمادى الأول، جمادى الثانية، رجب، شعبان، رمضان، شوّال، ذو القعدة، ذو الحجة. يُحتسب كل شهر هجري بالتحديد بناءً على رؤية الهلال أو الحسابات الفلكية الدقيقة لبداية الشهر الجديد. نتيجة لنظامه القمري، يكون التقويم الهجري قصيراً بحوالي 11 يوماً عن التقويم الميلادي الشمسية، مما يؤدي إلى تقدم الأعياد والمناسبات القمرية بشكل سنوي بالنسبة للتقويم الشمسي.",
+            "role": "assistant"
+          }
+        ],
+        "source": "allenai/olmo-3-instruct-sft-no-tools-final-tagged-topic-ade-keyword-filtered-no-wildchat-reasoning"
+      },
+      "truncated_cells": []
+    }
+  ],
+  "num_rows_total": 1924533,
+  "num_rows_per_page": 100,
+  "partial": false
+}

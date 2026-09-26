@@ -13,11 +13,10 @@ This situation highlights a crucial gap and a significant opportunity. The open-
     \vspace{-4mm}
 \end{wrapfigure}
 
-To bridge this gap, we propose \textbf{\method{}} (Reinforcement Learning from Agentic Rewards), a self-evolving framework that \textbf{regards the reward functions as callable tools} and is easy to scale over heterogeneous query distributions.
-\method{} primarily leverages LLMs' tool-calling capabilities to assign reward scores for the querying task sample based on existing tools. 
-Once there are no suitable local tools, \method{} explores online model checkpoint repositories in search of matching neural models, as well as designs code-based executable functions for the current task. The runtime tool library evolves with the appended tools.
-We calibrate the final reward output from \method{} with benchmarks such as \textsc{RewardBench-V2}~\citep{rewardbench2} before deploying it in online RL training.
-By shifting from learning LLMs' ``\textbf{generated score reward}'' to ``\textbf{designed reward function}'', \method{} ensures high-fidelity rewards across distributions while significantly reducing the inference costs associated with constructing additional reward models.
+To bridge this gap, we propose \textbf{\method{}} (Reinforcement Learning from Agentic Rewards), which treats reward functions as executable, reusable artifacts. A single controller uses modular tools to inspect task contracts, retrieve validated programs, construct a reward, and repair it using development-test feedback. Representative open-source reward models and their model cards are supplied through a fixed API catalogue; the agent may incorporate these models alongside code-based verifiers. Accepted programs accumulate in a tool library that serves as the system's persistent memory.
+The revised methodology focuses on objectively verifiable mathematics and code tasks. It tests reward quality independently of executability, compares interactive construction with single-completion program generation under controlled resources, and records traces for a proposed Qwen3-8B distillation study. The hypothesis is that feedback-guided construction yields better reward programs at a useful cost; this requires new evidence under the revised protocol.
+
+\noindent\textbf{Earlier implementation.} The empirical findings summarized below belong to the earlier implementation and are retained pending evaluation of the revised protocol.
 
 We evaluate \method{} across a diverse suite of tasks, including math reasoning~\citep{hendrycks2021measuringmathematicalproblemsolving, gsm8k}, code~\citep{leetcodedataset, mbpp}, translation~\citep{benchmax, nllb2022, flores101, twoevaldatasets}, and general chat~\citep{ultrachat}.
 We compare our agentic reward synthesis-leveraging framework against state-of-the-art static reward models, including classification~\citep{skyworkreward}, generative ones~\citep{skyworkcritic2024}, and GPT5-as-a-judge. 
@@ -25,7 +24,7 @@ We compare our agentic reward synthesis-leveraging framework against state-of-th
 Unlike baselines such as \textbf{SkyLlama}, which suffer from performance decrements in math reasoning tasks during mixed training, \method{} dynamically models domain objectives across math, code, translation, and chat. 
 Notably, \method{} demonstrates enhanced robustness to \textbf{format and verbosity hacking}, whereas loopholes persist in baselines, including GPT5-as-a-judge.
 Finally, compared to GPT-5-as-a-judge, \method{} reduces API token consumption by approximately \(80\%\) and GPU training hours by \(75\%\), demonstrating \method{}'s scaling potential.
-Ablation studies reveal that each synthesis pathway serves a distinct role: \textbf{CodeVerify}-generated verifiers are critical for rule-heavy tasks (math, code), while \textbf{WrapLLM}-retrieved neural models are essential for open-ended tasks (chat, translation). Furthermore, replacing the agentic selector with random reward assignment degrades performance across nearly all benchmarks, confirming that \method{}'s gains stem from precise per-query reward routing, not merely from reward tool diversity.
+Historical ablation studies compare the earlier synthesis pathways: \textbf{CodeVerify}-generated verifiers are critical for rule-heavy tasks (math, code), while \textbf{WrapLLM}-retrieved neural models are essential for open-ended tasks (chat, translation). Furthermore, replacing the agentic selector with random reward assignment degrades performance across nearly all benchmarks, confirming that \method{}'s gains stem from precise per-query reward routing, not merely from reward tool diversity.
 The data and code are available on \url{https://anonymous.4open.science/r/NeurIPS2026-RLAR/}.
 
 

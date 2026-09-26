@@ -1,0 +1,764 @@
+{
+  "$defs": {
+    "AcceptancePolicy": {
+      "additionalProperties": false,
+      "description": "Pre-declared thresholds. Never inferred at runtime.",
+      "properties": {
+        "score_threshold": {
+          "default": 0.5,
+          "title": "Score Threshold",
+          "type": "number"
+        },
+        "tie_tolerance": {
+          "default": 1e-09,
+          "title": "Tie Tolerance",
+          "type": "number"
+        },
+        "max_false_accept_rate": {
+          "default": 0.0,
+          "title": "Max False Accept Rate",
+          "type": "number"
+        },
+        "max_false_reject_rate": {
+          "default": 0.0,
+          "title": "Max False Reject Rate",
+          "type": "number"
+        },
+        "max_execution_error_rate": {
+          "default": 0.0,
+          "title": "Max Execution Error Rate",
+          "type": "number"
+        },
+        "min_ranking_accuracy": {
+          "default": 1.0,
+          "title": "Min Ranking Accuracy",
+          "type": "number"
+        },
+        "max_invariance_violation_rate": {
+          "default": 0.0,
+          "title": "Max Invariance Violation Rate",
+          "type": "number"
+        },
+        "min_coverage": {
+          "default": 1.0,
+          "title": "Min Coverage",
+          "type": "number"
+        },
+        "allow_partial_component_mask": {
+          "default": false,
+          "title": "Allow Partial Component Mask",
+          "type": "boolean"
+        }
+      },
+      "title": "AcceptancePolicy",
+      "type": "object"
+    },
+    "ActionOutcome": {
+      "enum": [
+        "completed",
+        "failed",
+        "unknown"
+      ],
+      "title": "ActionOutcome",
+      "type": "string"
+    },
+    "ComponentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "raw_value": {
+          "default": null,
+          "title": "Raw Value"
+        },
+        "raw_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Score"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        },
+        "normalization_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Normalization Id"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StructuredError"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stdout_truncated": {
+          "default": false,
+          "title": "Stdout Truncated",
+          "type": "boolean"
+        },
+        "wall_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wall Seconds"
+        }
+      },
+      "required": [
+        "id",
+        "status"
+      ],
+      "title": "ComponentResult",
+      "type": "object"
+    },
+    "ErrorCategory": {
+      "enum": [
+        "protocol",
+        "reward_code",
+        "quality",
+        "transport",
+        "timeout",
+        "auth",
+        "resource",
+        "budget",
+        "cancelled",
+        "input",
+        "internal"
+      ],
+      "title": "ErrorCategory",
+      "type": "string"
+    },
+    "RetryOwner": {
+      "description": "Who is responsible for making progress after this error.",
+      "enum": [
+        "agent",
+        "harness",
+        "none"
+      ],
+      "title": "RetryOwner",
+      "type": "string"
+    },
+    "ScoreResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "rlar.score.v1",
+          "default": "rlar.score.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "total_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Total Score"
+        },
+        "component_results": {
+          "items": {
+            "$ref": "#/$defs/ComponentResult"
+          },
+          "title": "Component Results",
+          "type": "array"
+        },
+        "valid_component_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Valid Component Ids",
+          "type": "array"
+        },
+        "coverage": {
+          "title": "Coverage",
+          "type": "number"
+        },
+        "planned_count": {
+          "title": "Planned Count",
+          "type": "integer"
+        },
+        "successful_count": {
+          "title": "Successful Count",
+          "type": "integer"
+        },
+        "reward_key": {
+          "title": "Reward Key",
+          "type": "string"
+        },
+        "aggregation_version": {
+          "default": "agg.v1",
+          "title": "Aggregation Version",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/Usage"
+        },
+        "example_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Example Id"
+        }
+      },
+      "required": [
+        "status",
+        "total_score",
+        "component_results",
+        "valid_component_ids",
+        "coverage",
+        "planned_count",
+        "successful_count",
+        "reward_key"
+      ],
+      "title": "ScoreResult",
+      "type": "object"
+    },
+    "StructuredError": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/ErrorCategory"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "phase": {
+          "title": "Phase",
+          "type": "string"
+        },
+        "retry_owner": {
+          "$ref": "#/$defs/RetryOwner"
+        },
+        "action_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Action Id"
+        },
+        "action_outcome": {
+          "$ref": "#/$defs/ActionOutcome",
+          "default": "failed"
+        },
+        "reward_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reward Key"
+        },
+        "remaining_budget": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remaining Budget"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "suggested_recovery": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suggested Recovery"
+        },
+        "detail_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail Ref"
+        }
+      },
+      "required": [
+        "category",
+        "code",
+        "phase",
+        "retry_owner"
+      ],
+      "title": "StructuredError",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "description": "Cost accounting. ``None`` means unknown; it never means zero.",
+      "properties": {
+        "input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Tokens"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Tokens"
+        },
+        "cached_input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cached Input Tokens"
+        },
+        "unknown_usage_events": {
+          "default": 0,
+          "title": "Unknown Usage Events",
+          "type": "integer"
+        },
+        "controller_logical_calls": {
+          "default": 0,
+          "title": "Controller Logical Calls",
+          "type": "integer"
+        },
+        "physical_requests": {
+          "default": 0,
+          "title": "Physical Requests",
+          "type": "integer"
+        },
+        "transport_retries": {
+          "default": 0,
+          "title": "Transport Retries",
+          "type": "integer"
+        },
+        "scoring_requests": {
+          "default": 0,
+          "title": "Scoring Requests",
+          "type": "integer"
+        },
+        "tool_calls": {
+          "default": 0,
+          "title": "Tool Calls",
+          "type": "integer"
+        },
+        "component_executions": {
+          "default": 0,
+          "title": "Component Executions",
+          "type": "integer"
+        },
+        "test_cases": {
+          "default": 0,
+          "title": "Test Cases",
+          "type": "integer"
+        },
+        "wall_seconds": {
+          "default": 0.0,
+          "title": "Wall Seconds",
+          "type": "number"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Usd"
+        },
+        "cost_status": {
+          "default": "unavailable",
+          "enum": [
+            "known",
+            "unavailable",
+            "unknown"
+          ],
+          "title": "Cost Status",
+          "type": "string"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    },
+    "ValidationMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "planned_cases": {
+          "title": "Planned Cases",
+          "type": "integer"
+        },
+        "completed_cases": {
+          "title": "Completed Cases",
+          "type": "integer"
+        },
+        "failed_cases": {
+          "title": "Failed Cases",
+          "type": "integer"
+        },
+        "execution_error_rate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Execution Error Rate"
+        },
+        "false_accept_rate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "False Accept Rate"
+        },
+        "false_reject_rate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "False Reject Rate"
+        },
+        "ranking_pairs_planned": {
+          "title": "Ranking Pairs Planned",
+          "type": "integer"
+        },
+        "ranking_pairs_scored": {
+          "title": "Ranking Pairs Scored",
+          "type": "integer"
+        },
+        "ranking_pairs_missing": {
+          "title": "Ranking Pairs Missing",
+          "type": "integer"
+        },
+        "ranking_accuracy": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ranking Accuracy"
+        },
+        "invariance_pairs_planned": {
+          "title": "Invariance Pairs Planned",
+          "type": "integer"
+        },
+        "invariance_violations": {
+          "title": "Invariance Violations",
+          "type": "integer"
+        },
+        "invariance_violation_rate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invariance Violation Rate"
+        },
+        "coverage": {
+          "title": "Coverage",
+          "type": "number"
+        },
+        "component_mask_distribution": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Component Mask Distribution",
+          "type": "object"
+        },
+        "partial_case_count": {
+          "default": 0,
+          "title": "Partial Case Count",
+          "type": "integer"
+        },
+        "all_failed_case_count": {
+          "default": 0,
+          "title": "All Failed Case Count",
+          "type": "integer"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "planned_cases",
+        "completed_cases",
+        "failed_cases",
+        "execution_error_rate",
+        "false_accept_rate",
+        "false_reject_rate",
+        "ranking_pairs_planned",
+        "ranking_pairs_scored",
+        "ranking_pairs_missing",
+        "ranking_accuracy",
+        "invariance_pairs_planned",
+        "invariance_violations",
+        "invariance_violation_rate",
+        "coverage"
+      ],
+      "title": "ValidationMetrics",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "rlar.validation.v1",
+      "default": "rlar.validation.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "reward_key": {
+      "title": "Reward Key",
+      "type": "string"
+    },
+    "task_contract_digest": {
+      "title": "Task Contract Digest",
+      "type": "string"
+    },
+    "suite_id": {
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "suite_version": {
+      "title": "Suite Version",
+      "type": "string"
+    },
+    "suite_digest": {
+      "default": "",
+      "title": "Suite Digest",
+      "type": "string"
+    },
+    "verifier_version": {
+      "title": "Verifier Version",
+      "type": "string"
+    },
+    "runtime_fingerprint": {
+      "title": "Runtime Fingerprint",
+      "type": "string"
+    },
+    "aggregation_version": {
+      "default": "agg.v1",
+      "title": "Aggregation Version",
+      "type": "string"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Case Ids",
+      "type": "array"
+    },
+    "metrics": {
+      "$ref": "#/$defs/ValidationMetrics"
+    },
+    "per_case": {
+      "items": {
+        "$ref": "#/$defs/ScoreResult"
+      },
+      "title": "Per Case",
+      "type": "array"
+    },
+    "error_categories": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Error Categories",
+      "type": "object"
+    },
+    "eligible": {
+      "title": "Eligible",
+      "type": "boolean"
+    },
+    "ineligibility_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Ineligibility Reasons",
+      "type": "array"
+    },
+    "assurance": {
+      "enum": [
+        "static",
+        "behavioral_prototype",
+        "isolated"
+      ],
+      "title": "Assurance",
+      "type": "string"
+    },
+    "policy": {
+      "$ref": "#/$defs/AcceptancePolicy"
+    },
+    "usage": {
+      "$ref": "#/$defs/Usage"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "issuer": {
+      "const": "trusted_evaluator",
+      "default": "trusted_evaluator",
+      "title": "Issuer",
+      "type": "string"
+    },
+    "integrity_tag": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Integrity Tag"
+    }
+  },
+  "required": [
+    "report_id",
+    "reward_key",
+    "task_contract_digest",
+    "suite_id",
+    "suite_version",
+    "verifier_version",
+    "runtime_fingerprint",
+    "profile_id",
+    "case_ids",
+    "metrics",
+    "eligible",
+    "assurance",
+    "policy",
+    "created_at"
+  ],
+  "title": "ValidationReport",
+  "type": "object"
+}

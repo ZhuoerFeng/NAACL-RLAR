@@ -242,12 +242,12 @@
 \begin{abstract}
 Large language model alignment via reinforcement learning depends critically on reward function quality. 
 However, generic reward models often underperform on heterogeneous task distributions due to distribution shifts, while training task‑specific reward models is costly and prone to annotation difficulty, catastrophic forgetting, and loss of generalization.
-We present \method{} (\underline{\textbf{R}}einforcement \underline{\textbf{L}}earning from \underline{\textbf{A}}gent \underline{\textbf{R}}ewards), an agent‑driven framework that dynamically assigns tailored reward functions to individual queries.
-Specifically, \method{} transforms reward acquisition into a dynamic tool synthesis and invocation task.
-It leverages LLM agents to autonomously retrieve optimal reward models from the Internet and synthesize code-based verifiers through code generation.
-This allows the reward system to self-evolve with the shifting data distributions during training.
-On \textsc{RewardBench-V2}, \method{} outperforms static baselines and approaches the performance upper bound, validating the dynamic reward orchestration mechanism.
-In online RL post-training, \method{} yields consistent gains of \(10\%\)--\(60\%\) across mathematics, coding, translation, and dialogue. Ablations confirm that synthesized code-based verifiers complement neural reward models on rule-heavy tasks, and that precise per-query reward routing outperforms monolithic reward prediction.
+We present \method{} (\underline{\textbf{R}}einforcement \underline{\textbf{L}}earning from \underline{\textbf{A}}gent \underline{\textbf{R}}ewards), a framework for constructing reusable reward programs through tool interaction.
+A controller inspects task specifications, combines code-based verifiers with a fixed catalogue of reward-model APIs, and revises candidate programs using task-provided development tests.
+Independent audits evaluate reward discrimination and robustness after finalization, while accepted artifacts accumulate in a lightweight tool library.
+The revised protocol focuses on objectively verifiable mathematics and code tasks, with single-completion reward design and budget-matched sampling as central controls.
+Recorded construction traces support a proposed study of whether Qwen3-8B can learn tool use and repair through supervised distillation.
+The empirical tables retained in this draft describe an earlier implementation; evaluation of the revised construction loop and distillation protocol remains to be completed.
 \end{abstract}
 
 
@@ -278,6 +278,8 @@ In online RL post-training, \method{} yields consistent gains of \(10\%\)--\(60\
 \input{Appendix/E_generated_tools}
 \input{Appendix/F_recording_curves}
 \input{Appendix/G_additional_analysis}
+\input{Appendix/H_construction_protocol}
+\input{Appendix/I_legacy_routing}
 
 
 

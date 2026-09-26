@@ -57,3 +57,6 @@ cc_start.sh
 
 # ===== Claude Code local state =====
 .claude/
+
+.parquet
+data/
