@@ -71,15 +71,23 @@ class HttpChatJsonV1(LLMAdapter):
 
     # -- wire ------------------------------------------------------------
     def build_body(self, request: LLMRequest) -> dict[str, Any]:
-        return {
+        body = {
             "model": self.config.model,
             "messages": [
                 {"role": m.role, "content": m.content} for m in request.messages
             ],
-            "temperature": request.temperature,
-            "max_tokens": request.max_output_tokens,
+            self.config.max_tokens_field: request.max_output_tokens,
             "stream": False,
         }
+        if self.config.send_temperature:
+            body["temperature"] = request.temperature
+        for name in ("reasoning_effort", "enable_thinking", "top_p", "prompt_cache_key"):
+            value = getattr(self.config, name)
+            if value is not None:
+                body[name] = value
+        if self.config.response_format:
+            body["response_format"] = {"type": self.config.response_format}
+        return body
 
     def build_headers(self) -> dict[str, str]:
         headers = {"content-type": "application/json"}

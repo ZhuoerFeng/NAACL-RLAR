@@ -81,7 +81,14 @@ class ModelConfig(Strict):
     revision: str | None = None
     api_key_env: str | None = None
     temperature: float = 0.0
+    send_temperature: bool = True
     max_output_tokens: int = 2048
+    max_tokens_field: Literal["max_tokens", "max_completion_tokens"] = "max_tokens"
+    reasoning_effort: Literal["low", "medium", "high"] | None = None
+    enable_thinking: bool | None = None
+    top_p: float | None = Field(default=None, ge=0.0, le=1.0)
+    response_format: Literal["json_object"] | None = None
+    prompt_cache_key: str | None = None
     context_limit_tokens: int = 32768
     token_counter: Literal["chars_div4_conservative", "adapter"] = "chars_div4_conservative"
     connect_timeout_s: float = 10.0

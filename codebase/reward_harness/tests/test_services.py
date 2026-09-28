@@ -57,6 +57,42 @@ def http_config(config, url):
     c.execution.allow_untrusted_code = True
     return c
 
+def test_aihub_options_are_the_actual_wire_snapshot(config, source, tmp_path):
+    with server([(200, response())]) as (url, requests):
+        c = http_config(config, url)
+        c.model.max_tokens_field = 'max_completion_tokens'
+        c.model.reasoning_effort = 'low'
+        c.model.enable_thinking = True
+        c.model.top_p = 0.9
+        c.model.response_format = 'json_object'
+        result = construct_file(c, source, tmp_path / 'run')[0]
+        assert result.status == 'success'
+        body = requests[0]['body']
+        assert llm_calls(tmp_path / 'run')[0]['request'] == body
+        assert body['max_completion_tokens'] == c.model.max_output_tokens
+        assert 'max_tokens' not in body
+        assert body['reasoning_effort'] == 'low'
+        assert body['enable_thinking'] is True
+        assert body['top_p'] == 0.9
+        assert body['response_format'] == {'type': 'json_object'}
+        assert 'tools' not in body and 'stop' not in body
+
+def test_gpt_quickstart_wire_fields_and_budget(config, source, tmp_path):
+    with server([(200, response())]) as (url, requests):
+        c = http_config(config, url)
+        c.model.model = 'gpt-6-luna'
+        c.model.max_tokens_field = 'max_completion_tokens'
+        c.model.reasoning_effort = 'low'
+        c.model.send_temperature = False
+        c.model.prompt_cache_key = 'harness-test-cache'
+        result = construct_file(c, source, tmp_path / 'run')[0]
+        assert result.status == 'success'
+        body = requests[0]['body']
+        assert set(body) == {'model', 'messages', 'max_completion_tokens',
+                             'reasoning_effort', 'stream', 'prompt_cache_key'}
+        assert body['prompt_cache_key'] == 'harness-test-cache'
+        assert llm_calls(tmp_path / 'run')[0]['request'] == body
+
 @pytest.mark.acceptance('AT-18', 'AT-32', 'AT-33')
 def test_http_retry_wire_snapshots_adapter_fields_and_no_secrets(config, source, tmp_path, monkeypatch):
     with server([(429,{'error':'limited'}), (503,{'error':'temporary'}), (200,response())]) as (url, requests):

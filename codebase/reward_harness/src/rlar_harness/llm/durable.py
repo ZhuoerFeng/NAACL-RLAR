@@ -113,7 +113,7 @@ class DurableLLMClient:
             self.deadline.check('llm dispatch')
             input_upper = len(json.dumps(body, ensure_ascii=False).encode('utf-8')) + 64
             self.budget.reserve({'model_requests': 1.0, 'input_tokens': float(input_upper),
-                                 'output_tokens': float(body['max_tokens'])}, operation_id=reservation_id)
+                                 'output_tokens': float(request.max_output_tokens)}, operation_id=reservation_id)
             if not any(e.type == 'llm_attempt_prepared' for e in these):
                 self.emit('llm_attempt_prepared', logical, physical_attempt_id=pid, attempt=attempt, **prepared)
             fault('llm_before_dispatch')

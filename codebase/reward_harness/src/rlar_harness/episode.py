@@ -14,6 +14,13 @@ from .tools.dispatcher import TOOL_SCHEMAS, validate_batch
 
 
 RUN_INSTRUCTIONS = '''Construct a reusable task-contract reward. Return one JSON action envelope.
+The exact top-level shape is {"actions": [{"id": "a1", "tool": "test_reward", "arguments": {...}}]}.
+Every action needs a unique id; never return a bare tool/arguments object. The tool argument
+schemas follow below. These are actions inside message.content, not provider tool calls.
+Every definition must explicitly set runtime_contract.environment_ref to the exact
+runtime_fingerprint string in the run prefix below. Do not use the schema placeholder
+configured_at_run_start. runtime_contract.python_version is a Python version (use 3.11+),
+not the runtime_fingerprint. Use the field names and enum values in the tool schemas.
 Each test_reward supplies the COMPLETE definition: components in planned order, each with
 id, criterion, all Python source, normalization and required_apis. Generate plan and code
 in this single decision. score(example, context) returns a finite scalar; errors are not

@@ -1,6 +1,6 @@
 # RLAR reward construction harness
 
-独立 Python 子项目，实现根目录 PRD 的离线 P0（M1–M5，AT-01–AT-36）。源 query 文件只读；定义、结果、库、预算、完整 LLM 输入输出和恢复状态写入独立 run 目录。数学、代码 fixture 实际启动 Python worker，并由可信 evaluator 计算开发指标。
+独立 Python 子项目，实现根目录 PRD 的离线 P0（M1–M5，AT-01–AT-36）。源 query 文件只读；定义、结果、库、预算、完整 LLM 输入输出和恢复状态统一写入 `codebase/reward_harness/runs/` 下的独立运行目录。数学、代码 fixture 实际启动 Python worker，并由可信 evaluator 计算开发指标。
 
 ## 安装与一条命令 demo
 
@@ -8,7 +8,8 @@
 
 ```bash
 uv sync --locked --extra dev
-.venv/bin/python scripts/offline_demo.py --run-dir runs/demo
+run_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_OfflineDemo"
+.venv/bin/python scripts/offline_demo.py --run-dir "$run_dir"
 ```
 
 `uv.lock` 固定依赖；不安装 `parquet` extra，不下载模型。若不用 uv：`python3 -m venv .venv` 后执行 `.venv/bin/pip install -e '.[dev]'`；这条备选安装不保证锁定所有间接依赖。
@@ -28,23 +29,25 @@ demo 不访问外网、不调用付费 API、不需要 API key 或 Docker。Scri
 所有配置内相对路径以 **配置文件所在目录** 解析，CLI 文件参数以调用目录解析；manifest 保存绝对路径和内容指纹。
 
 ```bash
+run_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_ManualConstruction"
 .venv/bin/python -m rlar_harness validate-config --config configs/offline_demo.yaml
-.venv/bin/python -m rlar_harness construct --config configs/offline_demo.yaml --input examples/queries.jsonl --run-dir runs/manual
-.venv/bin/python -m rlar_harness resume --run-dir runs/manual
-.venv/bin/python -m rlar_harness score --run-dir runs/manual --input examples/candidates.jsonl --output runs/manual/scores.jsonl
-.venv/bin/python -m rlar_harness audit --run-dir runs/manual --suite examples/audit_suite.json --output runs/manual/audit/prototype.json --allow-prototype-audit
-.venv/bin/python -m rlar_harness report --run-dir runs/manual --output runs/manual/report.json
-.venv/bin/python -m rlar_harness replay --run-dir runs/manual --mode observations --output runs/manual/replay.json
-.venv/bin/python -m rlar_harness export-llm-calls --run-dir runs/manual --output runs/manual/exports/llm_calls.jsonl
-.venv/bin/python -m rlar_harness export-sft --run-dir runs/manual --format per_call --output runs/manual/exports/sft.jsonl
+.venv/bin/python -m rlar_harness construct --config configs/offline_demo.yaml --input examples/queries.jsonl --run-dir "$run_dir"
+.venv/bin/python -m rlar_harness resume --run-dir "$run_dir"
+.venv/bin/python -m rlar_harness score --run-dir "$run_dir" --input examples/candidates.jsonl --output "$run_dir/scores.jsonl"
+.venv/bin/python -m rlar_harness audit --run-dir "$run_dir" --suite examples/audit_suite.json --output "$run_dir/audit/prototype.json" --allow-prototype-audit
+.venv/bin/python -m rlar_harness report --run-dir "$run_dir" --output "$run_dir/report.json"
+.venv/bin/python -m rlar_harness replay --run-dir "$run_dir" --mode observations --output "$run_dir/replay.json"
+.venv/bin/python -m rlar_harness export-llm-calls --run-dir "$run_dir" --output "$run_dir/exports/llm_calls.jsonl"
+.venv/bin/python -m rlar_harness export-sft --run-dir "$run_dir" --format per_call --output "$run_dir/exports/sft.jsonl"
 ```
 
-`replay --mode observations` 仅核验已有消息与 hash，无服务或代码执行。`--mode execute --execute-run-dir runs/reexecuted` 会建立另一个 run 并重新计算成本，必须明确指定。导出和评分输出不能覆盖输入、定义库、journal、manifest 或 blob。
+`run_dir` 相对本子项目目录解析；恢复历史运行时应将它设为已有路径。`replay --mode observations` 仅核验已有消息与 hash，无服务或代码执行。`--mode execute --execute-run-dir` 必须明确指定 `runs/` 下另一个符合命名规范的新目录；该模式会重新执行并计算成本。导出和评分输出不能覆盖输入、定义库、journal、manifest 或 blob。
 
 `audit` 默认要求文件、网络及标签/密钥隔离，subprocess 后端会拒绝。`--allow-prototype-audit` 仅运行合成 fixture，结果显式为 `behavioral_prototype`；不会修改已选产物、construction trace 或训练筛选。
 
 ## 工程约定
 
+- 新建运行目录遵循根目录 [AGENTS.md](../../AGENTS.md)：完整位置为 `codebase/reward_harness/runs/YYYY_MM_DD_HH_MM_{TaskName}/`，时间字段使用下划线，时区使用 `Asia/Shanghai`，任务名使用大驼峰；shell 路径应加引号。同一实验的子运行可以放在其目录内，并遵循相同命名规则。历史产物不覆盖或重命名。
 - `single` 是一个组件和 identity 聚合；`checklist` 对成功执行项等权平均。有效 0 保留；全失败返回 null；每次评分保留 mask 和 coverage。schema 拒绝 weights、重复组件和空 checklist。
 - 定义包括 Python 源字符串、criterion、固定 normalization、API/runtime 版本，canonical hash 覆盖全部。只有源代码的 CRLF/CR 会在 **reward hash** 中归一化；请求/响应 blob 保留实际原始内容。
 - `test_reward` 执行完整开发 suite，展示条数不改变指标分母。报告 HMAC、artifact、完整 suite digest、policy、profile 和 runtime 全部通过同一 finalizer 校验。报告不是 agent 自写的 PASS 文件。
@@ -75,13 +78,14 @@ SFT 视图独立选择，不应默认混合训练：
 
 ```bash
 .venv/bin/python -m pytest tests --acceptance-output acceptance-results.json
-.venv/bin/python scripts/recovery_demo.py --output-dir runs/recovery
+recovery_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_RecoveryDemo"
+.venv/bin/python scripts/recovery_demo.py --output-dir "$recovery_dir"
 .venv/bin/python scripts/export_schemas.py
 ```
 
 `acceptance-results.json` 为实际 pytest hook 生成的机器可读 AT-ID → 测试/结果映射。完整测试覆盖真实 reward/evaluator、loopback HTTP/RM 契约、乱序工具、真实 SIGKILL/SIGTERM、死循环、大 stdout、子进程、请求与 commit 顺序；没有将真实服务跳过项计为通过。
 
-`runs/recovery/recovery_evidence.json` 保存六个强制杀进程边界的退出码、恢复计数、unknown、结果 hash 和再次 resume 无变化的断言。对应子目录保留完整 run、LLM 调用和 SFT 导出。测试还覆盖执行中的取消、父进程被杀后的 worker 清理、deadline 过期及预算竞争。
+恢复实验目录内的 `recovery_evidence.json` 保存六个强制杀进程边界的退出码、恢复计数、unknown、结果 hash 和再次 resume 无变化的断言。对应子目录保留完整 run、LLM 调用和 SFT 导出。测试还覆盖执行中的取消、父进程被杀后的 worker 清理、deadline 过期及预算竞争。
 
 ## Python 接口与文件
 

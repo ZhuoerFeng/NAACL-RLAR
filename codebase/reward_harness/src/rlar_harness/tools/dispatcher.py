@@ -136,7 +136,12 @@ class ToolDispatcher:
         if len(definition.components) > min(self.pack.max_components, self.config.construction.max_components):
             raise ValueError('component limit exceeded')
         if definition.runtime_contract.environment_ref != self.config.execution.runtime_fingerprint:
-            raise ValueError('runtime fingerprint does not match the frozen run')
+            raise ValueError(
+                'runtime fingerprint does not match the frozen run: '
+                f'runtime_contract.environment_ref must be {self.config.execution.runtime_fingerprint!r}; '
+                f'got {definition.runtime_contract.environment_ref!r}. '
+                'Set python_version to 3.11+ or the exact Python revision, not to the environment fingerprint.'
+            )
         import sys
         declared_python = definition.runtime_contract.python_version
         if declared_python != '3.11+' and declared_python != '.'.join(map(str, sys.version_info[:3])):
