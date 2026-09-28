@@ -1,5 +1,7 @@
 # LLM 请求快照与 Qwen3-8B 蒸馏数据协议
 
+> 更新入口（2026-09-28）：角色分类与监督目标以 [v2 更新需求第 9 节](PRD_REWARD_HARNESS_UPDATE.md#9-模型配置trace-与定向蒸馏) 为准。所有模型调用留档，但默认只监督两个 synthesizer；harness-verifier 与 rubric judge 的回复不作为 base 学生 target。以下保留 v1 采集与导出要求，不再用“所有 assistant”代替角色筛选。
+
 状态：P0 实现要求，尚未实现采集或生成真实训练数据。本文补充 [llm_call 协议](HARNESS_LLM_PROTOCOL.md) 和 [实现 PRD](PRD_REWARD_HARNESS.md)，明确记录 harness 实际发送的每一份完整 message list，不能只保存 prompt 摘要、hash 或最终 reward 代码。
 
 ## 1. 记录边界：最终组装后、请求派发前

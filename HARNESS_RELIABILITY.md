@@ -1,5 +1,7 @@
 # Reward 合成过程的中断与异常处理原则
 
+> 更新入口（2026-09-28）：双角色阶段、harness-verifier、done/failed 映射及分项限额以 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 为准。以下 v1 的有限重试、预算不重置、未决状态和持久化恢复约束继续适用。
+
 本文件专门规定一次 reward 合成遇到报错/中断后，谁处理、从哪里继续、何时终止。它是待实现的恢复协议，不是运行平台稳定性建设方案。数据流、等权 checklist 与函数字符串格式见 [HARNESS_DESIGN.md](HARNESS_DESIGN.md)。
 
 ## 1. 三条基本原则

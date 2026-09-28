@@ -1,5 +1,7 @@
 # RLAR 流式 reward construction harness
 
+> 更新入口（2026-09-28）：以下为 v1 设计记录。双合成角色、工具化 harness-verifier、统一组件与测例协议以 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 为准；未被修改的基础约定继续适用。下文“尚未实现”是历史状态，不是当前代码状态。
+
 状态：接口与方法设计，尚未实现或部署。当前修订将 Docker 从默认架构中移除：核心是数据流、可序列化的 reward 定义、可选哈希库、有限构造循环和 trace。执行后端独立选择。作者已确认保留 agent 生成 Python 函数的能力，checklist 本轮始终等权，不开放权重设计；允许部分执行结果，全部子项执行失败时整条失败。延续任务级函数复用、query 级绑定、同一 GRPO group 固定 reward 的约定。
 
 ## 1. 核心结构与不使用 Docker 的方式

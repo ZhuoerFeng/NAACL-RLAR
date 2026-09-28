@@ -1,5 +1,7 @@
 # 追加需求 A01：完整 LLM 调用 trace 与蒸馏数据导出
 
+> 更新入口（2026-09-28）：以下为 v1 追加需求。[v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 继续复用这套 trace 底座，并按 actor 区分两个 synthesizer、harness-verifier、rubric judge。默认训练目标仅含两个 synthesizer，不能将所有留档模型回复自动混入蒸馏数据。
+
 日期：2026-09-23。交付对象：正在构建 RLAR harness 的 Claude Code。
 
 **请继续当前构建，在现有实现上增量完成本需求，不重新初始化项目或从头执行启动说明。** 原 PRD 的构造、评分、预算、恢复和提交语义继续有效；本追加单只补充 LLM 输入/输出留档及训练数据导出。已实现的等价能力直接复用，不另建一套并行 trace 系统。

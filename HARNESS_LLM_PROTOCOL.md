@@ -1,5 +1,7 @@
 # llm_call：公共前缀、时序一致性与调用效率
 
+> 更新入口（2026-09-28）：[v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 将调用方区分为两个 synthesizer、harness-verifier 和 rubric judge，统一底层调用但分别维护角色历史与输出协议。以下单 controller 描述属于 v1；只追加历史、不可变请求和物理调用留档约束继续适用。
+
 状态：待实现协议。沿用 [HARNESS_DESIGN.md](HARNESS_DESIGN.md) 的流式输入和单 controller，以及 [HARNESS_RELIABILITY.md](HARNESS_RELIABILITY.md) 的有限重试/恢复规则。本协议将模型上下文构建集中到一个 `llm_call` 边界；工具数量增加不应自动增加模型数量或调用层数。
 
 ## 1. 一个 episode，一条只追加的模型可见历史

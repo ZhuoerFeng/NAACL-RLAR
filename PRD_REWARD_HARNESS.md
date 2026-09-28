@@ -1,5 +1,7 @@
 # Reward Construction Harness：Claude Code 实现 PRD
 
+> 更新入口（2026-09-28）：以下保留为 v1 历史基线。当前增量开发以 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 为准，尤其是双 synthesizer、harness-verifier、语义验收、角色训练边界和终止条件；v2 明确替代的条款不与本文件重复执行。实际已有实现见子项目 README。
+
 版本：v1.1，2026-09-23。状态：待实现、可交付开发。v1.1 明确完整 LLM 请求快照及逐调用蒸馏导出。本文定义实现与验收要求，不代表代码、故障测试或效率实验已经完成。
 
 ## 1. 交付目标与依据
