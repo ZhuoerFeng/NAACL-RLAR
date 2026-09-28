@@ -59,10 +59,13 @@ cc_start.sh
 .claude/
 
 .parquet
-data/
+codebase/data/
 .json
 .pdf
 .jsonl
 codebase/analysis/results
 __pycache__
+
+data
+
 
