@@ -1,100 +1,78 @@
-# RLAR reward construction harness
+# RLAR reward harness v2
 
-独立 Python 子项目，实现根目录 PRD 的离线 P0（M1–M5，AT-01–AT-36）。源 query 文件只读；定义、结果、库、预算、完整 LLM 输入输出和恢复状态统一写入 `codebase/reward_harness/runs/` 下的独立运行目录。数学、代码 fixture 实际启动 Python worker，并由可信 evaluator 计算开发指标。
+实现 [PRD_REWARD_HARNESS_UPDATE.md](../../PRD_REWARD_HARNESS_UPDATE.md) 的增量链路：test case synthesizer 生成测例 → 确定性准入/冻结 → reward synthesizer 生成组件 → 同一 Python runner/聚合器 → harness-verifier → 同一 finalizer。默认采用语义验收；v1 的总分 FAR/FRR 门槛不参与 v2 提交判断。
 
-## 安装与一条命令 demo
+## 运行
 
-在本目录执行（Python 3.11+，当前验证平台为 macOS / Python 3.12）：
+Python 3.11+；在本子项目目录执行：
 
 ```bash
 uv sync --locked --extra dev
-run_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_OfflineDemo"
-.venv/bin/python scripts/offline_demo.py --run-dir "$run_dir"
+.venv/bin/python scripts/offline_v2_demo.py
 ```
 
-`uv.lock` 固定依赖；不安装 `parquet` extra，不下载模型。若不用 uv：`python3 -m venv .venv` 后执行 `.venv/bin/pip install -e '.[dev]'`；这条备选安装不保证锁定所有间接依赖。
-
-demo 不访问外网、不调用付费 API、不需要 API key 或 Docker。ScriptedLLM 只替代教师服务，reward 和 evaluator 均真实运行。预期：
-
-| query | 实际行为 | controller 决策 |
-|---|---|---:|
-| math_001 | 错奖负例 → 开发反馈 → 修复 → 自动提交 | 2 |
-| math_002 | 验证证据、contract、runtime 兼容后复用 | 0 |
-| code_001 | 固定接口和边界用例首次通过 | 1 |
-
-输出包括 `results.jsonl`、`reward_library.jsonl`、`trace.jsonl`、`blobs/`、`run_manifest.json`、`checkpoints/`、`scores.jsonl`、`report.json`、`replay.json`、`audit/prototype.json`、`exports/llm_calls.jsonl` 和三种 SFT 视图。默认 per-call 导出有 3 个真实 assistant 目标；零调用复用没有目标。`demo_summary.json` 可直接查看结果。已有目录应使用 `resume`，或换一个新目录，不会自动清理。
-
-## CLI
-
-所有配置内相对路径以 **配置文件所在目录** 解析，CLI 文件参数以调用目录解析；manifest 保存绝对路径和内容指纹。
+Demo 自动在 `runs/YYYY_MM_DD_HH_MM_HarnessV2Demo/` 创建独立目录（Asia/Shanghai 时区），实际执行 verifiable/rubric 混合 checklist。**四个模型角色均为明确标注的 scripted fixtures；这不是模型质量或真实服务验收。** 默认 1 条任务、2 个候选、3 条案例/关系判定；2 个合成调用、2 个 rubric 调用、3 个 verifier 调用。客观标签也通过有界 Python runner 独立校验。
 
 ```bash
-run_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_ManualConstruction"
-.venv/bin/python -m rlar_harness validate-config --config configs/offline_demo.yaml
-.venv/bin/python -m rlar_harness construct --config configs/offline_demo.yaml --input examples/queries.jsonl --run-dir "$run_dir"
+run_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_RewardConstruction"
+.venv/bin/python -m rlar_harness validate-config --config configs/offline_v2.yaml
+.venv/bin/python -m rlar_harness construct --config configs/offline_v2.yaml --run-dir "$run_dir"
 .venv/bin/python -m rlar_harness resume --run-dir "$run_dir"
-.venv/bin/python -m rlar_harness score --run-dir "$run_dir" --input examples/candidates.jsonl --output "$run_dir/scores.jsonl"
-.venv/bin/python -m rlar_harness audit --run-dir "$run_dir" --suite examples/audit_suite.json --output "$run_dir/audit/prototype.json" --allow-prototype-audit
 .venv/bin/python -m rlar_harness report --run-dir "$run_dir" --output "$run_dir/report.json"
-.venv/bin/python -m rlar_harness replay --run-dir "$run_dir" --mode observations --output "$run_dir/replay.json"
-.venv/bin/python -m rlar_harness export-llm-calls --run-dir "$run_dir" --output "$run_dir/exports/llm_calls.jsonl"
-.venv/bin/python -m rlar_harness export-sft --run-dir "$run_dir" --format per_call --output "$run_dir/exports/sft.jsonl"
+.venv/bin/python -m rlar_harness replay --run-dir "$run_dir" --output "$run_dir/replay.json"
+.venv/bin/python -m rlar_harness export-llm-calls --run-dir "$run_dir" --output "$run_dir/exports/calls.jsonl"
+.venv/bin/python -m rlar_harness export-sft --run-dir "$run_dir" --actor-role test_case_synthesizer --output "$run_dir/exports/tests.jsonl"
+.venv/bin/python -m rlar_harness export-sft --run-dir "$run_dir" --actor-role reward_synthesizer --output "$run_dir/exports/rewards.jsonl"
+.venv/bin/python -m rlar_harness export-feedback --run-dir "$run_dir" --output "$run_dir/exports/feedback.jsonl"
 ```
 
-`run_dir` 相对本子项目目录解析；恢复历史运行时应将它设为已有路径。`replay --mode observations` 仅核验已有消息与 hash，无服务或代码执行。`--mode execute --execute-run-dir` 必须明确指定 `runs/` 下另一个符合命名规范的新目录；该模式会重新执行并计算成本。导出和评分输出不能覆盖输入、定义库、journal、manifest 或 blob。
+配置中的相对路径相对于配置文件；CLI 路径相对于当前目录。所有运行产物放在本项目 `runs/`，不覆盖历史。`resume` 保留 suite、预算、角色历史和已落盘判断；输入、实现或依赖变化时须新建运行。结果 `status=success` 在报告中映射为 `outcome=done`，没有第二个可写终态。
 
-`audit` 默认要求文件、网络及标签/密钥隔离，subprocess 后端会拒绝。`--allow-prototype-audit` 仅运行合成 fixture，结果显式为 `behavioral_prototype`；不会修改已选产物、construction trace 或训练筛选。
+## 模型配置与真实服务
 
-## 工程约定
+只使用一个 `models` 目录，`roles` 引用 `test_case_synthesizer/reward_synthesizer/harness_verifier/rubric_judge`。两个合成者可以引用同一模型，历史仍独立。`configs/aihub_v2.yaml` 固定本次指定的 `gpt-6-sol / deepseek-flash / gpt-4.1`；前两者使用 AIHub standard Chat Completions，GPT-4.1 使用 `/openai/v1/responses` 和 `auth_provider: azure`。路由后缀仅在请求时附加到 Authorization，密钥只从 `RLAR_AIHUB_API_KEY` 运行时读取。未获得不可变 revision 时保留 null，不编造版本。
 
-- 新建运行目录遵循根目录 [AGENTS.md](../../AGENTS.md)：完整位置为 `codebase/reward_harness/runs/YYYY_MM_DD_HH_MM_{TaskName}/`，时间字段使用下划线，时区使用 `Asia/Shanghai`，任务名使用大驼峰；shell 路径应加引号。同一实验的子运行可以放在其目录内，并遵循相同命名规则。历史产物不覆盖或重命名。
-- `single` 是一个组件和 identity 聚合；`checklist` 对成功执行项等权平均。有效 0 保留；全失败返回 null；每次评分保留 mask 和 coverage。schema 拒绝 weights、重复组件和空 checklist。
-- 定义包括 Python 源字符串、criterion、固定 normalization、API/runtime 版本，canonical hash 覆盖全部。只有源代码的 CRLF/CR 会在 **reward hash** 中归一化；请求/响应 blob 保留实际原始内容。
-- `test_reward` 执行完整开发 suite，展示条数不改变指标分母。报告 HMAC、artifact、完整 suite digest、policy、profile 和 runtime 全部通过同一 finalizer 校验。报告不是 agent 自写的 PASS 文件。
-- 每个 query 一个显式状态机、一个串行 controller。一次生成完整组件计划和代码；自动 finalization 不追加 assistant 消息。独立 `read_resource` batch 可并发，结果在完整 barrier 后按原顺序进入上下文；本地行为测试顺序执行，避免重叠 watchdog。多候选按声明指标和 key 选择。
-- 历史只追加。固定 system 前缀不含时间戳/请求 ID；旧 observation 在首次限长后冻结。`model.token_counter=chars_div4_conservative` 保留兼容字段名，但实现使用 **UTF-8 字节数加 overhead** 的保守上界，不使用会低估代码/CJK 的 chars/4；真实 tokenizer 检查尚未提供。
-- `library_mode=continual` 将已提交成功产物发布给后续 query；`heldout` 使用固定空初始库，query 间不贡献。默认配置为 heldout，demo 显式 continual。当前不导入其他 run 的函数库；不会把外部同标签条目当作可信零调用证据。`reuse_enabled=false` 同时移除库上下文和复用路径。
-- 预算字段必须显式列出，`null` 表示明确不设该维度上限。controller、RM 物理 attempts 共同消耗 `model_requests`，评分另计 `scoring_requests`。每次派发前持久化预留，unknown 保留上界；指标报告另列已观测 token 和未知用量。价格缺失为 null。
-- 暂时网络错误只重试同一不可变请求；协议/代码错误进入下一次 controller 决策；鉴权、存储或未知内部错误暂停外层。环境不可用在有限内部重试后终止当前 query，连续次数达到配置的 circuit breaker 阈值时暂停外层。不会自动重启取消的 run；全局构造预算耗尽后，后续 query 保留为未处理记录。
-- 绝对 UTC deadline 持久化，运行中由 monotonic 计时和 POSIX watchdog 中止阻塞调用；停机时间不会延长预算。相同 run 的输入、profile、suite、Python/dependency 或实现版本变化时拒绝 resume，需新建 run。
-- 内存 index 与 checkpoint 可以从 journal/results 重建。blob 原子写入并 fsync；result 行是 commit，library 的孤立行不发布。`flock` 单写者；只修复未换行的末尾撕裂记录，中间损坏或缺 blob 立即失败。
-- subprocess 只称**受控原型**：每个 example/component 使用新解释器，白名单环境、CPU/wall/output 限额、进程组清理与父进程死亡检测。macOS 不宣称内存/进程数量限制；同用户进程仍可访问宿主文件和网络，HMAC 文件也不构成对恶意代码的安全边界。
-
-## 完整 LLM trace 与蒸馏
-
-`llm/client.py` 导出的 `LLMClient` 统一进入 `llm/durable.py`。adapter 先完成最终 body，保存完整 body/messages/其他字段和 attempt 意图，之后把同一个 body 传给 transport。HTTP adapter 没有 SDK 内部重试；Authorization 只放 header。每个物理 attempt 分别记录 prepared/dispatched/returned/failed/unknown、原始可观察响应、完整性、schema、history commit 与 action dispatch。
-
-`export-llm-calls` 每行展开实际完整请求与响应，含重试和无响应项。缺失/篡改 blob 会失败，旧格式仅有摘要时计为 `legacy_trace_unavailable`，不补造 prompt。观察回放及所有导出不会启动任何请求。
-
-SFT 视图独立选择，不应默认混合训练：
-
-- `per_call`：当前完整 prompt + 当前真实 assistant target；`prompt_loss_mask` 全 false，只有 target 参与 loss。保留合法但测试失败的动作和修复顺序。
-- `full_trace`：每个 episode 一份；`message_loss_mask` 对每个被选中的 assistant 只标一次。
-- `final_program_only`：初始输入和已验证 `target_program`，明确标注 `target_origin=verified_artifact`、`loss_scope=program_only`，是派生程序视图，不伪造自动提交的 assistant 发言。
-
-默认只选 train/training split 的开发成功 episode。非法 schema、截断、迟到或未提交响应不是正向目标，但真实历史中的非法回复仍保留为条件。每个 episode 沿用固定 split，不逐 call 随机划分；操作者应先按任务家族划分输入。窗口不足明确排除并计数。export manifest 标记 Qwen3 revision/tokenizer/template/thinking 尚未指定，消息级监督范围已导出，**未声称 token-level mask 验证或模型训练完成**。
-
-## 验收与恢复证据
+Responses adapter 与 Chat adapter 共享传输、预算和持久化底座；原始 `input/output` 完整留档，token 用量映射到统一账本。当前文本评分配置采用 JSON 输出、`stream: false`、`responses_store: false`，不启用远端工具。所有历史由 harness 提供；Responses 的截断、拒绝、错误和未知费用分别记录。
 
 ```bash
-.venv/bin/python -m pytest tests --acceptance-output acceptance-results.json
-recovery_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_RecoveryDemo"
-.venv/bin/python scripts/recovery_demo.py --output-dir "$recovery_dir"
+.venv/bin/python -m rlar_harness validate-config --config configs/aihub_v2.yaml
+```
+
+该配置仍使用小型数学工程任务；不是正式任务质量基准。凭据未注入时 preflight 报告所有缺项，不发送请求，不替换模型。所有角色通过 `llm/durable.py` 和同一 adapter 边界留档，传输只允许一个重试 owner。已有 utility 可实现 `LLMAdapter.send_prepared`，每次只派发一次并返回可观察原始响应；带隐藏重试或不能提供请求/响应的 utility 不符合完整证据契约。
+
+## 数据、执行与验收
+
+- `rlar.reward.v2` 沿用 single/checklist：组件具有 `kind`、`capability_ids`、`criterion`、源码、固定 normalization，rubric 另有 `judge_spec`。模板只有 `context.judge_spec` 一份权威内容；`context.call_llm_api(message, model_name)` 返回原始文本，组件 Python 解析器负责解析。
+- ABI `v2` 返回 `{raw_score, feedback, evidence}`；有限数值只归一化一次。正常 0 参与等权均值；执行异常保留 error/mask；全失败为 null。每个 rubric 组件/候选最多一次逻辑 judge 调用；物理重试仍扣全局预算。
+- GSM8K 可显式使用 `gsm8k_numeric_v1` checker：取候选最后一个 `####` 后的完整数值，与参考解答最后的数值精确比较；支持整数、小数及规范的千分位逗号。无有效候选答案为 0，缺失/无效参考答案是执行错误。该 checker 只验证最终数值，不证明中间推理；原有 boxed checker 的语义保持不变。
+- `SuiteDraft` 使用唯一候选表、能力级 pointwise 标签和显式关系。`SuitePolicy` 固定来源等级、类别、数量及 pairwise/triplet。Triplet 必须包含三个候选的三条关系；等价类合并后不能出现严格偏好环。Objective 标签实际校验；human 标签需要外部固定的证据内容绑定；未证明的模型依据只能标记 `model_inferred`。
+- 冻结 suite、依据、required/diagnostic 范围及 digest 后才启动 reward 角色。开发依据可以进入合成上下文；执行函数只收到许可的 query/response/reference/metadata。源码的明显样例/标签查表会被拒绝；原型静态检查不构成安全证明。
+- Verifier 只收固定意图、候选和实际分项证据；校验 reward/suite/evidence/model/prompt 绑定及引用。有效 false 不会重抽；格式错误最多修复 5 次。缺所需评分证据为非 completed，不能充当“成功拦截”。无关项 partial 不自动阻断能力级验收。
+- 所有判断落盘后由唯一 finalizer 校验签名和全部 required 决策。语言描述不能取代评分。默认语义提示检查真实分项行为；其判断质量仍需要独立标注集评估，HMAC 只证明完整性。
+
+## 预算、消融与导出
+
+`v2.test_synthesis_attempts/reward_synthesis_attempts/model_transport_attempts/verification_format_attempts` 默认均为 5（含首次）；`max_reward_decisions` 约束连续读工具。所有角色共享有限 run/episode 请求、token、工具、组件、测例和 deadline 预算。历史字段 `controller_steps` 在 v2 账本中承担合成决策总上限；报告单独列四种角色，不改写历史 `controller_logical_calls` 的含义。每次派发先持久化预留；未知费用保留 unknown；恢复不免费重置额度。
+
+独立实验开关：`v2.backend=semantic_verifier|rule_baseline`、`v2.feedback=full|scores_only`、task pack `suite_policy.categories` 与 `ranking_layout`。一次只激活一个 verifier backend。Rule baseline 仅用于有独立标签依据的能力级数值规则。反馈消融同步过滤 observation 和 report 资源，verifier 原始证据不受影响。报告记录案例/关系数、组件能力分布、修订次数、各角色调用/token/耗时及 unknown。
+
+`export-sft` 一次显式选择一个合成角色，默认 reward 角色；`full_trace` 不跨角色拼接历史。Test case 角色按 suite 自身准入成功筛选，即使后续 reward 失败也可导出；reward 角色按开发 done 筛选，保留合法失败尝试及修复。工具模型 targets 始终为 0，工具观察进入 prompt 但不计 loss。`final_program_only` 仅适用 reward；语言反馈是独立导出视图。Split 由任务家族预先分配到 run，不按 call 随机切分。未执行 tokenizer 级 mask 验证或训练。
+
+## 冻结评分与独立 audit
+
+原有 `score`、`audit` CLI 继续使用。v2 的模型调用写入新的、符合命名规范的证据运行，默认自动生成，也可通过 `--execution-run-dir` 指定；不改变原 construction trace。
+
+`score --input` 接收 JSONL `{query_id, candidate_id, response}`。`audit --suite` 接收 JSON 对象 `{query_id: SuiteDraft}`，该文件由外部提供并独立留存。Audit 强制恢复 fail/pass/ranking 全类别，检查独立依据，不反馈修订、不筛选 SFT。Subprocess 后端的正式 audit 会被拒绝；`--allow-prototype-audit` 仅记录原型保证。没有独立标注的 verifier 判断集时，不宣称验收模型质量已合格。
+
+## 验证与兼容
+
+```bash
+verify_dir="runs/$(TZ=Asia/Shanghai date +%Y_%m_%d_%H_%M)_HarnessVerification"
+mkdir -p "$verify_dir"
+.venv/bin/python -m pytest tests --basetemp="$verify_dir/pytest" --acceptance-output "$verify_dir/acceptance.json"
 .venv/bin/python scripts/export_schemas.py
 ```
 
-`acceptance-results.json` 为实际 pytest hook 生成的机器可读 AT-ID → 测试/结果映射。完整测试覆盖真实 reward/evaluator、loopback HTTP/RM 契约、乱序工具、真实 SIGKILL/SIGTERM、死循环、大 stdout、子进程、请求与 commit 顺序；没有将真实服务跳过项计为通过。
+验收 hook 分别输出 AT 和 UAT 矩阵；[V2_DELIVERY.md](V2_DELIVERY.md) 记录本次结果。`schemas/` 保留历史 v1 文件并增加 v2 文件。v1 显式配置和旧 fixture 仅用于历史回归；旧 reward hash、原始 blob、scalar ABI、报告签名及无反馈语义保持兼容，不原地升级旧 run。旧协议在变更范围内 superseded，映射见交付说明。
 
-恢复实验目录内的 `recovery_evidence.json` 保存六个强制杀进程边界的退出码、恢复计数、unknown、结果 hash 和再次 resume 无变化的断言。对应子目录保留完整 run、LLM 调用和 SFT 导出。测试还覆盖执行中的取消、父进程被杀后的 worker 清理、deadline 过期及预算竞争。
-
-## Python 接口与文件
-
-`driver.construct_file` 是可恢复文件入口；`driver.construct_stream(records, config, runner=..., llm_client=..., run_dir=...)` 逐条 yield sidecar 结果。内存流由调用方维持顺序；持久化 resume 使用文件入口。函数库由 run-dir 管理，外部 library 导入不在当前实现中。`episode.construct_one(record, EpisodeContext)`、`cli.score_reward`、`ToolDispatcher.test_reward/finalize` 和 `llm.client.llm_call` 可独立集成。
-
-`schemas/` 由类型定义生成；`tests/golden_hash.json` 固定 canonical hash。`examples/make_fixtures.py` 可重建合成数据，不读取或改写项目真实数据。`configs/real_service.template.yaml` 故意包含 REQUIRED，preflight 一次列出所有缺项。
-
-## 未联调与 P1
-
-尚未配置或验证：真实 controller/RM endpoint、model revision 和密钥环境变量，正式隔离 runner、真实 task packs/阈值、Qwen3 tokenizer/chat template。当前不声称真实任务质量改善、缓存加速、正式审计或已训练模型。
-
-P1 未实现：生产服务/隔离 runner adapter、文件/Bash tools、Parquet 输入（extra 仅预留依赖）、大库检索、原生 provider tool calls、扩展消融及真实 tokenizer 验证。没有自动 Git commit、PR、部署，也没有改动论文、`codebase/data/` 或 `codebase/analysis/`。
+Subprocess 仍是同用户的受控原型，具有 wall/CPU/output 与进程组清理，**不提供文件、网络、标签或密钥的正式隔离**。未捆绑部署、训练器、文件/Bash 工具、Parquet、大库检索或跨 run 库导入。

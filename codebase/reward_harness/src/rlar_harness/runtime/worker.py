@@ -66,11 +66,14 @@ class ScoringContext:
         required_apis: list[str],
         proxy: ScoringProxy | None,
         component_id: str,
+        judge_spec=None,
     ) -> None:
         self._permitted = set(permitted_apis)
         self._required = set(required_apis)
         self._proxy = proxy
         self._component_id = component_id
+        self.judge_spec = judge_spec
+        self._judge_calls = 0
         self._method_owner: dict[str, str] = {}
         self._instances: dict[str, Any] = {}
         for api_id in self._permitted:
@@ -96,6 +99,23 @@ class ScoringContext:
                 f"{self._component_id!r} did not declare in required_apis"
             )
         return getattr(self._instances[owner], name)
+
+    def call_llm_api(self, message, model_name):
+        if 'call_llm_api' not in self._permitted or 'call_llm_api' not in self._required:
+            raise ForbiddenAPI('call_llm_api is not declared and permitted')
+        if not self.judge_spec or model_name != self.judge_spec['model_ref']:
+            raise ForbiddenAPI('judge model must match the frozen component')
+        if self._judge_calls >= 1:
+            raise ForbiddenAPI('one judge call per component/example')
+        if not isinstance(message, str) or len(message) > 100000:
+            raise ForbiddenAPI('judge message must be bounded text')
+        self._judge_calls += 1
+        if self._proxy is None:
+            raise ScoringUnavailable('no judge utility was configured')
+        result = self._proxy.call({'kind': 'call_llm_api', 'message': message, 'model_name': model_name})
+        if result.get('status') != 'ok':
+            raise ScoringUnavailable(result.get('message', ''), code=result.get('code', 'scoring_service_error'))
+        return result['raw_response']
 
     def score_model(
         self,
@@ -185,7 +205,7 @@ def run_component(request: dict[str, Any], proxy: ScoringProxy | None) -> list[d
             )
             continue
         # Fresh context per example: no state leaks between examples.
-        context = ScoringContext(permitted_apis, required_apis, proxy, component_id)
+        context = ScoringContext(permitted_apis, required_apis, proxy, component_id, component.get("judge_spec"))
         try:
             value = fn(example, context)
         except ForbiddenAPI as exc:
@@ -262,6 +282,10 @@ def _jsonable(value: Any) -> Any:
         if value == float("-inf"):
             return {"__nonfinite__": "-inf"}
         return value
+    if isinstance(value, dict) and all(isinstance(k, str) for k in value):
+        return {k: _jsonable(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_jsonable(v) for v in value]
     return {"__unsupported_type__": type(value).__name__}
 
 

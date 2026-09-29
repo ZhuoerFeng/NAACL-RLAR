@@ -29,7 +29,9 @@ def pytest_sessionfinish(session, exitstatus):
         mapping = {f'AT-{n:02}': [r for r in _RESULTS if r['at_id'] == f'AT-{n:02}'] for n in range(1, 37)}
         p.write_text(json.dumps({'schema_version': 'rlar.acceptance.v1', 'exit_status': exitstatus,
             'collected': session.testscollected, 'matrix': mapping,
-            'all_p0_passed': all(v and all(r['result'] == 'passed' for r in v) for v in mapping.values())}, indent=2))
+            'all_p0_passed': all(v and all(r['result'] == 'passed' for r in v) for v in mapping.values()),
+            'v2_matrix': {f'UAT-{n:02}': [r for r in _RESULTS if r['at_id'] == f'UAT-{n:02}'] for n in range(1, 29)},
+            'v1_semantics_superseded': ['AT-09', 'AT-10', 'AT-11', 'AT-12', 'AT-28', 'AT-30', 'AT-35']}, indent=2))
 
 @pytest.fixture
 def config():

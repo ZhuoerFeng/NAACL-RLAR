@@ -62,7 +62,19 @@ class ToolDispatcher:
             report = ValidationReport.model_validate(self.blobs.get_json(r['validation_ref']))
             self.validations[report.report_id] = (r['definition_ref'], r['validation_ref'])
             self.resources.add(Resource('report:' + report.report_id, 'json', 'Development report',
-                lambda ref=r['validation_ref']: self.blobs.get_json(ref)))
+                lambda ref=r['validation_ref']: self.feedback_view(self.blobs.get_json(ref))))
+
+    def feedback_view(self, value):
+        if not self.config.is_v2 or self.config.v2.feedback == 'full':
+            return value
+        # Apply the same projection to observations AND read_resource reports.
+        hidden = {'feedback', 'evidence', 'raw_value', 'rationale', 'repair_feedback', 'message',
+                  'detail_ref', 'suggested_recovery', 'error_categories'}
+        if isinstance(value, dict):
+            return {k: self.feedback_view(v) for k, v in value.items() if k not in hidden}
+        if isinstance(value, list):
+            return [self.feedback_view(v) for v in value]
+        return value
 
     def emit(self, kind, **payload):
         return self.journal.append(kind, payload, episode_id=self.episode_id)
@@ -131,6 +143,24 @@ class ToolDispatcher:
         return output
 
     def check_definition(self, definition):
+        if self.config.is_v2:
+            if definition.schema_version != 'rlar.reward.v2' or self.suite is None:
+                raise ValueError('v2 requires a frozen suite and v2 reward')
+            from ..evaluation.suite import assert_frozen
+            assert_frozen(self.suite)
+            # Reward may group capabilities differently, but may not alter task meaning.
+            if definition.capabilities != self.pack.capabilities:
+                raise ValueError('reward capability descriptions differ from the fixed task')
+            for component in definition.components:
+                if component.judge_spec:
+                    ref = self.config.roles['rubric_judge']
+                    if component.judge_spec.model_ref != ref or component.judge_spec.model_config_digest != digest(self.config.models[ref]):
+                        raise ValueError('rubric judge model/config not frozen to the run catalogue')
+                    tree = ast.parse(component.source)
+                    if component.judge_spec.prompt_template in [n.value for n in ast.walk(tree) if isinstance(n, ast.Constant)]:
+                        raise ValueError('rubric template has one authority: context.judge_spec')
+                    if not any(isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == component.judge_spec.parser_entrypoint for n in tree.body):
+                        raise ValueError('rubric parser entrypoint is missing')
         if definition.mode not in self.pack.mode_constraints:
             raise ValueError('mode not permitted by profile')
         if len(definition.components) > min(self.pack.max_components, self.config.construction.max_components):
@@ -174,7 +204,12 @@ class ToolDispatcher:
                 tree = ast.parse(component.source)
             except SyntaxError:
                 continue
-            if any(isinstance(n, ast.Constant) and n.value in ('query_id', 'case_id', 'is_correct')
+            if self.config.is_v2:
+                forbidden = {e.id for e in self.suite.examples} | {c.id for c in self.suite.cases}
+                forbidden |= {e.response for e in self.suite.examples if isinstance(e.response, str) and len(e.response) >= 3}
+                if any(isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value in forbidden for n in ast.walk(tree)):
+                    raise ValueError('frozen candidate answer/ID lookup is not a reusable reward')
+            if any(isinstance(n, ast.Constant) and n.value in ('query_id', 'case_id', 'is_correct', 'expected_label', 'suite_digest', 'admission_report_ref')
                    for n in ast.walk(tree)):
                 raise ValueError('sample ID/oracle lookup is not a reusable reward')
 
@@ -185,7 +220,21 @@ class ToolDispatcher:
         definition = args.definition
         key = reward_key_for(definition)
         dref = self.blobs.put_json(definition.model_dump(mode='json'))
-        if self.suite is None:
+        report = None
+        if self.config.is_v2:
+            # A valid verdict for unchanged reward/suite/config is not a new lottery.
+            for event in self.journal.scan().events:
+                if event.episode_id != self.episode_id or event.type != 'evaluation_result':
+                    continue
+                prior = ValidationReport.model_validate(self.blobs.get_json(event.payload['validation_ref']))
+                if (prior.reward_key == key and prior.suite_digest == self.suite.suite_digest
+                    and prior.verifier_config_digest == self.evaluator.verifier.config_digest
+                    and self.evaluator.verify(prior)):
+                    report = prior
+                    break
+        if report is not None:
+            pass
+        elif self.suite is None:
             for c in definition.components:
                 ast.parse(c.source)
             report = self.evaluator.static_only_report(definition, self.pack, reward_key=key, reason='no_dev_suite')
@@ -198,14 +247,15 @@ class ToolDispatcher:
                 done = next((e for e in events if e.type == 'evaluation_result'), None)
                 if done:
                     report = ValidationReport.model_validate(self.blobs.get_json(done.payload['validation_ref']))
-                    if not done.payload['infrastructure_failures']:
+                    if self.config.is_v2 or not done.payload['infrastructure_failures']:
                         break
                     continue
-                if any(e.type == 'evaluation_dispatched' for e in events):
+                if not self.config.is_v2 and any(e.type == 'evaluation_dispatched' for e in events):
                     self.emit('evaluation_unknown', evaluation_id=eid)
                     continue  # safe repeat with a NEW charged attempt
+                count = len(self.suite.examples) if self.config.is_v2 else len(self.suite.cases)
                 self.budget.debit_once(eid, {'test_cases': float(len(self.suite.cases)),
-                    'component_executions': float(len(self.suite.cases) * len(definition.components))})
+                    **({} if self.config.is_v2 else {'component_executions': float(count * len(definition.components))})})
                 self.emit('evaluation_dispatched', evaluation_id=eid, reward_key=key, definition_ref=dref)
                 with watchdog(self.deadline.bounded(self.config.budget.per_tool_timeout_s)):
                     outcome = self.evaluator.validate(definition, self.pack, self.suite, reward_key=key, action_id=eid,
@@ -220,17 +270,29 @@ class ToolDispatcher:
                 vref = self.blobs.put_json(report.model_dump(mode='json'))
                 self.emit('evaluation_result', evaluation_id=eid, validation_ref=vref,
                           infrastructure_failures=outcome.infrastructure_failures)
-                if not outcome.infrastructure_failures:
+                if self.config.is_v2 or not outcome.infrastructure_failures:
                     break
             else:
                 raise HarnessError('environment_unavailable: validation retries exhausted', code='environment_unavailable')
         vref = self.blobs.put_json(report.model_dump(mode='json'))
+        if self.config.is_v2:
+            from ..evaluation.evaluator import INFRASTRUCTURE_CODES
+            for case, decision in zip(self.suite.cases, report.decisions):
+                if not case.required or decision.operation_status == 'completed':
+                    continue
+                relevant = {c.id for c in definition.components if case.scope == 'overall' or set(c.capability_ids) & set(case.capability_ids)}
+                if any(c.id in relevant and c.error and c.error.code in INFRASTRUCTURE_CODES
+                       for score in report.per_case if score.example_id in case.example_ids for c in score.component_results):
+                    raise HarnessError('required scoring service unavailable', code='environment_unavailable')
         return {'reward_key': key, 'definition_ref': dref, 'validation_ref': vref,
                 'validation_run_id': report.report_id, 'eligible': report.eligible,
                 'assurance': report.assurance, 'on_pass': args.on_pass,
                 'metrics': report.metrics.model_dump(mode='json'), 'reasons': report.ineligibility_reasons,
-                'displayed_cases': [r.model_dump(mode='json') for r in report.per_case[:args.display_limit]],
-                'complete_case_count': len(report.per_case)}
+                'displayed_cases': self.feedback_view([r.model_dump(mode='json') for r in report.per_case[:args.display_limit]]),
+                'complete_case_count': len(report.per_case),
+                'verification_unavailable': any(d.operation_status == 'error' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
+                'insufficient_evidence': any(d.operation_status == 'insufficient_evidence' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
+                **({'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions])} if self.config.is_v2 else {})}
 
     def finalize(self, dref, vref):
         definition = RewardDefinition.model_validate(self.blobs.get_json(dref))
@@ -244,9 +306,20 @@ class ToolDispatcher:
             or report.profile_id != self.pack.profile_id or report.verifier_version != self.pack.verifier_version
             or report.policy != policy or self.suite is None
             or report.suite_version != self.suite.version or report.suite_id != self.suite.suite_id
-            or report.suite_digest != digest(self.suite)):
+            or report.suite_digest != (self.suite.suite_digest if self.config.is_v2 else digest(self.suite))):
             raise ValueError('report_mismatch: artifact, contract, suite, policy or runtime changed')
         self.check_definition(definition)
+        if self.config.is_v2:
+            from ..evaluation.verifier import evidence_for, check_decision
+            if report.schema_version != 'rlar.validation.v2' or report.verifier_config_digest != self.evaluator.verifier.config_digest:
+                raise ValueError('verifier configuration changed')
+            if report.evidence_digest != digest(report.per_case) or len(report.decisions) != len(self.suite.cases):
+                raise ValueError('missing or changed execution/decision evidence')
+            for case, decision in zip(self.suite.cases, report.decisions):
+                evidence = evidence_for(case, self.suite, definition, report.per_case, self.pack, self.evaluator.verifier)
+                check_decision(decision, evidence)
+                if case.required and (decision.operation_status != 'completed' or decision.passed is not True):
+                    raise ValueError('required case is not passed')
         return definition, report
 
     def select(self, results, *, all_eligible=False):

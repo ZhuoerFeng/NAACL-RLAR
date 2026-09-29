@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "reward_key": {
+      "title": "Reward Key",
+      "type": "string"
+    },
+    "suite_digest": {
+      "title": "Suite Digest",
+      "type": "string"
+    },
+    "evidence_digest": {
+      "title": "Evidence Digest",
+      "type": "string"
+    },
+    "operation_status": {
+      "enum": [
+        "completed",
+        "insufficient_evidence",
+        "error"
+      ],
+      "title": "Operation Status",
+      "type": "string"
+    },
+    "passed": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Passed"
+    },
+    "relevant_component_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Relevant Component Ids",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "repair_feedback": {
+      "title": "Repair Feedback",
+      "type": "string"
+    },
+    "verifier_model_ref": {
+      "title": "Verifier Model Ref",
+      "type": "string"
+    },
+    "verifier_prompt_version": {
+      "title": "Verifier Prompt Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "reward_key",
+    "suite_digest",
+    "evidence_digest",
+    "operation_status",
+    "passed",
+    "relevant_component_ids",
+    "evidence_refs",
+    "rationale",
+    "repair_feedback",
+    "verifier_model_ref",
+    "verifier_prompt_version"
+  ],
+  "title": "ValidationDecision",
+  "type": "object",
+  "$id": "rlar.validation_decision.v2"
+}

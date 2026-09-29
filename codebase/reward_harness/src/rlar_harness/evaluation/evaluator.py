@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
-from ..errors import RetryOwner
+from ..errors import HarnessError, RetryOwner
 from ..runtime.aggregate import aggregate
 from ..runtime.runner import Runner, make_execute_request
 from ..schemas import (
@@ -144,6 +144,36 @@ class TrustedEvaluator:
         usage = response.usage.merged(Usage(test_cases=len(example_ids)))
         return results, usage
 
+    def durable_scores(self, definition, pack, examples, example_ids, *, action_id, reward_key):
+        """One persisted execution path; unknown executions consume new bounded attempts."""
+        journal, blobs, episode_id = self.persistence
+        from ..errors import HarnessError
+        from ..durability import fault
+        binding = digest({'definition': definition, 'pack': pack, 'examples': examples, 'ids': example_ids})
+        def emit(kind, **payload):
+            journal.append(kind, {'scoring_id': action_id, 'binding': binding, **payload}, episode_id=episode_id)
+        for attempt in range(self.execution_attempts):
+            events = [e for e in journal.scan().events if e.episode_id == episode_id
+                      and e.payload.get('scoring_id') == action_id and e.payload.get('attempt') == attempt]
+            if any(e.payload['binding'] != binding for e in events):
+                from ..errors import StorageError
+                raise StorageError('execution inputs changed on resume')
+            done = next((e for e in events if e.type == 'score_batch_result'), None)
+            if done:
+                return [ScoreResult.model_validate(r) for r in blobs.get_json(done.payload['scores_ref'])]
+            if any(e.type == 'score_batch_dispatched' for e in events):
+                emit('score_batch_unknown', attempt=attempt)
+                continue
+            self.budget.debit_once(f'{action_id}:execute:{attempt}', {
+                'component_executions': float(len(examples) * len(definition.components))})
+            emit('score_batch_dispatched', attempt=attempt)
+            scores, usage = self.score_examples(definition, pack, examples, example_ids,
+                action_id=action_id, reward_key=reward_key)
+            emit('score_batch_result', attempt=attempt, scores_ref=blobs.put_json([s.model_dump(mode='json') for s in scores]))
+            fault('execution_after_evidence')
+            return scores
+        raise HarnessError('execution interrupted too often', code='environment_unavailable')
+
     # -- validation ------------------------------------------------------
     def validate(
         self,
@@ -155,6 +185,8 @@ class TrustedEvaluator:
         action_id: str,
         policy: AcceptancePolicy | None = None,
     ) -> ValidationOutcome:
+        if getattr(suite, 'schema_version', None) == 'rlar.suite.v2':
+            return self.validate_v2(definition, pack, suite, reward_key=reward_key, action_id=action_id)
         policy = policy or pack.acceptance_policy
         started = time.monotonic()
         cases = list(suite.cases)
@@ -202,6 +234,78 @@ class TrustedEvaluator:
         return ValidationOutcome(
             report=report, infrastructure_failures=infra, score_results=results
         )
+
+    def validate_v2(self, definition, pack, suite, *, reward_key, action_id):
+        from .suite import assert_frozen, example_input
+        from .verifier import base_decision, evidence_for, check_decision
+        from ..schemas import ValidationDecision
+        from ..durability import fault
+        assert_frozen(suite)
+        journal, blobs, episode_id = self.persistence
+        def events(kind):
+            return [e for e in journal.scan().events if e.episode_id == episode_id
+                    and e.type == kind and e.payload.get('evaluation_id') == action_id]
+        def emit(kind, **payload):
+            journal.append(kind, {'evaluation_id': action_id, **payload}, episode_id=episode_id)
+        stored = events('execution_evidence')
+        if stored:
+            scores = [ScoreResult.model_validate(s) for s in blobs.get_json(stored[0].payload['scores_ref'])]
+        else:
+            scores = self.durable_scores(definition, pack,
+                [example_input(e, self.query, pack) for e in suite.examples], [e.id for e in suite.examples],
+                action_id=action_id, reward_key=reward_key)
+            emit('execution_evidence', scores_ref=blobs.put_json([r.model_dump(mode='json') for r in scores]))
+        decisions = []
+        for case in suite.cases:
+            evidence = evidence_for(case, suite, definition, scores, pack, self.verifier)
+            previous = [e for e in events('verification_decision') if e.payload['case_id'] == case.id]
+            if previous:
+                decision = ValidationDecision.model_validate(blobs.get_json(previous[0].payload['decision_ref']))
+            else:
+                try:
+                    decision = self.verifier.verify(evidence, f'{action_id}:{case.id}')
+                except HarnessError as exc:
+                    if case.required or exc.code != 'environment_unavailable':
+                        raise
+                    # Diagnostic availability cannot veto completed required cases.
+                    # Keep an explicit decision; durable I/O retains failed/unknown
+                    # attempts and their charged budgets for export and recovery.
+                    decision = base_decision(evidence, status='error',
+                        rationale='diagnostic verifier service unavailable after bounded transport attempts')
+                emit('verification_decision', case_id=case.id, evidence_ref=blobs.put_json(evidence),
+                     decision_ref=blobs.put_json(decision.model_dump(mode='json')))
+                fault('verifier_after_decision')
+            check_decision(decision, evidence)
+            decisions.append(decision)
+        required = {c.id for c in suite.cases if c.required}
+        reasons = [f'{d.case_id}:{d.operation_status}:{d.passed}' for d in decisions
+                   if d.case_id in required and (d.operation_status != 'completed' or d.passed is not True)]
+        completed = sum(d.operation_status == 'completed' for d in decisions)
+        rankings = [d for d, case in zip(decisions, suite.cases) if case.kind == 'ranking']
+        pairs = sum(len(c.relations) for c in suite.cases)
+        from collections import Counter
+        masks = Counter(','.join(s.valid_component_ids) for s in scores)
+        metrics = ValidationMetrics(planned_cases=len(suite.cases), completed_cases=completed,
+            failed_cases=len(suite.cases)-completed, execution_error_rate=None, false_accept_rate=None,
+            false_reject_rate=None, ranking_pairs_planned=pairs,
+            ranking_pairs_scored=sum(len(c.relations) for c, d in zip(suite.cases, decisions) if d.operation_status == 'completed'),
+            ranking_pairs_missing=sum(len(c.relations) for c, d in zip(suite.cases, decisions) if d.operation_status != 'completed'),
+            ranking_accuracy=sum(d.passed is True for d in rankings)/len(rankings) if rankings else None,
+            invariance_pairs_planned=0, invariance_violations=0, invariance_violation_rate=None,
+            coverage=completed/len(suite.cases), component_mask_distribution=dict(masks),
+            partial_case_count=sum(s.status == 'partial' for s in scores),
+            all_failed_case_count=sum(s.status == 'failed' for s in scores),
+            limitations=['Development acceptance is not independent task quality or production isolation.'])
+        report = ValidationReport(schema_version='rlar.validation.v2', report_id=digest({'evaluation': action_id, 'reward': reward_key}),
+            reward_key=reward_key, task_contract_digest=pack.applicability_rule.task_contract_digest,
+            suite_id=suite.id, suite_version=suite.version, suite_digest=suite.suite_digest,
+            verifier_version=pack.verifier_version, runtime_fingerprint=pack.applicability_rule.runtime_fingerprint,
+            profile_id=pack.profile_id, case_ids=[c.id for c in suite.cases], metrics=metrics,
+            per_case=scores, eligible=bool(required) and not reasons, ineligibility_reasons=reasons,
+            assurance=self.assurance(), policy=pack.acceptance_policy, decisions=decisions,
+            evidence_digest=digest(scores), verifier_config_digest=self.verifier.config_digest,
+            created_at=datetime.now(timezone.utc).isoformat())
+        return ValidationOutcome(self.sign(report), self._infrastructure_failures(scores), scores)
 
     def static_only_report(
         self,

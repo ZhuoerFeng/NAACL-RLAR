@@ -20,6 +20,18 @@ from ..errors import Code
 from ..schemas import LLMRequest
 
 
+def wire_messages(body: dict) -> list[dict]:
+    """The actual conversation field, without rewriting the persisted wire body.
+
+    Both supported adapters emit text messages with role/content strings.
+    Responses calls carry that same supported message shape in `input`.
+    """
+    value = body['messages'] if 'messages' in body else body['input']
+    if not isinstance(value, list):
+        raise ValueError('adapter conversation must be a message list')
+    return value
+
+
 @dataclass
 class ProviderResponse:
     text: str

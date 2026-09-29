@@ -1,5 +1,7 @@
 # Reward Construction Harness：Claude Code 实现 PRD
 
+> 历史 v1 基线。新建运行默认使用 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md)；双合成角色、结构化 ABI、能力级验收与角色导出的实现/验收见 [v2 交付说明](codebase/reward_harness/V2_DELIVERY.md)。下表标记 superseded 的条目仅保留作 v1 回归标准。
+
 > 更新入口（2026-09-28）：以下保留为 v1 历史基线。当前增量开发以 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 为准，尤其是双 synthesizer、harness-verifier、语义验收、角色训练边界和终止条件；v2 明确替代的条款不与本文件重复执行。实际已有实现见子项目 README。
 
 版本：v1.1，2026-09-23。状态：待实现、可交付开发。v1.1 明确完整 LLM 请求快照及逐调用蒸馏导出。本文定义实现与验收要求，不代表代码、故障测试或效率实验已经完成。
@@ -445,10 +447,10 @@ P1 的“无执行反馈”必须关闭构造期 test、Bash/code execution 和�
 | AT-06 | 全 0、NaN、bool、语法/import 错误 | 全 0 是有效 0；非法项独立失败，其他组件仍执行；bool 按 ABI。 |
 | AT-07 | 权重、空 checklist、重复组件 | schema 明确拒绝，不默默重解释配置。 |
 | AT-08 | 伪造 PASS 或改报告内容 | 无法获得准入；报告来源/hash/版本被检查。 |
-| AT-09 | 函数可运行但错奖负例 | 开发质量指标不通过；不会因执行成功直接提交。 |
-| AT-10 | partial、缺分、缺测试依据 | coverage/错误不被删除；partial 不自动 eligible；缺依据输出 unvalidated。 |
-| AT-11 | 兼容复用/不兼容同标签 | 兼容路径 0 controller call；不兼容不得零调用宣称可用。 |
-| AT-12 | 首次通过、一次修复通过 | 分别 1/2 次 controller 逻辑调用；测试/自动提交没有隐藏模型调用。 |
+| AT-09（v2 superseded → UAT-06/07/08） | 函数可运行但错奖负例 | 开发质量指标不通过；不会因执行成功直接提交。 |
+| AT-10（v2 superseded → UAT-02/12/13） | partial、缺分、缺测试依据 | coverage/错误不被删除；partial 不自动 eligible；缺依据输出 unvalidated。 |
+| AT-11（v2 superseded → UAT-19） | 兼容复用/不兼容同标签 | 兼容路径 0 controller call；不兼容不得零调用宣称可用。 |
+| AT-12（v2 superseded → UAT-01/20/25） | 首次通过、一次修复通过 | 分别 1/2 次 controller 逻辑调用；测试/自动提交没有隐藏模型调用。 |
 | AT-13 | single-completion 测试失败 | 只有一次生成，失败反馈不触发第二轮；与 agentic 共用 evaluator。 |
 | AT-14 | 连续三次 controller 请求 | 旧 prefix/message 内容和顺序严格保留；状态只追加；schema 固定。 |
 | AT-15 | 两条不同 query | 历史相互独立；第二条只通过许可库看到已提交 artifact。 |
@@ -464,14 +466,14 @@ P1 的“无执行反馈”必须关闭构造期 test、Bash/code execution 和�
 | AT-25 | result 写后/checkpoint 更新前崩溃 | 恢复识别 commit，不重复构造/提交，旧 snapshot 保持一致。 |
 | AT-26 | 尾行撕裂、中间损坏、缺失 blob、双 writer | 仅安全处理不完整尾部；中间损坏/引用缺失/双写者明确停止。 |
 | AT-27 | 用户取消、鉴权失败、磁盘失败 | 用户取消不自动重启；系统故障暂停外层；未落盘不报告完成。 |
-| AT-28 | RM broker 调用未许可模型/耗尽预算 | 拒绝并记因果错误；密钥不进入 worker、prompt、trace；评分请求单独计数。 |
+| AT-28（v2 superseded → UAT-04/26） | RM broker 调用未许可模型/耗尽预算 | 拒绝并记因果错误；密钥不进入 worker、prompt、trace；评分请求单独计数。 |
 | AT-29 | 正式 audit 使用不足隔离后端 | preflight 拒绝；prototype fixture 结果明确标识，audit 不进入模型资源。 |
-| AT-30 | observation replay 与 SFT export | 不发新请求；复现消息 hash；仅 assistant trainable，无 audit/自动提交目标。 |
+| AT-30（v2 superseded → UAT-20/21/22） | observation replay 与 SFT export | 不发新请求；复现消息 hash；仅 assistant trainable，无 audit/自动提交目标。 |
 | AT-31 | report 含失败、partial、重试和未知费用 | 全量分母正确，逻辑/物理/评分计数分开，未知值不写成免费。 |
 | AT-32 | HTTP adapter/mock wire contract | 完整请求与解析、异常、finish reason、usage 均被断言；无 key 可全套运行。 |
 | AT-33 | 最终请求快照与 transport 对照 | fake transport 收到的 messages/顶层工具与 schema 和导出逐项一致；包含 adapter 追加字段，实际限长 observation 不被替换为全量原始输出。 |
 | AT-34 | 重试、截断、迟到返回的请求导出 | 每个物理 attempt 均有完整输入/状态；响应与请求一一关联，默认正向目标按逻辑调用及历史提交去重。 |
-| AT-35 | 多轮 trace 的 SFT 因果/监督范围 | per_call 仅监督当前 assistant；旧 assistant 不重复计 loss，未来反馈不进旧 prompt，同 episode 不跨 split，无 audit/自动提交/零调用伪目标。 |
+| AT-35（v2 superseded → UAT-21/22/23） | 多轮 trace 的 SFT 因果/监督范围 | per_call 仅监督当前 assistant；旧 assistant 不重复计 loss，未来反馈不进旧 prompt，同 episode 不跨 split，无 audit/自动提交/零调用伪目标。 |
 | AT-36 | 消息引用损坏及无损展开 | 缺 blob/hash 错误时导出失败；共享/压缩存储可还原完整消息；导出不新增 LLM 请求，不生成近似 prompt。 |
 
 此外至少一条集成测试串起“首个 query 构造失败→修复→自动提交→下一 query 复用→进程重启→不重复结果→导出 trace”。崩溃测试必须包含真实子进程终止；只在同一进程抛 Python exception 不足以覆盖落盘时序。

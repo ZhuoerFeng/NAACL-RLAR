@@ -218,6 +218,17 @@ def build_resource_index(
             )
         )
 
+    if scoring_abi == 'v2':
+        index.add(Resource(SCORING_ABI, 'json', 'Structured v2 component ABI', lambda: {
+            'scoring_abi': 'v2', 'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
+            'zero_is_valid': True, 'normalization': 'apply exactly once in the trusted aggregator'}))
+        index.add(Resource(COMPONENT_TEMPLATE, 'text', 'Structured component example', lambda:
+            'def score(example, context):\n    value = context.check_answer(example)\n    return {"raw_score": value, "feedback": "Checker result: " + str(value), "evidence": []}\n'))
+        index.add(Resource(TASK_CONTRACT, 'json', 'Frozen task requirements and capabilities', lambda: {
+            'profile_id': pack.profile_id, 'task_contract': pack.task_contract,
+            'capabilities': [c.model_dump(mode='json') for c in pack.capabilities],
+            'permitted_inputs': pack.permitted_inputs, 'permitted_apis': pack.permitted_apis,
+            'normalization_mappings': pack.normalization_mappings, 'max_components': pack.max_components}))
     return index
 
 

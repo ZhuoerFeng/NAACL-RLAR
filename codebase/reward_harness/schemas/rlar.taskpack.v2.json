@@ -1,0 +1,332 @@
+{
+  "$defs": {
+    "AcceptancePolicy": {
+      "additionalProperties": false,
+      "description": "Pre-declared thresholds. Never inferred at runtime.",
+      "properties": {
+        "score_threshold": {
+          "default": 0.5,
+          "title": "Score Threshold",
+          "type": "number"
+        },
+        "tie_tolerance": {
+          "default": 1e-09,
+          "title": "Tie Tolerance",
+          "type": "number"
+        },
+        "max_false_accept_rate": {
+          "default": 0.0,
+          "title": "Max False Accept Rate",
+          "type": "number"
+        },
+        "max_false_reject_rate": {
+          "default": 0.0,
+          "title": "Max False Reject Rate",
+          "type": "number"
+        },
+        "max_execution_error_rate": {
+          "default": 0.0,
+          "title": "Max Execution Error Rate",
+          "type": "number"
+        },
+        "min_ranking_accuracy": {
+          "default": 1.0,
+          "title": "Min Ranking Accuracy",
+          "type": "number"
+        },
+        "max_invariance_violation_rate": {
+          "default": 0.0,
+          "title": "Max Invariance Violation Rate",
+          "type": "number"
+        },
+        "min_coverage": {
+          "default": 1.0,
+          "title": "Min Coverage",
+          "type": "number"
+        },
+        "allow_partial_component_mask": {
+          "default": false,
+          "title": "Allow Partial Component Mask",
+          "type": "boolean"
+        }
+      },
+      "title": "AcceptancePolicy",
+      "type": "object"
+    },
+    "ApplicabilityRule": {
+      "additionalProperties": false,
+      "description": "Trusted, deterministic reuse rule. Text tags alone are never enough.",
+      "properties": {
+        "task_contract_digest": {
+          "title": "Task Contract Digest",
+          "type": "string"
+        },
+        "permitted_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Permitted Inputs",
+          "type": "array"
+        },
+        "mode_constraints": {
+          "items": {
+            "enum": [
+              "single",
+              "checklist"
+            ],
+            "type": "string"
+          },
+          "title": "Mode Constraints",
+          "type": "array"
+        },
+        "runtime_fingerprint": {
+          "title": "Runtime Fingerprint",
+          "type": "string"
+        },
+        "task_tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Task Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "task_contract_digest",
+        "permitted_inputs",
+        "mode_constraints",
+        "runtime_fingerprint"
+      ],
+      "title": "ApplicabilityRule",
+      "type": "object"
+    },
+    "Capability": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "task_requirement_ref": {
+          "minLength": 1,
+          "title": "Task Requirement Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "task_requirement_ref"
+      ],
+      "title": "Capability",
+      "type": "object"
+    },
+    "SuitePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "ranking_layout": {
+          "default": "pairwise",
+          "enum": [
+            "pairwise",
+            "triplet"
+          ],
+          "title": "Ranking Layout",
+          "type": "string"
+        },
+        "categories": {
+          "items": {
+            "enum": [
+              "fail",
+              "pass",
+              "ranking"
+            ],
+            "type": "string"
+          },
+          "title": "Categories",
+          "type": "array"
+        },
+        "required_sources": {
+          "items": {
+            "enum": [
+              "objective_verified",
+              "human_annotated",
+              "model_inferred"
+            ],
+            "type": "string"
+          },
+          "title": "Required Sources",
+          "type": "array"
+        },
+        "min_cases_per_category": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Min Cases Per Category",
+          "type": "integer"
+        },
+        "max_cases": {
+          "default": 30,
+          "minimum": 1,
+          "title": "Max Cases",
+          "type": "integer"
+        },
+        "max_examples": {
+          "default": 60,
+          "minimum": 2,
+          "title": "Max Examples",
+          "type": "integer"
+        },
+        "objective_checker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Objective Checker"
+        },
+        "trusted_evidence": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Trusted Evidence",
+          "type": "object"
+        }
+      },
+      "title": "SuitePolicy",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "rlar.taskpack.v2",
+      "default": "rlar.taskpack.v2"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "task_contract": {
+      "title": "Task Contract",
+      "type": "string"
+    },
+    "applicability_rule": {
+      "$ref": "#/$defs/ApplicabilityRule"
+    },
+    "permitted_inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Permitted Inputs",
+      "type": "array"
+    },
+    "permitted_apis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Permitted Apis",
+      "type": "array"
+    },
+    "mode_constraints": {
+      "items": {
+        "enum": [
+          "single",
+          "checklist"
+        ],
+        "type": "string"
+      },
+      "title": "Mode Constraints",
+      "type": "array"
+    },
+    "dev_suite_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dev Suite Ref"
+    },
+    "verifier_version": {
+      "title": "Verifier Version",
+      "type": "string"
+    },
+    "acceptance_policy": {
+      "$ref": "#/$defs/AcceptancePolicy"
+    },
+    "report_policy": {
+      "additionalProperties": true,
+      "title": "Report Policy",
+      "type": "object"
+    },
+    "normalization_mappings": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Normalization Mappings",
+      "type": "object"
+    },
+    "max_components": {
+      "default": 8,
+      "title": "Max Components",
+      "type": "integer"
+    },
+    "resources": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Resources",
+      "type": "object"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/Capability"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "suite_policy": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SuitePolicy"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "profile_id",
+    "version",
+    "task_contract",
+    "applicability_rule",
+    "permitted_inputs",
+    "permitted_apis",
+    "mode_constraints",
+    "verifier_version",
+    "acceptance_policy"
+  ],
+  "title": "TaskPack",
+  "type": "object",
+  "$id": "rlar.taskpack.v2"
+}

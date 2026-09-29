@@ -15,19 +15,25 @@ from ..durability import fault, watchdog
 from ..errors import BudgetExhausted, Code, DeadlineExceeded, StorageError
 from ..schemas import LLMRequest, LLMResult, StructuredError, Usage
 from ..storage.canonical import digest, wire_digest
-from .adapter import ProviderError, ProviderResponse
-from .protocol import parse_actions
+from .adapter import ProviderError, ProviderResponse, wire_messages
+from .protocol import parse_actions, ParseOutcome
 
 TOOLS = frozenset({'read_resource', 'test_reward', 'submit_reward'})
 
 
 class DurableLLMClient:
     def __init__(self, adapter, model_config: ModelConfig, *, budget, journal, blobs,
-                 episode_id, run_id, task_id, split, retry=None, deadline=None):
+                 episode_id, run_id, task_id, split, retry=None, deadline=None,
+                 actor_role=None, parent_job_id=None, purpose=None):
         self.adapter, self.model_config = adapter, model_config
         self.budget, self.journal, self.blobs = budget, journal, blobs
         self.episode_id = episode_id
         self.identity = dict(run_id=run_id, episode_id=episode_id, task_id=task_id, split=split)
+        self.actor_role = actor_role
+        if actor_role:
+            self.identity.update(actor_role=actor_role, purpose=purpose or actor_role,
+                parent_job_id=parent_job_id or episode_id, role_episode_id=f'{episode_id}:{actor_role}',
+                training_target_eligible=actor_role in ('test_case_synthesizer', 'reward_synthesizer'))
         self.retry = retry or RetryConfig()
         self.deadline = deadline or Deadline(None)
         self._in_flight = False
@@ -71,10 +77,11 @@ class DurableLLMClient:
             tokens = len(json.dumps(body, ensure_ascii=False).encode('utf-8')) + 64
             if tokens + self.model_config.max_output_tokens + self.model_config.context_reserve_tokens > self.model_config.context_limit_tokens:
                 raise BudgetExhausted('context budget exhausted', code=Code.CONTEXT_BUDGET_EXHAUSTED)
-            self.budget.debit_once(logical, {'controller_steps': 1.0})
+            if self.actor_role in (None, 'test_case_synthesizer', 'reward_synthesizer'):
+                self.budget.debit_once(logical, {'controller_steps': 1.0})
             prepared = dict(request_body_ref=self.blobs.put_json(body),
                 logical_request_ref=self.blobs.put_json(request.model_dump(mode='json')),
-                request_digest=wire_digest(body), messages_ref=self.blobs.put_json(body['messages']),
+                request_digest=wire_digest(body), messages_ref=self.blobs.put_json(wire_messages(body)),
                 model_config_ref=self.blobs.put_json(self.model_config.model_dump(mode='json')),
                 generation_config_ref=self.blobs.put_json({k: v for k, v in body.items() if k != 'messages'}),
                 tools_ref=self.blobs.put_json(body.get('tools', [])),
@@ -112,7 +119,7 @@ class DurableLLMClient:
                 continue  # safe replay only; a new attempt incurs a NEW charge
             self.deadline.check('llm dispatch')
             input_upper = len(json.dumps(body, ensure_ascii=False).encode('utf-8')) + 64
-            self.budget.reserve({'model_requests': 1.0, 'input_tokens': float(input_upper),
+            self.budget.reserve({**({'scoring_requests': 1.0} if self.actor_role == 'rubric_judge' else {}), 'model_requests': 1.0, 'input_tokens': float(input_upper),
                                  'output_tokens': float(request.max_output_tokens)}, operation_id=reservation_id)
             if not any(e.type == 'llm_attempt_prepared' for e in these):
                 self.emit('llm_attempt_prepared', logical, physical_attempt_id=pid, attempt=attempt, **prepared)
@@ -153,13 +160,14 @@ class DurableLLMClient:
 
     def _settle(self, rid, response):
         if response.usage_known:
-            self.budget.settle(rid, {'model_requests': 1.0, 'input_tokens': float(response.prompt_tokens or 0),
+            self.budget.settle(rid, {**({'scoring_requests': 1.0} if self.actor_role == 'rubric_judge' else {}), 'model_requests': 1.0, 'input_tokens': float(response.prompt_tokens or 0),
                                      'output_tokens': float(response.completion_tokens or 0)})
         else:
             self.budget.settle(rid, unknown=True)
 
     def _result(self, request, body, pid, response):
-        parsed = parse_actions(response.text, known_tools=TOOLS, finish_reason=response.finish_reason)
+        parsed = (parse_actions(response.text, known_tools=TOOLS, finish_reason=response.finish_reason)
+                  if self.actor_role in (None, 'reward_synthesizer') else ParseOutcome())
         return LLMResult(status='incomplete' if response.finish_reason == 'length' else 'complete',
             assistant_text=response.text, proposed_actions=parsed.actions, parse_error=parsed.error,
             request_digest=wire_digest(body), finish_reason=response.finish_reason,

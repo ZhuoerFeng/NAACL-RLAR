@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from ..errors import StorageError
+from ..llm.adapter import wire_messages
 from ..schemas import Message
 from ..storage.blobs import BlobStore, atomic_write_bytes
 from ..storage.canonical import canonical_json, digest, wire_json, wire_digest
@@ -32,7 +33,7 @@ def llm_calls(root):
         pid = p.get('physical_attempt_id')
         if e.type == 'llm_attempt_prepared':
             body = blobs.get_json(p['request_body_ref'])
-            if wire_digest(body) != p['request_digest'] or body['messages'] != blobs.get_json(p['messages_ref']):
+            if wire_digest(body) != p['request_digest'] or wire_messages(body) != blobs.get_json(p['messages_ref']):
                 raise StorageError('request/messages digest mismatch')
             calls[pid] = {'schema_version': 'rlar.llm_call.v1', **p, 'request': body,
                 'response': None, 'dispatch_status': 'prepared', 'response_complete': False,
@@ -96,10 +97,18 @@ def replay(root):
     blobs, events, _, _ = read_run(root)
     previous = {}
     last_state = {}
+    role_histories = {}
     for e in events:
         if e.type != 'episode_saved':
             continue
         state = blobs.get_json(e.payload['state_ref'])
+        for role, field in (('test_case_synthesizer', 'test_history'), ('reward_synthesizer', 'history')):
+            if field in state and state[field]:
+                rid = e.episode_id + ':' + role
+                old_role = role_histories.get(rid, [])
+                if state[field][:len(old_role)] != old_role:
+                    raise StorageError('role history was rewritten')
+                role_histories[rid] = state[field]
         messages = state['history']
         old = previous.get(e.episode_id, [])
         if messages[:len(old)] != old:
@@ -113,12 +122,14 @@ def replay(root):
     return {'schema_version': 'rlar.replay.v1', 'mode': 'observations', 'new_requests': 0,
         'episodes': {eid: {'messages': messages, 'full_digest': digest([{'role': m['role'], 'content': m['content']} for m in messages]),
                           'state': last_state[eid]['state']} for eid, messages in previous.items()},
-        'physical_attempts': len(calls)}
+        'physical_attempts': len(calls), 'role_episodes': role_histories}
 
 
-def export_sft(root, output, *, format='per_call', max_tokens=131072):
+def export_sft(root, output, *, format='per_call', max_tokens=131072, actor_role='reward_synthesizer'):
     guard_output(root, output)
     blobs, events, results, manifest = read_run(root)
+    if manifest['config']['schema_version'] == 'rlar.config.v2':
+        return _export_sft_v2(root, output, actor_role=actor_role, format=format, max_tokens=max_tokens)
     calls = llm_calls(root)
     selected = {r.episode_id: r for r in results if r.status == 'success' and not r.reused
                 and manifest['split'] in ('train', 'training')}
@@ -140,11 +151,11 @@ def export_sft(root, output, *, format='per_call', max_tokens=131072):
         target = {'role': 'assistant', 'content': call['response']['text']}
         body = call['request']
         sample = {'schema_version': 'rlar.sft.v1', 'sample_id': ':'.join(key), 'episode_id': key[0],
-            'logical_call_id': key[1], 'split': call['split'], 'prompt_messages': body['messages'],
+            'logical_call_id': key[1], 'split': call['split'], 'prompt_messages': wire_messages(body),
             'target_message': target, 'tools': body.get('tools', []),
             'response_schema': body.get('response_format', body.get('response_schema')),
-            'model_input_fields': {k: v for k, v in body.items() if k != 'messages'},
-            'loss_scope': 'target_assistant_only', 'prompt_loss_mask': [False] * len(body['messages']),
+            'model_input_fields': {k: v for k, v in body.items() if k not in ('messages', 'input')},
+            'loss_scope': 'target_assistant_only', 'prompt_loss_mask': [False] * len(wire_messages(body)),
             'target_trainable': True, 'provenance': {'request_digest': call['request_digest'],
                 'response_digest': call['response_ref'].split(':', 1)[1],
                 'adapter_version': call['adapter_version'], 'conversion_version': 'json_action.v1',
@@ -203,3 +214,100 @@ def export_sft(root, output, *, format='per_call', max_tokens=131072):
     _write_jsonl(output, rows)
     atomic_write_bytes(Path(str(output) + '.manifest.json'), canonical_json(export_manifest))
     return export_manifest
+
+
+def _export_sft_v2(root, output, *, actor_role, format, max_tokens):
+    if actor_role not in ('test_case_synthesizer', 'reward_synthesizer'):
+        raise ValueError('only synthesizer roles are student targets')
+    if format == 'final_program_only' and actor_role != 'reward_synthesizer':
+        raise ValueError('final_program_only is a reward-only derived view')
+    blobs, events, results, manifest = read_run(root)
+    states = {e.episode_id: blobs.get_json(e.payload['state_ref']) for e in events if e.type == 'episode_saved'}
+    reward_success = {r.episode_id: r for r in results if r.status == 'success' and not r.reused}
+    selected = {eid for eid, s in states.items() if
+                (s.get('suite_ref') if actor_role == 'test_case_synthesizer' else eid in reward_success)}
+    if manifest['split'] not in ('train', 'training'):
+        selected = set()
+    valid, excluded, seen = defaultdict(list), Counter(), set()
+    for call in llm_calls(root):
+        if call.get('actor_role') != actor_role or not call.get('training_target_eligible'):
+            excluded['non_selected_actor'] += 1
+            continue
+        if call['episode_id'] not in selected:
+            excluded['role_not_training_success'] += 1
+            continue
+        if not (call['response_complete'] and call['committed_to_history'] and call['schema_valid']):
+            excluded['incomplete_invalid_or_uncommitted'] += 1
+            continue
+        logical = call['logical_call_id']
+        if logical in seen:
+            excluded['duplicate_logical_response'] += 1
+            continue
+        seen.add(logical)
+        body, text = call['request'], call['response']['text']
+        if len(wire_json(body)) + len(text.encode()) > max_tokens:
+            excluded['context_window'] += 1
+            continue
+        suite = blobs.get_json(states[call['episode_id']]['suite_ref'])
+        sample = {'schema_version': 'rlar.sft.v2', 'sample_id': logical, 'episode_id': call['episode_id'],
+            'role_episode_id': call['role_episode_id'], 'actor_role': actor_role, 'split': manifest['split'],
+            'logical_call_id': logical, 'prompt_messages': wire_messages(body),
+            'target_message': {'role': 'assistant', 'content': text},
+            'prompt_loss_mask': [False] * len(wire_messages(body)), 'target_trainable': True,
+            'loss_scope': 'target_assistant_only', 'model_input_fields': {k: v for k, v in body.items() if k not in ('messages', 'input')},
+            'provenance': {'request_digest': call['request_digest'], 'response_ref': call['response_ref'],
+                'model_config_ref': call['model_config_ref'], 'suite_digest': suite['suite_digest'],
+                'source_levels': sorted({c['evidence_source'] for c in suite['cases']})}}
+        valid[call['episode_id']].append(sample)
+    rows = []
+    for eid, samples in valid.items():
+        if format == 'per_call':
+            rows.extend(samples)
+        elif format == 'full_trace':
+            messages = states[eid]['test_history' if actor_role == 'test_case_synthesizer' else 'history']
+            targets = {s['logical_call_id'] for s in samples}
+            row = {'schema_version': 'rlar.sft.v2', 'sample_id': eid + ':' + actor_role,
+                'role_episode_id': eid + ':' + actor_role, 'actor_role': actor_role, 'split': manifest['split'],
+                'messages': [{'role': m['role'], 'content': m['content']} for m in messages],
+                'message_loss_mask': [m['actor'] == 'assistant' and m['meta'].get('logical_call_id') in targets for m in messages],
+                'loss_scope': 'selected_assistants_once', 'provenance': [s['provenance'] for s in samples]}
+            if len(wire_json(row['messages'])) <= max_tokens:
+                rows.append(row)
+            else:
+                excluded['context_window'] += 1
+        elif format == 'final_program_only':
+            rows.append({'schema_version': 'rlar.sft.v2', 'sample_id': eid + ':program', 'actor_role': actor_role,
+                'split': manifest['split'], 'target_origin': 'verified_artifact', 'loss_scope': 'program_only',
+                'prompt_messages': samples[0]['prompt_messages'],
+                'target_program': blobs.get_json(states[eid]['selected']['definition_ref']),
+                'provenance': {'reward_key': reward_success[eid].reward_key}})
+        else:
+            raise ValueError('unknown SFT format')
+    result = {'schema_version': 'rlar.export.v2', 'actor_role': actor_role, 'format': format,
+        'samples': len(rows), 'excluded': dict(excluded), 'new_requests': 0,
+        'tool_model_targets': {'harness_verifier': 0, 'rubric_judge': 0},
+        'selection': 'role-specific development success; complete valid committed replies; audit never selects training data',
+        'split_policy': 'task-family split inherited from run; never randomized per call',
+        'token_level_mask_verified': False, 'length_counter': 'conservative_utf8_bytes'}
+    _write_jsonl(output, rows)
+    atomic_write_bytes(Path(str(output) + '.manifest.json'), wire_json(result))
+    return result
+
+
+def export_feedback(root, output):
+    guard_output(root, output)
+    blobs, events, _, _ = read_run(root)
+    rows = []
+    for e in events:
+        if e.type != 'execution_evidence':
+            continue
+        for score in blobs.get_json(e.payload['scores_ref']):
+            for component in score['component_results']:
+                if component.get('feedback') is not None:
+                    rows.append({'schema_version': 'rlar.feedback.v2', 'episode_id': e.episode_id,
+                        'evaluation_id': e.payload['evaluation_id'], 'reward_key': score['reward_key'],
+                        'example_id': score['example_id'], 'component_id': component['id'],
+                        'score': component['score'], 'feedback': component['feedback'],
+                        'evidence': component.get('evidence', []), 'training_target_eligible': False})
+    _write_jsonl(output, rows)
+    return {'rows': len(rows), 'new_requests': 0, 'view': 'policy_facing_feedback'}

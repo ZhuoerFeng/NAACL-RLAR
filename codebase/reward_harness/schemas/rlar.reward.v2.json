@@ -1,0 +1,309 @@
+{
+  "$defs": {
+    "Aggregation": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "identity",
+            "mean"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Aggregation",
+      "type": "object"
+    },
+    "Capability": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "task_requirement_ref": {
+          "minLength": 1,
+          "title": "Task Requirement Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "task_requirement_ref"
+      ],
+      "title": "Capability",
+      "type": "object"
+    },
+    "Component": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "criterion": {
+          "minLength": 1,
+          "title": "Criterion",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "entrypoint": {
+          "const": "score",
+          "default": "score",
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "normalization": {
+          "$ref": "#/$defs/Normalization"
+        },
+        "required_apis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Apis",
+          "type": "array"
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "enum": [
+                "verifiable",
+                "rubric"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Kind"
+        },
+        "capability_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capability Ids",
+          "type": "array"
+        },
+        "judge_spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JudgeSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "criterion",
+        "source",
+        "normalization"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "JudgeSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "model_ref": {
+          "title": "Model Ref",
+          "type": "string"
+        },
+        "model_config_digest": {
+          "title": "Model Config Digest",
+          "type": "string"
+        },
+        "prompt_template": {
+          "minLength": 1,
+          "title": "Prompt Template",
+          "type": "string"
+        },
+        "output_contract": {
+          "minLength": 1,
+          "title": "Output Contract",
+          "type": "string"
+        },
+        "parser_entrypoint": {
+          "default": "parse_judge",
+          "title": "Parser Entrypoint",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_ref",
+        "model_config_digest",
+        "prompt_template",
+        "output_contract"
+      ],
+      "title": "JudgeSpec",
+      "type": "object"
+    },
+    "Normalization": {
+      "additionalProperties": false,
+      "description": "Frozen mapping of a component's raw score into [0, 1].\n\n``identity`` requires the component to already return a value in [0, 1].\n``mapping`` refers to a mapping declared by the task pack / RM catalogue;\nthe agent may only reference declared mapping IDs, so it cannot smuggle a\nweight in through an arbitrary output scale.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "identity",
+            "mapping"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "range": {
+          "default": [
+            0.0,
+            1.0
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Range",
+          "type": "array"
+        },
+        "mapping_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mapping Id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Normalization",
+      "type": "object"
+    },
+    "RuntimeContract": {
+      "additionalProperties": false,
+      "description": "Backend-independent fingerprint of everything that can change scores.",
+      "properties": {
+        "scoring_abi": {
+          "default": "v1",
+          "enum": [
+            "v1",
+            "v1+bool",
+            "v2"
+          ],
+          "title": "Scoring Abi",
+          "type": "string"
+        },
+        "python_version": {
+          "default": "3.11+",
+          "title": "Python Version",
+          "type": "string"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "scoring_sdk": {
+          "default": "rlar.scoring.v1",
+          "title": "Scoring Sdk",
+          "type": "string"
+        },
+        "api_revisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Api Revisions",
+          "type": "object"
+        },
+        "aggregator_version": {
+          "default": "agg.v1",
+          "title": "Aggregator Version",
+          "type": "string"
+        },
+        "environment_ref": {
+          "default": "configured_at_run_start",
+          "title": "Environment Ref",
+          "type": "string"
+        }
+      },
+      "title": "RuntimeContract",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "rlar.reward.v2",
+      "default": "rlar.reward.v2"
+    },
+    "mode": {
+      "enum": [
+        "single",
+        "checklist"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/Component"
+      },
+      "minItems": 1,
+      "title": "Components",
+      "type": "array"
+    },
+    "aggregation": {
+      "$ref": "#/$defs/Aggregation"
+    },
+    "runtime_contract": {
+      "$ref": "#/$defs/RuntimeContract"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/Capability"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode",
+    "components",
+    "aggregation"
+  ],
+  "title": "RewardDefinition",
+  "type": "object",
+  "$id": "rlar.reward.v2"
+}

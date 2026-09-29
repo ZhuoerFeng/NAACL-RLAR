@@ -103,6 +103,7 @@ class SubprocessRunner(Runner):
         self.python = python_executable or sys.executable
         self.env_allowlist = env_allowlist
         self.memory_limit_mb = memory_limit_mb
+        self.work_root = None
         self._active: dict[str, subprocess.Popen] = {}
         self._lock = threading.Lock()
 
@@ -202,7 +203,7 @@ class SubprocessRunner(Runner):
                 Usage(component_executions=n),
             )
 
-        work_dir = Path(tempfile.mkdtemp(prefix="rlar-worker-"))
+        work_dir = Path(tempfile.mkdtemp(prefix="worker-", dir=self.work_root))
         req_path = work_dir / "request.json"
         resp_path = work_dir / "response.json"
         out_path = work_dir / "stdout.log"
@@ -240,6 +241,8 @@ class SubprocessRunner(Runner):
             pass_fds = (req_w, resp_r)
             if hasattr(self.scoring_service, "max_timeout_s"):
                 self.scoring_service.max_timeout_s = request.wall_timeout_s
+            if hasattr(self.scoring_service, 'bind_execution'):
+                self.scoring_service.bind_execution(request, component)
             servicer = _ScoringServicer(req_r, resp_w, self.scoring_service)
 
         cmd = [
@@ -276,7 +279,18 @@ class SubprocessRunner(Runner):
             if servicer is not None:
                 servicer.start()
             try:
-                proc.wait(timeout=request.wall_timeout_s)
+                if servicer is not None and getattr(self.scoring_service, 'main_thread_dispatch', False):
+                    until = time.monotonic() + request.wall_timeout_s
+                    while proc.poll() is None:
+                        if time.monotonic() >= until:
+                            raise subprocess.TimeoutExpired(cmd, request.wall_timeout_s)
+                        servicer.pump()
+                        try:
+                            proc.wait(timeout=min(0.02, max(0.001, until - time.monotonic())))
+                        except subprocess.TimeoutExpired:
+                            pass
+                else:
+                    proc.wait(timeout=request.wall_timeout_s)
             except subprocess.TimeoutExpired:
                 _kill_tree(proc)
                 status_code = Code.COMPONENT_TIMEOUT
@@ -469,6 +483,19 @@ class _ScoringServicer(threading.Thread):
         self.request_ids: list[str] = []
         self.failure: BaseException | None = None
         self._stop_event = threading.Event()
+        import queue
+        self.pending = queue.Queue()
+
+    def pump(self):
+        import queue
+        try:
+            item = self.pending.get_nowait()
+        except queue.Empty:
+            return
+        try:
+            item['response'] = self._service.handle_scoring_request(item['payload'])
+        finally:
+            item['done'].set()
 
     def run(self) -> None:
         try:
@@ -480,7 +507,17 @@ class _ScoringServicer(threading.Thread):
                         break
                     try:
                         payload = json.loads(line)
-                        response = self._service.handle_scoring_request(payload)
+                        if getattr(self._service, 'main_thread_dispatch', False):
+                            item = {'payload': payload, 'done': threading.Event()}
+                            self.pending.put(item)
+                            while not item['done'].wait(0.02):
+                                if self._stop_event.is_set():
+                                    return
+                            if 'response' not in item:
+                                return
+                            response = item['response']
+                        else:
+                            response = self._service.handle_scoring_request(payload)
                     except BaseException as exc:
                         self.failure = exc
                         break
@@ -553,7 +590,7 @@ def make_execute_request(
     action_id: str,
 ) -> ExecuteRequest:
     return ExecuteRequest(
-        request_id=uuid.uuid4().hex,
+        request_id=action_id,
         action_id=action_id,
         definition=definition,
         examples=examples,

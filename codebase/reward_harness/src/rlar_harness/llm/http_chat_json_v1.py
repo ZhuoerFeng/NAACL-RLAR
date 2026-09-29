@@ -1,4 +1,4 @@
-"""``http_chat_json_v1`` — the one wire dialect this harness speaks.
+"""``http_chat_json_v1`` — the Chat Completions wire dialect.
 
 Request body::
 
@@ -22,9 +22,8 @@ The API key is read from the configured environment variable at send time. It
 goes into the ``authorization`` header only; it is never placed in the body,
 never included in the request digest, and never written to a trace.
 
-This adapter is implemented against the documented contract above. No real
-endpoint has been exercised — see ``README.md`` "Not integrated" — so its tests
-run against a local mock HTTP server that enforces exactly this contract.
+Local HTTP fixtures verify this contract. Real-service evidence and its scope
+are recorded separately in the delivery report and per-run artifacts.
 """
 
 from __future__ import annotations
@@ -158,7 +157,7 @@ class HttpChatJsonV1(LLMAdapter):
         result.raw = raw
         return result
 
-    def parse_response(self, response: httpx.Response) -> ProviderResponse:
+    def response_object(self, response: httpx.Response) -> dict:
         status = response.status_code
         if status in (401, 403):
             raise ProviderError(
@@ -217,6 +216,11 @@ class HttpChatJsonV1(LLMAdapter):
                 status_code=status,
             )
 
+        return data
+
+    def parse_response(self, response: httpx.Response) -> ProviderResponse:
+        data = self.response_object(response)
+        status = response.status_code
         choices = data.get("choices")
         if not isinstance(choices, list) or not choices:
             raise ProviderError(

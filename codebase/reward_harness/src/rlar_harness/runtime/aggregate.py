@@ -22,6 +22,7 @@ total of 0.0, which is ``ok``, not ``failed``.
 from __future__ import annotations
 
 from typing import Any
+import json
 
 from ..errors import ActionOutcome, Code, ErrorCategory, RetryOwner
 from ..schemas import (
@@ -132,12 +133,27 @@ def finalize_component(
     *,
     allow_bool: bool,
     mappings: dict[str, dict[str, Any]],
+    structured: bool = False,
 ) -> ComponentResult:
     """Turn a runner-level result into a validated, normalized one."""
     if result.status == "error":
         return result.model_copy(update={"raw_value": None})
 
-    raw, error = coerce_raw_value(result.raw_value, allow_bool=allow_bool)
+    value = result.raw_value
+    if structured:
+        try:
+            if not isinstance(value, dict) or set(value) != {'raw_score', 'feedback', 'evidence'}:
+                raise ValueError('v2 result requires exactly raw_score, feedback, evidence')
+            if not isinstance(value['feedback'], str) or not isinstance(value['evidence'], list) or not all(isinstance(e, dict) for e in value['evidence']):
+                raise ValueError('feedback must be text and evidence must be an object list')
+            if len(value['feedback']) > 8000 or len(json.dumps(value['evidence'], allow_nan=False).encode()) > 16000:
+                raise ValueError('component feedback/evidence exceeds bound')
+            result = result.model_copy(update={'feedback': value['feedback'], 'evidence': value['evidence']})
+            value = value['raw_score']
+        except (ValueError, TypeError) as exc:
+            return result.model_copy(update={'status': 'error', 'raw_value': None,
+                'error': _err(Code.COMPONENT_RETURN_TYPE, str(exc))})
+    raw, error = coerce_raw_value(value, allow_bool=allow_bool)
     if error is not None:
         return result.model_copy(
             update={"status": "error", "error": error, "raw_value": None}
@@ -179,6 +195,9 @@ def aggregate(
     mappings = mappings or {}
     allow_bool = definition.runtime_contract.scoring_abi == "v1+bool"
     by_id = {c.id: c for c in definition.components}
+    if [r.id for r in component_results] != definition.component_ids:
+        component_results = [ComponentResult(id=c.id, status='error',
+            error=_err(Code.COMPONENT_RETURN_TYPE, 'runner component coverage/order mismatch')) for c in definition.components]
 
     finalized: list[ComponentResult] = []
     for result in component_results:
@@ -198,7 +217,8 @@ def aggregate(
             )
             continue
         finalized.append(
-            finalize_component(result, component, allow_bool=allow_bool, mappings=mappings)
+            finalize_component(result, component, allow_bool=allow_bool, mappings=mappings,
+                               structured=definition.runtime_contract.scoring_abi == "v2")
         )
 
     planned = len(definition.components)
@@ -216,6 +236,7 @@ def aggregate(
         status = "ok" if len(valid) == planned else "partial"
 
     return ScoreResult(
+        schema_version="rlar.score.v2" if definition.runtime_contract.scoring_abi == "v2" else "rlar.score.v1",
         status=status,  # type: ignore[arg-type]
         total_score=total,
         component_results=finalized,

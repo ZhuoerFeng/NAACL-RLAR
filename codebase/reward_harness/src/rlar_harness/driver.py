@@ -14,7 +14,7 @@ from pathlib import Path
 from .budget import BudgetLedger, Deadline
 from .config import HarnessConfig, RunManifest, preflight, require_preflight, resolve_paths
 from .durability import PersistentBudget, fault, watchdog
-from .episode import EpisodeContext, construct_one, initial_history
+from .episode import EpisodeContext, construct_one, initial_history, synthesize_tests
 from .errors import ConfigError, HarnessError, StorageError
 from .evaluation.audit import assert_not_controller_visible
 from .evaluation.evaluator import ExecutionLimits, TrustedEvaluator
@@ -22,6 +22,7 @@ from .evaluation.taskpack import DevSuiteStore, TaskPackStore
 from .inputs import InputItem, file_digest, iter_jsonl, job_key, record_digest
 from .llm.durable import DurableLLMClient
 from .llm.http_chat_json_v1 import HttpChatJsonV1
+from .llm.http_responses_json_v1 import HttpResponsesJsonV1
 from .llm.scripted import ScriptedLLM, Turn
 from .runtime.broker import ScoringBroker
 from .runtime.runner import SubprocessRunner
@@ -44,8 +45,9 @@ def resource_fingerprints(config):
     files = []
     for root in (config.data.task_pack_root, config.validation.dev_suite_root):
         files.extend(Path(root).glob('*.json'))
-    if config.model.scripted_responses:
-        files.append(Path(config.model.scripted_responses))
+    for model in config.models.values() if config.is_v2 else [config.model]:
+        if model.scripted_responses:
+            files.append(Path(model.scripted_responses))
     files.extend(Path(__file__).parent.rglob('*.py'))
     result = {str(p.resolve()): file_digest(p) for p in sorted(files)}
     result['python'] = sys.version
@@ -62,19 +64,33 @@ def resolve_config(config, base):
     c.validation.audit_suite_root = str(paths['audit_suite_root']) if paths['audit_suite_root'] else None
     if paths['input_path']:
         c.data.input_path = str(paths['input_path'])
-    if c.model.scripted_responses:
-        c.model.scripted_responses = str((Path(base) / c.model.scripted_responses).resolve())
+    for model in c.models.values() if c.is_v2 else [c.model]:
+        if model.scripted_responses:
+            model.scripted_responses = str((Path(base) / model.scripted_responses).resolve())
     return c
 
 
-def adapter_for(config, record):
-    if config.model.provider_adapter == 'http_chat_json_v1':
-        return HttpChatJsonV1(config.model)
-    if not config.model.scripted_responses:
+def adapter_for(config, record, role=None):
+    model = config.role_model(role) if role else config.model
+    if model.provider_adapter == 'http_chat_json_v1':
+        return HttpChatJsonV1(model)
+    if model.provider_adapter == 'http_responses_json_v1':
+        return HttpResponsesJsonV1(model)
+    if not model.scripted_responses:
         raise ConfigError('scripted adapter requires model.scripted_responses or an injected adapter')
-    scripts = json.loads(Path(config.model.scripted_responses).read_text())
+    scripts = json.loads(Path(model.scripted_responses).read_text())
     turns = scripts.get(record.query_id, scripts.get(record.task_profile_id, scripts.get('default', [])))
     def choose(request):
+        if scripts.get('fixture') == 'verifier':
+            from .evaluation.verifier import rule_decision
+            evidence = json.loads(request.messages[-1].content)['evidence']
+            return Turn(content=rule_decision(evidence).model_dump_json())
+        if scripts.get('fixture') == 'rubric':
+            # Explicit offline utility fixture; scores supplied data, never executes reward code.
+            from .evaluation.checkers import RationalArithmeticCheckerV1
+            data = json.loads(json.loads(request.messages[-1].content))
+            score = RationalArithmeticCheckerV1().check_answer(data)
+            return Turn(content=json.dumps({'score': score, 'feedback': 'Offline judge fixture result'}))
         # A logical index survives physical retries and process restart.
         index = int(request.logical_call_id.rsplit(':', 1)[1]) - 1
         if index >= len(turns):
@@ -82,6 +98,8 @@ def adapter_for(config, record):
         data = dict(turns[index])
         if 'actions' in data:
             content = json.dumps({'actions': data.pop('actions')})
+            if config.is_v2:
+                content = content.replace('$JUDGE_CONFIG_DIGEST', digest(config.role_model('rubric_judge')))
             return Turn(content=content, **data)
         return Turn(**data)
     return ScriptedLLM(on_exhausted=choose)
@@ -122,12 +140,12 @@ class RunDriver:
             if config is None:
                 raise ConfigError('new run requires a config')
             require_preflight(preflight(config, self.root, runner_capabilities=self.runner.capabilities().model_dump()))
-            if config.model.provider_adapter != 'scripted' and not config.execution.allow_untrusted_code:
+            if any(m.provider_adapter != 'scripted' for m in (config.models.values() if config.is_v2 else [config.model])) and not config.execution.allow_untrusted_code:
                 raise ConfigError('model-generated code requires explicit prototype allow_untrusted_code=true')
             deadline = config.budget.absolute_deadline_utc
             if deadline is None and config.budget.wall_deadline_s is not None:
                 deadline = time.time() + config.budget.wall_deadline_s
-            self.manifest = RunManifest(run_id=uuid.uuid4().hex, created_at=utc_now(), config=config,
+            self.manifest = RunManifest(schema_version="rlar.manifest.v2" if config.is_v2 else "rlar.manifest.v1", run_id=uuid.uuid4().hex, created_at=utc_now(), config=config,
                 config_digest=config.digest(), input_path=str(Path(input_path).resolve()) if input_path else None,
                 input_digest=file_digest(Path(input_path)) if input_path else None,
                 input_record_count=sum(bool(line.strip()) for line in open(input_path, "rb")) if input_path else None,
@@ -140,6 +158,9 @@ class RunDriver:
             events = []
         self.blobs.max_bytes = config.logging.max_blob_bytes
         self.config = config
+        if isinstance(self.runner, SubprocessRunner):
+            self.runner.work_root = self.root / 'workers'
+            self.runner.work_root.mkdir(exist_ok=True)
         self.runner.memory_limit_mb = config.execution.memory_limit_mb if isinstance(self.runner, SubprocessRunner) else None
         self.deadline = Deadline(self.manifest.deadline_utc)
         secret_path = self.root / '.evaluator-secret'
@@ -241,14 +262,28 @@ class RunDriver:
                 state, budget, dispatcher, llm = self._episode(item, pack)
                 context = EpisodeContext(state, self.config, dispatcher, llm, budget, self.journal, self.blobs, self.root, self.deadline)
                 try:
+                    if self.config.is_v2:
+                        synthesize_tests(item.record, context, dispatcher.role_clients['test_case_synthesizer'], dispatcher.snapshot)
+                        if state['state'] == 'REUSE_CHECK' and state.get('suite_ref') and self.config.construction.reuse_enabled:
+                            for entry in dispatcher.snapshot.entries:
+                                dref = self.blobs.put_json(entry.definition.model_dump(mode='json'))
+                                try:
+                                    dispatcher.finalize(dref, entry.validation_ref)
+                                except ValueError:
+                                    continue
+                                state.update(state='SELECTED', status='success', stop_reason='compatible_reuse', reused=True,
+                                    selected={'definition_ref': dref, 'validation_ref': entry.validation_ref, 'reward_key': entry.reward_key})
+                                context.save()
+                                break
                     final = construct_one(item.record, context)
                     result = self._commit(item, final, budget, dispatcher, pack)
                 finally:
-                    llm.adapter.close()
+                    for client in getattr(dispatcher, 'role_clients', {'legacy': llm}).values():
+                        client.adapter.close()
                 self.run_ledger = budget.run
                 yield result
                 consecutive_environment_failures = (consecutive_environment_failures + 1
-                    if result.stop_reason == 'environment_unavailable' else 0)
+                    if result.stop_reason in ('environment_unavailable', 'infrastructure_error') else 0)
                 if consecutive_environment_failures >= self.config.budget.retry.circuit_breaker_threshold:
                     self.journal.append('run_interrupted', {'state': 'INTERRUPTED', 'reason': 'environment_circuit_breaker',
                         'consecutive_environment_failures': consecutive_environment_failures})
@@ -301,19 +336,48 @@ class RunDriver:
         limits = ExecutionLimits(**{k: getattr(self.config.execution, k) for k in ExecutionLimits.__dataclass_fields__})
         evaluator = TrustedEvaluator(self.runner, limits=limits, integrity_secret=self.secret,
                                      normalization_mappings=self.config.rm.normalization_mappings)
-        resources = build_resource_index(item.record, pack, snapshot, model_cards=broker.model_cards())
+        cards = broker.model_cards()
+        if self.config.is_v2:
+            cards = {ref: {'model': model.model, 'revision': model.revision, 'model_config_digest': digest(model)}
+                     for ref, model in self.config.models.items()}
+        resources = build_resource_index(item.record, pack, snapshot, model_cards=cards,
+                                         scoring_abi='v2' if self.config.is_v2 else 'v1')
         assert_not_controller_visible({r.resource_id: r.loader() for r in resources.resources.values()},
             Path(self.config.validation.audit_suite_root) if self.config.validation.audit_suite_root else None)
-        suite = self.suites.get(pack.dev_suite_ref) if pack.dev_suite_ref else None
+        suite = self.suites.get(pack.dev_suite_ref) if pack.dev_suite_ref and not self.config.is_v2 else None
         dispatcher = ToolDispatcher(episode_id=eid, config=self.config, pack=pack, suite=suite, evaluator=evaluator,
             resources=resources, budget=budget, journal=self.journal, blobs=self.blobs, deadline=self.deadline)
-        if not saved:
-            state['history'] = initial_history(item.record, pack, snapshot, resources, self.config, budget)
-        adapter = self.injected_llm or adapter_for(self.config, item.record)
-        llm = DurableLLMClient(adapter, self.config.model, budget=budget, journal=self.journal, blobs=self.blobs,
-            episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id, split=self.manifest.split,
-            retry=self.config.budget.retry, deadline=self.deadline)
-        if not saved and self.config.construction.reuse_enabled:
+        if self.config.is_v2:
+            from .evaluation.verifier import HarnessVerifier
+            from .llm.utility import JudgeUtility
+            clients = {}
+            for role, ref in self.config.roles.items():
+                model = self.config.models[ref]
+                adapter = (self.injected_llm.get(role) if isinstance(self.injected_llm, dict) else None) or adapter_for(self.config, item.record, role)
+                clients[role] = DurableLLMClient(adapter, model, budget=budget, journal=self.journal,
+                    blobs=self.blobs, episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id,
+                    split=self.manifest.split, actor_role=role, parent_job_id=state['job_key'],
+                    retry=self.config.budget.retry.model_copy(update={'max_transport_attempts': self.config.v2.model_transport_attempts}),
+                    deadline=self.deadline)
+            dispatcher.role_clients, dispatcher.snapshot = clients, snapshot
+            llm = clients['reward_synthesizer']
+            verifier_ref = self.config.roles.get('harness_verifier', 'rule_baseline')
+            evaluator.verifier = HarnessVerifier(self.config.v2, clients.get('harness_verifier'),
+                model_ref=verifier_ref, model_config=self.config.models.get(verifier_ref))
+            evaluator.persistence = (self.journal, self.blobs, eid)
+            evaluator.budget = budget
+            evaluator.execution_attempts = self.config.v2.model_transport_attempts
+            evaluator.query = item.record
+            if isinstance(self.runner, SubprocessRunner):
+                self.runner.scoring_service = JudgeUtility(clients['rubric_judge'], self.config.roles['rubric_judge'])
+        else:
+            if not saved:
+                state['history'] = initial_history(item.record, pack, snapshot, resources, self.config, budget)
+            adapter = self.injected_llm or adapter_for(self.config, item.record)
+            llm = DurableLLMClient(adapter, self.config.model, budget=budget, journal=self.journal, blobs=self.blobs,
+                episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id, split=self.manifest.split,
+                retry=self.config.budget.retry, deadline=self.deadline)
+        if not saved and not self.config.is_v2 and self.config.construction.reuse_enabled:
             decision = self.library.decide_reuse(snapshot, pack, item.record.reward_mode or self.config.construction.reward_mode,
                                                 suite_version=suite.version if suite else None)
             self.journal.append('reuse_decision', {'kind': decision.kind, 'reasons': decision.reasons}, episode_id=eid)
@@ -340,10 +404,13 @@ class RunDriver:
             if state['status'] == 'success':
                 definition, report = dispatcher.finalize(selected['definition_ref'], selected['validation_ref'])
         usage = budget.usage()
+        if self.config.is_v2:
+            usage.controller_logical_calls = 0
+            usage.physical_requests = int(budget.episode.consumed['model_requests'] + budget.episode.reserved['model_requests'])
         usage.wall_seconds = max(0.0, time.time() - state.get('started_at', time.time()))
         attempts = [e for e in self.journal.scan().events if e.episode_id == state['episode_id'] and e.type == 'llm_dispatched']
         usage.transport_retries = len(attempts) - len({e.payload['logical_call_id'] for e in attempts})
-        result = ConstructionResult(query_id=item.record.query_id, input_location=item.location,
+        result = ConstructionResult(schema_version="rlar.result.v2" if self.config.is_v2 else "rlar.result.v1", query_id=item.record.query_id, input_location=item.location,
             input_digest=item.raw_digest, run_config_digest=self.config.digest(), library_snapshot=state['library_snapshot'],
             job_key=state['job_key'], episode_id=state['episode_id'], attempt_id=1, status=state['status'],
             stop_reason=state['stop_reason'], reward_key=reward_key_for(definition) if definition else None,

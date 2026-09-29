@@ -95,6 +95,45 @@ class RationalArithmeticCheckerV1:
         return extract_boxed(example.get("response", ""))
 
 
+class Gsm8kNumericCheckerV1:
+    """Exact final-answer comparison for the declared GSM8K #### format.
+
+    This checks the final number, not the correctness of intermediate reasoning.
+    The reference may be the original GSM8K solution or an extracted number.
+    """
+
+    api_id = 'gsm8k_numeric_v1'
+    version = '1.0.0'
+    _number = re.compile(r'[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?')
+
+    @classmethod
+    def _parse_number(cls, value: str | None) -> Fraction | None:
+        if value is None or not cls._number.fullmatch(value.strip()):
+            return None
+        return Fraction(value.strip().replace(',', ''))
+
+    def extract_answer(self, example: dict[str, Any]) -> str | None:
+        response = example.get('response')
+        if not isinstance(response, str) or '####' not in response:
+            return None
+        final = response.rsplit('####', 1)[1].strip()
+        return final if self._parse_number(final) is not None else None
+
+    def check_answer(self, example: dict[str, Any]) -> float:
+        reference = example.get('reference')
+        if reference is None:
+            raise CheckerError('no reference answer is available for this example')
+        reference = str(reference)
+        expected = self._parse_number(reference.rsplit('####', 1)[-1])
+        if expected is None:
+            raise CheckerError('reference has no valid GSM8K final numeric answer')
+        got = self._parse_number(self.extract_answer(example))
+        return 1.0 if got is not None and got == expected else 0.0
+
+    def check_declared_format(self, example: dict[str, Any]) -> float:
+        return float(self.extract_answer(example) is not None)
+
+
 class PythonUnitTestsCheckerV1:
     """Runs a candidate's Python function against the pack's fixed test cases.
 
@@ -152,12 +191,14 @@ class PythonUnitTestsCheckerV1:
 
 BUNDLES: dict[str, Any] = {
     RationalArithmeticCheckerV1.api_id: RationalArithmeticCheckerV1,
+    Gsm8kNumericCheckerV1.api_id: Gsm8kNumericCheckerV1,
     PythonUnitTestsCheckerV1.api_id: PythonUnitTestsCheckerV1,
 }
 
 #: Methods each bundle exposes on ``context``.
 BUNDLE_METHODS: dict[str, tuple[str, ...]] = {
     "rational_arithmetic_v1": ("check_answer", "check_declared_format", "extract_answer"),
+    "gsm8k_numeric_v1": ("check_answer", "check_declared_format", "extract_answer"),
     "python_unit_tests_v1": ("run_task_tests", "has_docstring"),
 }
 

@@ -1,0 +1,290 @@
+{
+  "$defs": {
+    "Capability": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "task_requirement_ref": {
+          "minLength": 1,
+          "title": "Task Requirement Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "task_requirement_ref"
+      ],
+      "title": "Capability",
+      "type": "object"
+    },
+    "Relation": {
+      "additionalProperties": false,
+      "properties": {
+        "left": {
+          "title": "Left",
+          "type": "string"
+        },
+        "right": {
+          "title": "Right",
+          "type": "string"
+        },
+        "operator": {
+          "enum": [
+            ">",
+            "="
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "justification": {
+          "minLength": 1,
+          "title": "Justification",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "left",
+        "right",
+        "operator",
+        "justification",
+        "evidence_refs"
+      ],
+      "title": "Relation",
+      "type": "object"
+    },
+    "SuiteExample": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "query_ref": {
+          "title": "Query Ref",
+          "type": "string"
+        },
+        "response": {
+          "title": "Response"
+        },
+        "allowed_reference_or_metadata": {
+          "additionalProperties": true,
+          "title": "Allowed Reference Or Metadata",
+          "type": "object"
+        },
+        "provenance": {
+          "minLength": 1,
+          "title": "Provenance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "query_ref",
+        "response",
+        "provenance"
+      ],
+      "title": "SuiteExample",
+      "type": "object"
+    },
+    "TestCase": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "pointwise",
+            "ranking"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "capability_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Capability Ids",
+          "type": "array"
+        },
+        "scope": {
+          "enum": [
+            "capability",
+            "overall"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "example_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Example Ids",
+          "type": "array"
+        },
+        "expected_label": {
+          "anyOf": [
+            {
+              "enum": [
+                "pass",
+                "fail"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Label"
+        },
+        "relations": {
+          "items": {
+            "$ref": "#/$defs/Relation"
+          },
+          "title": "Relations",
+          "type": "array"
+        },
+        "discrimination_target": {
+          "minLength": 1,
+          "title": "Discrimination Target",
+          "type": "string"
+        },
+        "expected_behavior": {
+          "minLength": 1,
+          "title": "Expected Behavior",
+          "type": "string"
+        },
+        "justification": {
+          "minLength": 1,
+          "title": "Justification",
+          "type": "string"
+        },
+        "evidence_source": {
+          "enum": [
+            "objective_verified",
+            "human_annotated",
+            "model_inferred"
+          ],
+          "title": "Evidence Source",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "capability_ids",
+        "scope",
+        "required",
+        "example_ids",
+        "discrimination_target",
+        "expected_behavior",
+        "justification",
+        "evidence_source",
+        "evidence_refs"
+      ],
+      "title": "TestCase",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "rlar.suite.v2",
+      "default": "rlar.suite.v2"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/Capability"
+      },
+      "minItems": 1,
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "examples": {
+      "items": {
+        "$ref": "#/$defs/SuiteExample"
+      },
+      "minItems": 2,
+      "title": "Examples",
+      "type": "array"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/TestCase"
+      },
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    },
+    "generation_config_ref": {
+      "title": "Generation Config Ref",
+      "type": "string"
+    },
+    "admission_report_ref": {
+      "title": "Admission Report Ref",
+      "type": "string"
+    },
+    "suite_digest": {
+      "title": "Suite Digest",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "capabilities",
+    "examples",
+    "cases",
+    "generation_config_ref",
+    "admission_report_ref",
+    "suite_digest"
+  ],
+  "title": "FrozenSuite",
+  "type": "object",
+  "$id": "rlar.suite.v2"
+}

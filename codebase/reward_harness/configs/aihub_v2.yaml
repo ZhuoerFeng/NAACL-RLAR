@@ -1,0 +1,150 @@
+schema_version: rlar.config.v2
+run_label: v2-aihub-small-sample
+profile_kind: real
+data:
+  input_path: ../examples/v2/queries.jsonl
+  task_pack_root: ../examples/v2/task_packs
+  split: train
+  output_layout: reference
+construction:
+  strategy: agentic
+  reward_mode: checklist
+  allow_row_mode_override: false
+  on_pass: submit
+  candidate_selector: best_metric_then_reward_key
+  selector_metric: false_accept_rate
+  seed: 0
+  reuse_enabled: true
+  library_mode: continual
+  max_components: 4
+execution:
+  runner_type: subprocess
+  runner_profile: prototype
+  runtime_fingerprint: python-stdlib-fixture-v1
+  wall_timeout_s: 120
+  cpu_timeout_s: 2
+  memory_limit_mb: 512
+  max_processes: null
+  max_output_bytes: 16384
+  max_return_bytes: 131072
+  allow_untrusted_code: true
+  max_concurrent_actions: 4
+rm:
+  enabled: false
+  catalogue: []
+budget:
+  run:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  episode:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  retry:
+    max_transport_attempts: 3
+    backoff_initial_s: 0.01
+    backoff_multiplier: 2
+    backoff_max_s: 0.1
+    circuit_breaker_threshold: 3
+  no_progress_threshold: 3
+  wall_deadline_s: 1800
+  per_tool_timeout_s: 600
+validation:
+  dev_suite_root: ../examples/v2
+  audit_suite_root: null
+  oracle_version: fixture-oracle-v1
+  audit_required_assurance: isolated
+logging:
+  max_observation_chars: 8000
+  max_blob_bytes: 4000000
+  single_writer_lock: true
+models:
+  base:
+    provider_adapter: http_chat_json_v1
+    endpoint: http://api.aihub.woa.com/standard/v1/chat/completions
+    model: gpt-6-sol
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: high
+    enable_thinking: null
+    top_p: null
+    response_format: null
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_chat_json_v1
+    context_reserve_tokens: 12000
+  verifier:
+    provider_adapter: http_chat_json_v1
+    endpoint: http://api.aihub.woa.com/standard/v1/chat/completions
+    model: deepseek-flash
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: null
+    enable_thinking: null
+    top_p: null
+    response_format: null
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_chat_json_v1
+    context_reserve_tokens: 12000
+  rubric:
+    provider_adapter: http_responses_json_v1
+    endpoint: http://api.aihub.woa.com/openai/v1/responses
+    model: gpt-4.1
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    auth_provider: azure
+    responses_store: false
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: null
+    enable_thinking: null
+    top_p: null
+    response_format: json_object
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_responses_json_v1
+    context_reserve_tokens: 12000
+roles:
+  test_case_synthesizer: base
+  reward_synthesizer: base
+  harness_verifier: verifier
+  rubric_judge: rubric
+v2:
+  backend: semantic_verifier
+  feedback: full

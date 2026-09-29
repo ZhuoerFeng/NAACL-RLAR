@@ -1,0 +1,99 @@
+{
+  "schema_version": "rlar.suite_draft.v2",
+  "id": "math_generated",
+  "version": "1",
+  "capabilities": [
+    {
+      "id": "correctness",
+      "description": "Exact rational answer correctness",
+      "task_requirement_ref": "math_v2"
+    }
+  ],
+  "examples": [
+    {
+      "id": "good",
+      "query_ref": "v2_math",
+      "response": "\\boxed{5/6}",
+      "provenance": "Offline fixture authored for engineering checks"
+    },
+    {
+      "id": "bad",
+      "query_ref": "v2_math",
+      "response": "\\boxed{1/6}",
+      "provenance": "Offline fixture authored for engineering checks"
+    }
+  ],
+  "cases": [
+    {
+      "capability_ids": [
+        "correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "justification": "Independent exact rational arithmetic checker",
+      "evidence_source": "objective_verified",
+      "evidence_refs": [
+        "checker:rational_arithmetic_v1:check_answer"
+      ],
+      "id": "pass",
+      "kind": "pointwise",
+      "example_ids": [
+        "good"
+      ],
+      "expected_label": "pass",
+      "discrimination_target": "Exact arithmetic correctness",
+      "expected_behavior": "Retain correct answers"
+    },
+    {
+      "capability_ids": [
+        "correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "justification": "Independent exact rational arithmetic checker",
+      "evidence_source": "objective_verified",
+      "evidence_refs": [
+        "checker:rational_arithmetic_v1:check_answer"
+      ],
+      "id": "fail",
+      "kind": "pointwise",
+      "example_ids": [
+        "bad"
+      ],
+      "expected_label": "fail",
+      "discrimination_target": "Exact arithmetic correctness",
+      "expected_behavior": "Penalize incorrect answers"
+    },
+    {
+      "capability_ids": [
+        "correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "justification": "Independent exact rational arithmetic checker",
+      "evidence_source": "objective_verified",
+      "evidence_refs": [
+        "checker:rational_arithmetic_v1:check_answer"
+      ],
+      "id": "ranking",
+      "kind": "ranking",
+      "example_ids": [
+        "good",
+        "bad"
+      ],
+      "discrimination_target": "Prefer correct rational answers",
+      "expected_behavior": "Correct answer scores above incorrect answer in correctness capability",
+      "relations": [
+        {
+          "left": "good",
+          "right": "bad",
+          "operator": ">",
+          "justification": "Only good equals the independently computed reference",
+          "evidence_refs": [
+            "checker:rational_arithmetic_v1:check_answer"
+          ]
+        }
+      ]
+    }
+  ]
+}
