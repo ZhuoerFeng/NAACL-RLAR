@@ -10,8 +10,7 @@ from pathlib import Path
 from .config import load_config, preflight
 from .driver import RunDriver, construct_file, resolve_config
 from .errors import HarnessError, PreflightError
-from .evaluation.evaluator import ExecutionLimits, TrustedEvaluator
-from .evaluation.taskpack import TaskPackStore, whitelist_example
+from .evaluation.scoring import score_reward
 from .inputs import iter_jsonl
 from .runtime.runner import SubprocessRunner
 from .schemas import RewardDefinition
@@ -19,17 +18,6 @@ from .storage.blobs import atomic_write_bytes
 from .storage.canonical import canonical_json
 from .trace.export import export_llm_calls, export_sft, export_feedback, llm_calls, read_run, replay, _write_jsonl, guard_output
 from .trace.report import report
-
-
-def score_reward(definition, example, scoring_context, runner):
-    from .storage.canonical import reward_key_for
-    evaluator = TrustedEvaluator(runner)
-    pack = scoring_context
-    results, usage = evaluator.score_examples(definition, pack, [whitelist_example(example, pack.permitted_inputs)],
-        ['candidate'], action_id='score', reward_key=reward_key_for(definition))
-    result = results[0]
-    result.usage = usage
-    return result
 
 
 def frozen_definitions(root):

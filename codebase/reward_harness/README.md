@@ -65,6 +65,55 @@ Responses adapter 与 Chat adapter 共享传输、预算和持久化底座；原
 
 `score --input` 接收 JSONL `{query_id, candidate_id, response}`。`audit --suite` 接收 JSON 对象 `{query_id: SuiteDraft}`，该文件由外部提供并独立留存。Audit 强制恢复 fail/pass/ranking 全类别，检查独立依据，不反馈修订、不筛选 SFT。Subprocess 后端的正式 audit 会被拒绝；`--allow-prototype-audit` 仅记录原型保证。没有独立标注的 verifier 判断集时，不宣称验收模型质量已合格。
 
+## RL 框架 adapter（verl）
+
+`rlar_harness.adapters.verl.VerlRewardAdapter` 提供独立的接入层，不改变构造流程或生成组件的 `score(example, context)` ABI，也不依赖 verl、torch 或 Ray。适用于已由调用方选定的 reward；`data_source` 不会自动选择 reward，也不代表该 reward 已验证适用于整个数据集。
+
+```python
+from rlar_harness.adapters.verl import VerlRewardAdapter
+
+# definition: RewardDefinition；task_pack: TaskPack；runner: 已配置的 Runner。
+# runner 的工作目录、judge 服务、预算和调用留档由调用方管理。
+adapter = VerlRewardAdapter.from_reward(definition, task_pack, runner)
+compute_score = adapter.compute_score
+
+result = compute_score(
+    data_source="openai/gsm8k",
+    solution_str="48 + 24 = 72.\n#### 72",
+    ground_truth="原始参考解答……#### 72",
+    extra_info={"rlar": {"query": "原始问题", "metadata": {}}},
+)
+# {"score": 1.0}，具体值由所选 reward 决定。
+```
+
+默认映射：`solution_str → response`、`ground_truth → reference`、`extra_info.rlar.query → query`、`extra_info.rlar.metadata → metadata`。metadata 中的字段也按既有约定展开到 example 顶层，再由 task pack 的 `permitted_inputs` 过滤；禁止 metadata 覆盖 query/response/reference/metadata。原始输入不会被修改，工具配置、rollout 分数及其他 extra_info 字段不自动传入。ground_truth 的内容和类型必须与构建时的 reference 契约一致；本地 verl 默认 GSM8K 预处理的 ground_truth 仅为提取后的数字，不能直接假定它等同于原始解答。
+
+已有其他数据布局时传入 `input_mapper(data_source, solution_str, ground_truth, extra_info) -> dict`。已有带预算、留档或服务调用的评分运行时时，直接使用 `VerlRewardAdapter(scorer)`，其中 `scorer(example) -> ScoreResult`。`from_reward` 复用公开的 `rlar_harness.evaluation.scoring.score_reward`，使用同一 runner/白名单/聚合器；CLI 原 `score_reward` 导入保持兼容。
+
+成功只返回 `{"score": total_score}`，合法 0 分正常返回。当前不提供异常回传协议：scorer 异常原样抛出；partial/failed 或非有限总分在本地抛出 `ValueError`，不返回错误字典，不填 0。adapter 不提供训练跳过、重试、丢组或故障恢复策略。使用本地 verl 新版 `naive` manager；不要用会把异常转成 0 的 manager 来假定上述语义仍成立。
+
+每个 worker 初始化一次 adapter；同一实例串行评分，避免共享 judge 的执行绑定互相覆盖。不同 adapter 不应并发共享同一个有状态 runner。rubric 使用调用方提供的 judge-enabled runner 或 durable scorer，adapter 不选择模型、不注入凭据、不绕过真实调用留档。
+
+[examples/verl_reward.py](examples/verl_reward.py) 是可由 verl 按文件加载的 **verifiable reward** 脚手架。准备已选定的完整 `RewardDefinition` JSON 和对应 `TaskPack` JSON（不是整个 `results.jsonl`），并在所有 worker 安装相同版本的 rlar-harness。路径按部署环境替换：
+
+```yaml
+reward:
+  reward_manager:
+    source: register
+    name: naive
+  reward_model:
+    enable: false
+  custom_reward_function:
+    path: /path/to/reward_harness/examples/verl_reward.py
+    name: compute_score
+    reward_kwargs:
+      reward_path: /path/to/frozen/reward.json
+      task_pack_path: /path/to/frozen/task_pack.json
+      execution_run_dir: /project/codebase/reward_harness/runs/YYYY_MM_DD_HH_MM_VerlRewardTraining
+```
+
+文件入口按路径缓存，不要在训练中修改 artifact 文件；变更 reward 应新开运行及 worker。示例不自动建立跨 query 索引、导出 bundle 或配置 rubric 服务；rubric 请在自己的入口中使用上面的 Python API。此接入不改变 SubprocessRunner 的原型隔离等级。
+
 ## 验证与兼容
 
 ```bash
