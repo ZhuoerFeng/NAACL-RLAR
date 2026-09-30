@@ -1,40 +1,148 @@
-# Intentionally incomplete. validate-config reports all REQUIRED paths together.
-# Provide real services and formal task packs; demo thresholds are never inherited.
-schema_version: rlar.config.v1
-run_label: real-experiment
+schema_version: rlar.config.v2
+run_label: real-service-template
 profile_kind: real
 data:
-  input_path: REQUIRED
-  task_pack_root: REQUIRED
-  split: REQUIRED
+  input_path: ../examples/self_contained/queries.jsonl
+  task_pack_root: ../examples/self_contained/task_packs
+  split: train
   output_layout: reference
 construction:
   strategy: agentic
   reward_mode: checklist
-  library_mode: heldout
-  max_components: REQUIRED
-model:
-  provider_adapter: http_chat_json_v1
-  endpoint: REQUIRED
-  model: REQUIRED
-  revision: REQUIRED
-  api_key_env: REQUIRED
-  max_output_tokens: REQUIRED
-  context_limit_tokens: REQUIRED
+  allow_row_mode_override: false
+  on_pass: submit
+  candidate_selector: best_metric_then_reward_key
+  selector_metric: false_accept_rate
+  seed: 0
+  reuse_enabled: true
+  library_mode: continual
+  max_components: 4
 execution:
   runner_type: subprocess
-  runner_profile: formal
-  required_capabilities: [filesystem_isolation, network_isolation, label_secret_isolation]
-  runtime_fingerprint: REQUIRED
-  allow_untrusted_code: false
+  runner_profile: prototype
+  runtime_fingerprint: python-stdlib-fixture-v1
+  wall_timeout_s: 120
+  cpu_timeout_s: 2
+  memory_limit_mb: 512
+  max_processes: null
+  max_output_bytes: 16384
+  max_return_bytes: 131072
+  allow_untrusted_code: true
+  max_concurrent_actions: 4
 budget:
-  run: REQUIRED
-  episode: REQUIRED
-  absolute_deadline_utc: REQUIRED
+  run:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  episode:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  retry:
+    max_transport_attempts: 3
+    backoff_initial_s: 0.01
+    backoff_multiplier: 2
+    backoff_max_s: 0.1
+    circuit_breaker_threshold: 3
+  no_progress_threshold: 3
+  wall_deadline_s: 1800
+  per_tool_timeout_s: 600
 validation:
-  dev_suite_root: REQUIRED
-  oracle_version: REQUIRED
-  audit_suite_root: REQUIRED
+  dev_suite_root: ../examples/self_contained
+  audit_suite_root: null
+  oracle_version: fixture-oracle-v1
   audit_required_assurance: isolated
-# P0 ships a Runner interface and subprocess prototype. A production isolated
-# backend is an external integration, not silently emulated by this template.
+logging:
+  max_observation_chars: 8000
+  max_blob_bytes: 4000000
+  single_writer_lock: true
+models:
+  base:
+    provider_adapter: http_chat_json_v1
+    endpoint: REQUIRED
+    model: gpt-6-sol
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: high
+    enable_thinking: null
+    top_p: null
+    response_format: null
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_chat_json_v1
+    context_reserve_tokens: 12000
+  verifier:
+    provider_adapter: http_chat_json_v1
+    endpoint: REQUIRED
+    model: deepseek-flash
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: null
+    enable_thinking: null
+    top_p: null
+    response_format: null
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_chat_json_v1
+    context_reserve_tokens: 12000
+  rubric:
+    provider_adapter: http_responses_json_v1
+    endpoint: REQUIRED
+    model: gpt-4.1
+    revision: null
+    api_key_env: RLAR_AIHUB_API_KEY
+    auth_provider: azure
+    responses_store: false
+    temperature: 0.0
+    send_temperature: false
+    max_output_tokens: 8192
+    max_tokens_field: max_completion_tokens
+    reasoning_effort: null
+    enable_thinking: null
+    top_p: null
+    response_format: json_object
+    prompt_cache_key: null
+    context_limit_tokens: 131072
+    token_counter: chars_div4_conservative
+    connect_timeout_s: 15.0
+    read_timeout_s: 180.0
+    total_timeout_s: 240.0
+    adapter_version: http_responses_json_v1
+    context_reserve_tokens: 12000
+roles:
+  test_case_synthesizer: base
+  reward_synthesizer: base
+  harness_verifier: verifier
+  rubric_judge: rubric
+synthesis:
+  backend: semantic_verifier
+  feedback: full
+  reward_logic_policy: self_contained_v1

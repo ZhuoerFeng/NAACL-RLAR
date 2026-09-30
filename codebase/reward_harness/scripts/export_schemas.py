@@ -13,6 +13,6 @@ models = {'rlar.reward.v2': RewardDefinition, 'rlar.score.v2': ScoreResult,
 for version, model in models.items():
     schema = model.model_json_schema()
     if 'schema_version' in schema['properties']:
-        schema['properties']['schema_version'] = {'type': 'string', 'const': version, 'default': version}
+        assert schema['properties']['schema_version']['const'] == version
     schema['$id'] = version
     (root / (version + '.json')).write_text(json.dumps(schema, ensure_ascii=False, indent=2) + '\n')

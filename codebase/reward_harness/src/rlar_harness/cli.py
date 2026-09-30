@@ -10,7 +10,6 @@ from pathlib import Path
 from .config import load_config, preflight
 from .driver import RunDriver, construct_file, resolve_config
 from .errors import HarnessError, PreflightError
-from .evaluation.audit import Auditor, AuditSuiteStore
 from .evaluation.evaluator import ExecutionLimits, TrustedEvaluator
 from .evaluation.taskpack import TaskPackStore, whitelist_example
 from .inputs import iter_jsonl
@@ -35,6 +34,8 @@ def score_reward(definition, example, scoring_context, runner):
 
 def frozen_definitions(root):
     blobs, events, results, manifest = read_run(root)
+    from .config import require_current_manifest
+    require_current_manifest(manifest)
     library = {}
     path = Path(root) / 'reward_library.jsonl'
     if path.exists():
@@ -45,7 +46,8 @@ def frozen_definitions(root):
     for result in results:
         if result.status != 'success':
             continue
-        definition = result.reward_definition or RewardDefinition.model_validate(library[(result.reward_key, result.validation_ref)])
+        raw = result.reward_definition.model_dump() if result.reward_definition else library[(result.reward_key, result.validation_ref)]
+        definition = RewardDefinition.model_validate(raw)
         from .storage.canonical import reward_key_for
         if reward_key_for(definition) != result.reward_key:
             raise ValueError("frozen artifact hash mismatch")
@@ -57,37 +59,14 @@ def score_file(root, source, output, execution_run_dir=None):
     guard_output(root, output)
     if Path(source).resolve() == Path(output).resolve():
         raise ValueError("score output cannot overwrite candidate source")
-    from .budget import BudgetLedger, SharedBudget
-    from .runtime.broker import ScoringBroker
     definitions, manifest = frozen_definitions(root)
     from .config import HarnessConfig
     config = HarnessConfig.model_validate(manifest['config'])
-    packs = TaskPackStore(Path(config.data.task_pack_root))
     queries = {x.record.query_id: x.record for x in iter_jsonl(Path(manifest['input_path'])) if x.ok}
-    if config.is_v2:
-        from .evaluation.standalone import evaluate_frozen
-        rows, evidence_run = evaluate_frozen(config, queries, definitions, source, run_dir=execution_run_dir)
-        _write_jsonl(output, rows)
-        return {'scored': len(rows), 'output': str(output), 'evidence_run': evidence_run}
-    budget = SharedBudget(BudgetLedger('score', dict(config.budget.run)))
-    runner = SubprocessRunner(scoring_service=ScoringBroker(config.rm, budget=budget))
-    rows = []
-    with open(source) as f:
-        for line in f:
-            candidate = json.loads(line)
-            definition, result = definitions[candidate['query_id']]
-            q = queries[candidate['query_id']]
-            pack = packs.get(q.task_profile_id)
-            example = {'query': q.query, 'reference': q.reference, **q.metadata, 'response': candidate['response']}
-            reserved = budget.reserve({'component_executions': float(len(definition.components))})
-            budget.settle(reserved)
-            score = score_reward(definition, example, pack, runner)
-            rows.append({'schema_version': 'rlar.candidate_score.v1', 'query_id': q.query_id,
-                'candidate_id': candidate.get('candidate_id'), 'group_id': candidate.get('group_id'),
-                **score.model_dump(mode='json')})
+    from .evaluation.standalone import evaluate_frozen
+    rows, evidence_run = evaluate_frozen(config, queries, definitions, source, run_dir=execution_run_dir)
     _write_jsonl(output, rows)
-    atomic_write_bytes(Path(str(output) + '.usage.json'), canonical_json(budget.run.to_json()))
-    return {'scored': len(rows), 'output': str(output)}
+    return {'scored': len(rows), 'output': str(output), 'evidence_run': evidence_run}
 
 
 def audit_run(root, suite, output, allow_prototype=False, execution_run_dir=None):
@@ -95,34 +74,15 @@ def audit_run(root, suite, output, allow_prototype=False, execution_run_dir=None
     definitions, manifest = frozen_definitions(root)
     from .config import HarnessConfig
     config = HarnessConfig.model_validate(manifest['config'])
-    if config.is_v2:
-        from .evaluation.standalone import evaluate_frozen
-        queries = {x.record.query_id: x.record for x in iter_jsonl(Path(manifest['input_path'])) if x.ok}
-        rows, evidence_run = evaluate_frozen(config, queries, definitions, suite, audit=True,
-            allow_prototype=allow_prototype, run_dir=execution_run_dir)
-        summary = {'schema_version': 'rlar.audit.v2', 'reports': rows, 'evidence_run': evidence_run,
-            'done_after_audit_failure_count': sum(not r['eligible'] for r in rows),
-            'training_selection_affected': False, 'verifier_quality_calibrated': False}
-        atomic_write_bytes(Path(output), canonical_json(summary))
-        return summary
-    runner = SubprocessRunner()
-    limits = ExecutionLimits(**{k: getattr(config.execution, k) for k in ExecutionLimits.__dataclass_fields__})
-    evaluator = TrustedEvaluator(runner, namespace='audit', limits=limits)
-    auditor = Auditor(evaluator, AuditSuiteStore(config.validation.audit_suite_root))
-    mapping = json.loads(Path(suite).read_text())
-    packs = TaskPackStore(Path(config.data.task_pack_root))
+    from .evaluation.standalone import evaluate_frozen
     queries = {x.record.query_id: x.record for x in iter_jsonl(Path(manifest['input_path'])) if x.ok}
-    entries = []
-    seen = set()
-    for qid, (definition, result) in definitions.items():
-        profile = queries[qid].task_profile_id
-        if (profile, result.reward_key) in seen:
-            continue
-        seen.add((profile, result.reward_key))
-        entries.append((result.reward_key, definition, packs.get(profile), mapping[profile]))
-    summary = auditor.audit(entries, allow_insufficient_assurance=allow_prototype)
-    auditor.write_summary(summary, Path(output))
-    return summary.to_json()
+    rows, evidence_run = evaluate_frozen(config, queries, definitions, suite, audit=True,
+        allow_prototype=allow_prototype, run_dir=execution_run_dir)
+    summary = {'schema_version': 'rlar.audit.v2', 'reports': rows, 'evidence_run': evidence_run,
+        'done_after_audit_failure_count': sum(not r['eligible'] for r in rows),
+        'training_selection_affected': False, 'verifier_quality_calibrated': False}
+    atomic_write_bytes(Path(output), canonical_json(summary))
+    return summary
 
 
 def build_parser():
@@ -141,6 +101,7 @@ def build_parser():
         if name == 'audit':
             p.add_argument('--suite', required=True); p.add_argument('--allow-prototype-audit', action='store_true')
         if name == 'export-sft':
+            p.add_argument('--include-legacy', action='store_true', help='Explicitly include historical checker-wrapper training views')
             p.add_argument('--format', choices=['per_call', 'full_trace', 'final_program_only'], default='per_call')
             p.add_argument('--max-tokens', type=int, default=131072)
             p.add_argument('--actor-role', choices=['test_case_synthesizer', 'reward_synthesizer'], default='reward_synthesizer')
@@ -181,7 +142,7 @@ def main(argv=None):
                 result = {'mode': 'execute', 'new_run': args.execute_run_dir, 'results': len(rows)}
             else: result = replay(args.run_dir)
         elif cmd == 'export-llm-calls': result = export_llm_calls(args.run_dir, args.output)
-        elif cmd == 'export-sft': result = export_sft(args.run_dir, args.output, format=args.format, max_tokens=args.max_tokens, actor_role=args.actor_role)
+        elif cmd == 'export-sft': result = export_sft(args.run_dir, args.output, format=args.format, max_tokens=args.max_tokens, actor_role=args.actor_role, include_legacy=args.include_legacy)
         elif cmd == 'export-feedback': result = export_feedback(args.run_dir, args.output)
         elif cmd == 'score': result = score_file(args.run_dir, args.input, args.output, args.execution_run_dir)
         elif cmd == 'audit': result = audit_run(args.run_dir, args.suite, args.output, args.allow_prototype_audit, args.execution_run_dir)

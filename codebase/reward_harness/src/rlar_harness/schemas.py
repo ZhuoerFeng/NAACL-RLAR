@@ -22,15 +22,15 @@ from pydantic import (
 
 from .errors import ActionOutcome, ErrorCategory, RetryOwner
 
-REWARD_SCHEMA_VERSION = "rlar.reward.v1"
-RESULT_SCHEMA_VERSION = "rlar.result.v1"
-REPORT_SCHEMA_VERSION = "rlar.validation.v1"
-SCORE_SCHEMA_VERSION = "rlar.score.v1"
+REWARD_SCHEMA_VERSION = "rlar.reward.v2"
+RESULT_SCHEMA_VERSION = "rlar.result.v2"
+REPORT_SCHEMA_VERSION = "rlar.validation.v2"
+SCORE_SCHEMA_VERSION = "rlar.score.v2"
 TOOL_SCHEMA_VERSION = "rlar.tool.v1"
-TASKPACK_SCHEMA_VERSION = "rlar.taskpack.v1"
+TASKPACK_SCHEMA_VERSION = "rlar.taskpack.v2"
 LIBRARY_SCHEMA_VERSION = "rlar.library.v1"
 EVENT_SCHEMA_VERSION = "rlar.event.v1"
-MANIFEST_SCHEMA_VERSION = "rlar.manifest.v1"
+MANIFEST_SCHEMA_VERSION = "rlar.manifest.v2"
 CHECKPOINT_SCHEMA_VERSION = "rlar.checkpoint.v1"
 SFT_SCHEMA_VERSION = "rlar.sft.v1"
 
@@ -38,9 +38,8 @@ SFT_SCHEMA_VERSION = "rlar.sft.v1"
 #: older aggregation version are not valid evidence for a new submission.
 AGGREGATION_VERSION = "agg.v1"
 
-#: Scoring ABIs understood by the worker. ``v1`` rejects ``bool`` returns;
-#: ``v1+bool`` explicitly opts in to ``True/False -> 1.0/0.0``.
-SCORING_ABIS = ("v1", "v1+bool", "v2")
+#: The executable ABI is structured; historical scalar values are read as data.
+SCORING_ABIS = ("v2",)
 
 
 class Strict(BaseModel):
@@ -237,8 +236,8 @@ class Component(Frozen):
     entrypoint: Literal["score"] = "score"
     normalization: Normalization
     required_apis: list[str] = Field(default_factory=list)
-    kind: Literal['verifiable', 'rubric'] | None = None
-    capability_ids: list[str] = Field(default_factory=list)
+    kind: Literal['verifiable', 'rubric']
+    capability_ids: list[str] = Field(min_length=1)
     judge_spec: JudgeSpec | None = None
 
     @model_validator(mode="before")
@@ -271,32 +270,24 @@ def _reject_weight_keys(data: Any, where: str) -> None:
 class RuntimeContract(Frozen):
     """Backend-independent fingerprint of everything that can change scores."""
 
-    scoring_abi: Literal["v1", "v1+bool", "v2"] = "v1"
+    scoring_abi: Literal["v2"] = "v2"
     python_version: str = "3.11+"
     dependencies: list[str] = Field(default_factory=list)
     scoring_sdk: str = "rlar.scoring.v1"
     api_revisions: dict[str, str] = Field(default_factory=dict)
     aggregator_version: str = AGGREGATION_VERSION
     environment_ref: str = "configured_at_run_start"
+    reward_logic_policy: Literal['self_contained_v1'] = 'self_contained_v1'
 
 
 class RewardDefinition(Frozen):
-    schema_version: Literal["rlar.reward.v1", "rlar.reward.v2"] = REWARD_SCHEMA_VERSION
+    schema_version: Literal["rlar.reward.v2"] = REWARD_SCHEMA_VERSION
     mode: RewardMode
     components: list[Component] = Field(min_length=1)
     aggregation: Aggregation
     runtime_contract: RuntimeContract = Field(default_factory=RuntimeContract)
-    capabilities: list[Capability] = Field(default_factory=list)
+    capabilities: list[Capability] = Field(min_length=1)
 
-    @model_serializer(mode='wrap')
-    def serialize_version(self, handler):
-        data = handler(self)
-        if self.schema_version == 'rlar.reward.v1':
-            data.pop('capabilities', None)
-            for component in data['components']:
-                for key in ('kind', 'capability_ids', 'judge_spec'):
-                    component.pop(key, None)
-        return data
 
     @model_validator(mode="before")
     @classmethod
@@ -306,25 +297,22 @@ class RewardDefinition(Frozen):
 
     @model_validator(mode="after")
     def _check(self) -> "RewardDefinition":
-        if self.schema_version == 'rlar.reward.v2':
-            if self.runtime_contract.scoring_abi != 'v2' or not self.capabilities:
-                raise ValueError('v2 requires structured ABI and capabilities')
-            caps = {c.id for c in self.capabilities}
-            if len(caps) != len(self.capabilities):
-                raise ValueError('duplicate capability IDs')
-            for c in self.components:
-                if '/' in c.id:
-                    raise ValueError('v2 component IDs cannot contain evidence-reference separators')
-                if not c.kind or not c.capability_ids or not set(c.capability_ids) <= caps:
-                    raise ValueError('component needs kind and valid capability references')
-                if (c.kind == 'rubric') != (c.judge_spec is not None):
-                    raise ValueError('only rubric components require judge_spec')
-                if c.kind == 'rubric' and 'call_llm_api' not in c.required_apis:
-                    raise ValueError('rubric requires call_llm_api')
-            if len({c.source for c in self.components}) != len(self.components):
-                raise ValueError('duplicating components does not add a capability')
-        elif self.capabilities or any(c.kind or c.capability_ids or c.judge_spec for c in self.components) or self.runtime_contract.scoring_abi == 'v2':
-            raise ValueError('v2 fields require rlar.reward.v2')
+        if self.runtime_contract.scoring_abi != 'v2' or not self.capabilities:
+            raise ValueError('v2 requires structured ABI and capabilities')
+        caps = {c.id for c in self.capabilities}
+        if len(caps) != len(self.capabilities):
+            raise ValueError('duplicate capability IDs')
+        for c in self.components:
+            if '/' in c.id:
+                raise ValueError('v2 component IDs cannot contain evidence-reference separators')
+            if not c.kind or not c.capability_ids or not set(c.capability_ids) <= caps:
+                raise ValueError('component needs kind and valid capability references')
+            if (c.kind == 'rubric') != (c.judge_spec is not None):
+                raise ValueError('only rubric components require judge_spec')
+            if c.kind == 'rubric' and 'call_llm_api' not in c.required_apis:
+                raise ValueError('rubric requires call_llm_api')
+        if len({c.source for c in self.components}) != len(self.components):
+            raise ValueError('duplicating components does not add a capability')
         ids = [c.id for c in self.components]
         dupes = sorted({i for i in ids if ids.count(i) > 1})
         if dupes:
@@ -370,7 +358,7 @@ class ComponentResult(Strict):
     evidence: list[dict[str, Any]] | None = None
 
     @model_serializer(mode='wrap')
-    def serialize_legacy(self, handler):
+    def omit_absent_details(self, handler):
         data = handler(self)
         for key in ('feedback', 'evidence'):
             if data[key] is None:
@@ -379,7 +367,7 @@ class ComponentResult(Strict):
 
 
 class ScoreResult(Strict):
-    schema_version: Literal["rlar.score.v1", "rlar.score.v2"] = SCORE_SCHEMA_VERSION
+    schema_version: Literal["rlar.score.v2"] = SCORE_SCHEMA_VERSION
     status: Literal["ok", "partial", "failed"]
     total_score: float | None
     component_results: list[ComponentResult]
@@ -471,18 +459,18 @@ class ApplicabilityRule(Strict):
     task_tags: list[str] = Field(default_factory=list)
 
 
-EvidenceSource = Literal['objective_verified', 'human_annotated', 'model_inferred']
+EvidenceSource = Literal['human_annotated', 'model_inferred']
 ActorRole = Literal['test_case_synthesizer', 'reward_synthesizer', 'harness_verifier', 'rubric_judge']
 
 
 class SuitePolicy(Strict):
     ranking_layout: Literal['pairwise', 'triplet'] = 'pairwise'
     categories: list[Literal['fail', 'pass', 'ranking']] = Field(default_factory=lambda: ['fail', 'pass', 'ranking'])
-    required_sources: list[EvidenceSource] = Field(default_factory=lambda: ['objective_verified', 'human_annotated'])
+    required_sources: list[EvidenceSource] = Field(default_factory=lambda: ['model_inferred', 'human_annotated'])
     min_cases_per_category: int = Field(default=1, ge=1)
     max_cases: int = Field(default=30, ge=1)
     max_examples: int = Field(default=60, ge=2)
-    objective_checker: str | None = None
+    objective_checker: None = None
     trusted_evidence: dict[str, str] = Field(default_factory=dict)
 
 
@@ -560,7 +548,7 @@ class ValidationDecision(Strict):
 
 
 class TaskPack(Strict):
-    schema_version: Literal["rlar.taskpack.v1", "rlar.taskpack.v2"] = TASKPACK_SCHEMA_VERSION
+    schema_version: Literal["rlar.taskpack.v2"] = TASKPACK_SCHEMA_VERSION
     profile_id: str
     version: str
     task_contract: str
@@ -578,16 +566,10 @@ class TaskPack(Strict):
     #: held by the evaluator config and never appear here.
     resources: dict[str, str] = Field(default_factory=dict)
 
-    capabilities: list[Capability] = Field(default_factory=list)
-    suite_policy: SuitePolicy | None = None
+    capabilities: list[Capability] = Field(min_length=1)
+    suite_policy: SuitePolicy
+    reward_logic_policy: Literal['self_contained_v1'] = 'self_contained_v1'
 
-    @model_serializer(mode='wrap')
-    def serialize_version(self, handler):
-        data = handler(self)
-        if self.schema_version == 'rlar.taskpack.v1':
-            data.pop('capabilities', None)
-            data.pop('suite_policy', None)
-        return data
 
     @model_validator(mode="after")
     def check_applicability(self):
@@ -597,23 +579,6 @@ class TaskPack(Strict):
         if self.applicability_rule.permitted_inputs != self.permitted_inputs or self.applicability_rule.mode_constraints != self.mode_constraints:
             raise ValueError("applicability rule does not match profile permissions")
         return self
-
-
-class DevCase(Strict):
-    case_id: str
-    kind: Literal["correct", "incorrect", "invariance", "perturbation"]
-    example: dict[str, Any]
-    #: Oracle label, held by the trusted evaluator and never sent to a worker.
-    is_correct: bool
-    group_id: str | None = None
-    #: For invariance/perturbation cases: the case_id this one is derived from.
-    base_case_id: str | None = None
-
-
-class DevSuite(Strict):
-    suite_id: str
-    version: str
-    cases: list[DevCase] = Field(min_length=1)
 
 
 class ValidationMetrics(Strict):
@@ -642,7 +607,7 @@ Assurance = Literal["static", "behavioral_prototype", "isolated"]
 
 
 class ValidationReport(Strict):
-    schema_version: Literal["rlar.validation.v1", "rlar.validation.v2"] = REPORT_SCHEMA_VERSION
+    schema_version: Literal["rlar.validation.v2"] = REPORT_SCHEMA_VERSION
     report_id: str
     reward_key: str
     task_contract_digest: str
@@ -671,25 +636,16 @@ class ValidationReport(Strict):
     verifier_config_digest: str | None = None
     evidence_digest: str | None = None
 
-    @model_serializer(mode='wrap')
-    def serialize_version(self, handler):
-        data = handler(self)
-        if self.schema_version == 'rlar.validation.v1':
-            for key in ('decisions', 'verifier_config_digest', 'evidence_digest'):
-                data.pop(key, None)
-        return data
-
-
 
 # --------------------------------------------------------------------------
 # construction results
 # --------------------------------------------------------------------------
 
-ConstructionStatus = Literal["success", "unvalidated", "failed", "skipped"]
+ConstructionStatus = Literal["success", "failed", "skipped"]
 
 
 class ConstructionResult(Strict):
-    schema_version: Literal["rlar.result.v1", "rlar.result.v2"] = RESULT_SCHEMA_VERSION
+    schema_version: Literal["rlar.result.v2"] = RESULT_SCHEMA_VERSION
     query_id: str
     input_location: InputLocation
     input_digest: str
@@ -805,14 +761,12 @@ class EpisodeState(str, Enum):
     ACTIONS_PENDING = "ACTIONS_PENDING"
     OBSERVATIONS_READY = "OBSERVATIONS_READY"
     SELECTED = "SELECTED"
-    UNVALIDATED = "UNVALIDATED"
     FAILED = "FAILED"
     INTERRUPTED = "INTERRUPTED"
 
 
 TERMINAL_EPISODE_STATES = {
     EpisodeState.SELECTED,
-    EpisodeState.UNVALIDATED,
     EpisodeState.FAILED,
 }
 

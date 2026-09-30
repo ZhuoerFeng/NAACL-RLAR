@@ -18,7 +18,6 @@ from pydantic import Field, model_validator, model_serializer
 from .errors import ConfigError, PreflightError
 from .schemas import (
     MANIFEST_SCHEMA_VERSION,
-    AcceptancePolicy,
     Assurance,
     RewardMode,
     Strict,
@@ -141,26 +140,6 @@ class ExecutionConfig(Strict):
     max_concurrent_actions: int = 4
 
 
-class RMCatalogueEntry(Strict):
-    model_id: str
-    revision: str
-    model_card_ref: str
-    supported_inputs: list[str]
-    score_semantics: str
-    normalization_id: str
-    endpoint_ref: str
-    api_key_env: str | None = None
-    timeout_s: float = 30.0
-    max_calls_per_score: int = 2
-
-
-class RMConfig(Strict):
-    enabled: bool = False
-    catalogue: list[RMCatalogueEntry] = Field(default_factory=list)
-    normalization_mappings: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    max_scoring_requests_per_run: int | None = None
-
-
 class RetryConfig(Strict):
     max_transport_attempts: int = 3
     backoff_initial_s: float = 0.01
@@ -187,7 +166,7 @@ class BudgetConfig(Strict):
 class ValidationConfig(Strict):
     dev_suite_root: str
     oracle_version: str
-    acceptance_policy_override: AcceptancePolicy | None = None
+    acceptance_policy_override: None = None
     #: Audit lives in its own namespace; these paths never reach the controller.
     audit_suite_root: str | None = None
     audit_required_assurance: Assurance = "isolated"
@@ -204,7 +183,9 @@ class LoggingConfig(Strict):
     truncation_marker: str = "\n...[truncated]..."
 
 
-class V2Config(Strict):
+class SynthesisConfig(Strict):
+    # Historical manifests are read raw; new runs pin this execution policy.
+    reward_logic_policy: Literal['self_contained_v1'] = 'self_contained_v1'
     test_synthesis_attempts: int = Field(default=5, ge=1)
     reward_synthesis_attempts: int = Field(default=5, ge=1)
     verification_format_attempts: int = Field(default=5, ge=1)
@@ -223,45 +204,57 @@ class V2Config(Strict):
 
 
 class HarnessConfig(Strict):
-    schema_version: Literal["rlar.config.v1", "rlar.config.v2"] = "rlar.config.v2"
+    schema_version: Literal["rlar.config.v2"] = "rlar.config.v2"
     run_label: str = "run"
     data: DataConfig
     construction: ConstructionConfig = Field(default_factory=ConstructionConfig)
-    model: ModelConfig | None = None
     models: dict[str, ModelConfig] = Field(default_factory=dict)
     roles: dict[str, str] = Field(default_factory=dict)
-    v2: V2Config = Field(default_factory=V2Config)
+    synthesis: SynthesisConfig = Field(default_factory=SynthesisConfig)
+
+    @model_validator(mode='before')
+    @classmethod
+    def section_alias(cls, data):
+        if isinstance(data, dict):
+            data = dict(data)
+            if 'v2' in data and 'synthesis' in data:
+                raise ValueError('use exactly one of synthesis or v2')
+            if 'v2' in data:
+                data['synthesis'] = data.pop('v2')
+            # Accept the disabled historical section, never an executable RM catalogue.
+            rm = data.pop('rm', None)
+            if rm is not None and (not isinstance(rm, dict) or set(rm) - {'enabled','catalogue','normalization_mappings','max_scoring_requests_per_run'} or any(v not in (None, False, [], {}) for v in rm.values())):
+                raise ValueError('legacy RM catalogue is unsupported; use models + roles')
+        return data
+
+    @model_serializer(mode='wrap')
+    def serialize_wire(self, handler):
+        data = handler(self)
+        data['v2'] = data.pop('synthesis')
+        return data
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, core_schema, handler):
+        schema = handler(core_schema)
+        schema['properties']['v2'] = schema['properties'].pop('synthesis')
+        if 'synthesis' in schema.get('required', []):
+            schema['required'][schema['required'].index('synthesis')] = 'v2'
+        return schema
+
     execution: ExecutionConfig = Field(default_factory=ExecutionConfig)
-    rm: RMConfig = Field(default_factory=RMConfig)
     budget: BudgetConfig = Field(default_factory=BudgetConfig)
     validation: ValidationConfig
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     #: Marks demo/prototype configurations so no report can claim otherwise.
     profile_kind: Literal["offline_demo", "real"] = "offline_demo"
 
-    @property
-    def is_v2(self):
-        return self.schema_version == 'rlar.config.v2'
 
     def role_model(self, role):
-        return self.models[self.roles[role]] if self.is_v2 else self.model
+        return self.models[self.roles[role]]
 
-    @model_serializer(mode='wrap')
-    def serialize_version(self, handler):
-        data = handler(self)
-        if not self.is_v2:
-            for key in ('models', 'roles', 'v2'):
-                data.pop(key, None)
-        else:
-            data.pop('model', None)
-        return data
 
     @model_validator(mode="after")
     def validate_limits(self):
-        if self.is_v2 and self.model is not None:
-            raise ValueError('v2 uses only models + roles, not the legacy model field')
-        if not self.is_v2 and self.model is None:
-            raise ValueError('v1 requires model')
         from .budget import DIMENSIONS
         import math
         for scope, limits in (("run", self.budget.run), ("episode", self.budget.episode)):
@@ -277,7 +270,7 @@ class HarnessConfig(Strict):
             self.execution.max_concurrent_actions, self.construction.max_components,
             self.budget.retry.max_transport_attempts, self.budget.no_progress_threshold,
             self.budget.per_tool_timeout_s, self.logging.max_blob_bytes, self.logging.max_observation_chars]
-        for model in self.models.values() if self.is_v2 else [self.model]:
+        for model in self.models.values():
             positive += [model.max_output_tokens, model.context_limit_tokens, model.total_timeout_s,
                          model.connect_timeout_s, model.read_timeout_s]
         if any(not math.isfinite(v) or v <= 0 for v in positive):
@@ -387,9 +380,8 @@ def preflight(
             problems.append(f"{key} does not exist: {p}")
 
     if paths["task_pack_root"] and paths["task_pack_root"].exists() and paths["dev_suite_root"]:
-        from .evaluation.taskpack import TaskPackStore, DevSuiteStore
+        from .evaluation.taskpack import TaskPackStore
         store = TaskPackStore(paths["task_pack_root"])
-        suites = DevSuiteStore(paths["dev_suite_root"])
         for profile in store.available():
             try:
                 pack = store.get(profile)
@@ -397,37 +389,29 @@ def preflight(
                     problems.append(f"{profile}: runtime fingerprint differs from execution config")
                 if pack.verifier_version != config.validation.oracle_version:
                     problems.append(f"{profile}: verifier version differs from configured oracle")
-                if not config.is_v2 and pack.dev_suite_ref:
-                    suite = suites.get(pack.dev_suite_ref)
-                    ids = [case.case_id for case in suite.cases]
-                    if len(set(ids)) != len(ids):
-                        problems.append(f"{profile}: duplicate development case IDs")
-                if config.is_v2 and (pack.schema_version != 'rlar.taskpack.v2' or not pack.capabilities or not pack.suite_policy):
-                    problems.append(f'{profile}: v2 requires capabilities and suite_policy')
+                if pack.schema_version != 'rlar.taskpack.v2' or not pack.capabilities or (not pack.suite_policy):
+                    problems.append(f'{profile}: current task packs require capabilities and suite_policy')
+                from .runtime.policy import validate_pack
+                validate_pack(pack)
                 if config.construction.reward_mode not in pack.mode_constraints:
                     problems.append(f"{profile}: configured reward mode is not permitted")
             except (ConfigError, ValueError) as exc:
                 problems.append(f"{profile}: {exc}")
 
-    if config.is_v2:
-        required_roles = {'test_case_synthesizer', 'reward_synthesizer', 'rubric_judge'}
-        if config.v2.backend == 'semantic_verifier':
-            required_roles.add('harness_verifier')
-        for role in sorted(required_roles):
-            if role not in config.roles or config.roles[role] not in config.models:
-                problems.append(f'roles.{role}: model catalogue reference required')
-        if set(config.roles) - (required_roles | {'harness_verifier'}):
-            problems.append('unknown actor role')
-        if config.rm.enabled:
-            problems.append('v2 uses the shared model catalogue, not legacy rm catalogue')
-        if config.validation.acceptance_policy_override:
-            problems.append('v1 acceptance override cannot be combined with v2 verification')
-        if config.budget.wall_deadline_s is None and config.budget.absolute_deadline_utc is None:
-            problems.append('v2 requires a finite deadline')
-        for scope in ('run', 'episode'):
-            if any(value is None for value in getattr(config.budget, scope).values()):
-                problems.append(f'v2 requires finite {scope} budgets')
-    catalogue = config.models if config.is_v2 else {'model': config.model}
+    required_roles = {'test_case_synthesizer', 'reward_synthesizer', 'rubric_judge'}
+    if config.synthesis.backend == 'semantic_verifier':
+        required_roles.add('harness_verifier')
+    for role in sorted(required_roles):
+        if role not in config.roles or config.roles[role] not in config.models:
+            problems.append(f'roles.{role}: model catalogue reference required')
+    if set(config.roles) - (required_roles | {'harness_verifier'}):
+        problems.append('unknown actor role')
+    if config.budget.wall_deadline_s is None and config.budget.absolute_deadline_utc is None:
+        problems.append('current execution requires a finite deadline')
+    for scope in ('run', 'episode'):
+        if any(value is None for value in getattr(config.budget, scope).values()):
+            problems.append(f'current execution requires finite {scope} budgets')
+    catalogue = config.models
     for name, model in catalogue.items():
         if model.provider_adapter.startswith('http_'):
             if model.api_key_env and not os.environ.get(model.api_key_env):
@@ -437,20 +421,6 @@ def preflight(
         elif not model.scripted_responses:
             problems.append(f'{name}: scripted_responses required for offline model')
 
-
-    if config.rm.enabled:
-        seen: set[str] = set()
-        for entry in config.rm.catalogue:
-            if entry.model_id in seen:
-                problems.append(f"duplicate RM catalogue model_id: {entry.model_id}")
-            seen.add(entry.model_id)
-            if entry.api_key_env and not os.environ.get(entry.api_key_env):
-                warnings.append(
-                    f"RM {entry.model_id}: {entry.api_key_env} not set; "
-                    "scoring calls will fail at dispatch"
-                )
-        if not config.rm.catalogue:
-            problems.append("rm.enabled=true but the catalogue is empty")
 
     caps = runner_capabilities or {}
     for required in config.execution.required_capabilities:
@@ -509,7 +479,7 @@ def require_preflight(report: PreflightReport) -> None:
 
 
 class RunManifest(Strict):
-    schema_version: Literal["rlar.manifest.v1", "rlar.manifest.v2"] = MANIFEST_SCHEMA_VERSION
+    schema_version: Literal["rlar.manifest.v2"] = MANIFEST_SCHEMA_VERSION
     run_id: str
     created_at: str
     config: HarnessConfig
@@ -530,3 +500,11 @@ class RunManifest(Strict):
     initial_library_snapshot: str = ""
     supersedes_run_id: str | None = None
     supersedes_reason: str | None = None
+
+
+def require_current_manifest(manifest):
+    """Read-only operations accept history; execution never silently upgrades it."""
+    config = manifest.get('config', {})
+    if (config.get('schema_version') != 'rlar.config.v2'
+        or config.get('v2', {}).get('reward_logic_policy') != 'self_contained_v1'):
+        raise ConfigError('historical execution contract is unsupported; use the original code/environment. Report, replay and trace export remain available.')

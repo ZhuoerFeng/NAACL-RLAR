@@ -34,7 +34,7 @@ def report(root):
         'controller_logical_calls': len({c['logical_call_id'] for c in calls if not c.get('actor_role')}), 'physical_requests': len(attempts),
         'transport_retries': sum(max(0, sum(c['logical_call_id'] == key for c in attempts) - 1) for key in logicals),
         'scoring_requests': len(scoring) + sum(c.get('actor_role') == 'rubric_judge' for c in attempts),
-        'actor_usage': actor_usage(calls), 'v2_statistics': v2_statistics(blobs, events), 'input_tokens': tokens('prompt_tokens'), 'output_tokens': tokens('completion_tokens'),
+        'actor_usage': actor_usage(calls), 'synthesis_statistics': synthesis_statistics(blobs, events), 'input_tokens': tokens('prompt_tokens'), 'output_tokens': tokens('completion_tokens'),
         'cached_input_tokens': tokens('cached_tokens'), 'unknown_usage_events': unknown + sum(e.payload.get('usage_unknown', False) for e in scoring),
         'cost_usd': None, 'cost_status': 'unknown' if unknown else 'unavailable',
         'partial_cases': partial, 'all_failed_cases': failed, 'mask_distribution': dict(mask),
@@ -61,7 +61,7 @@ def actor_usage(calls):
         'cost_status': 'unavailable'} for role, group in grouped.items()}
 
 
-def v2_statistics(blobs, events):
+def synthesis_statistics(blobs, events):
     states = {e.episode_id: blobs.get_json(e.payload['state_ref']) for e in events if e.type == 'episode_saved'}
     rows = []
     for eid, state in states.items():

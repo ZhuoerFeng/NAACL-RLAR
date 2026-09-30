@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import __version__
 from .budget import BudgetLedger, Deadline
 from .config import HarnessConfig, RunManifest, preflight, require_preflight, resolve_paths
 from .durability import PersistentBudget, fault, watchdog
@@ -18,13 +19,11 @@ from .episode import EpisodeContext, construct_one, initial_history, synthesize_
 from .errors import ConfigError, HarnessError, StorageError
 from .evaluation.audit import assert_not_controller_visible
 from .evaluation.evaluator import ExecutionLimits, TrustedEvaluator
-from .evaluation.taskpack import DevSuiteStore, TaskPackStore
+from .evaluation.taskpack import TaskPackStore
 from .inputs import InputItem, file_digest, iter_jsonl, job_key, record_digest
 from .llm.durable import DurableLLMClient
-from .llm.http_chat_json_v1 import HttpChatJsonV1
-from .llm.http_responses_json_v1 import HttpResponsesJsonV1
-from .llm.scripted import ScriptedLLM, Turn
-from .runtime.broker import ScoringBroker
+from .llm.http_chat_json import HttpChatJsonAdapter
+from .llm.http_responses_json import HttpResponsesJsonAdapter
 from .runtime.runner import SubprocessRunner
 from .schemas import ConstructionResult, InputLocation, LibraryEntry, QueryRecord, RewardDefinition, StructuredError
 from .storage.blobs import BlobStore, atomic_write_bytes
@@ -45,7 +44,7 @@ def resource_fingerprints(config):
     files = []
     for root in (config.data.task_pack_root, config.validation.dev_suite_root):
         files.extend(Path(root).glob('*.json'))
-    for model in config.models.values() if config.is_v2 else [config.model]:
+    for model in config.models.values():
         if model.scripted_responses:
             files.append(Path(model.scripted_responses))
     files.extend(Path(__file__).parent.rglob('*.py'))
@@ -64,45 +63,20 @@ def resolve_config(config, base):
     c.validation.audit_suite_root = str(paths['audit_suite_root']) if paths['audit_suite_root'] else None
     if paths['input_path']:
         c.data.input_path = str(paths['input_path'])
-    for model in c.models.values() if c.is_v2 else [c.model]:
+    for model in c.models.values():
         if model.scripted_responses:
             model.scripted_responses = str((Path(base) / model.scripted_responses).resolve())
     return c
 
 
-def adapter_for(config, record, role=None):
-    model = config.role_model(role) if role else config.model
+def adapter_for(config, record, role):
+    model = config.role_model(role)
     if model.provider_adapter == 'http_chat_json_v1':
-        return HttpChatJsonV1(model)
+        return HttpChatJsonAdapter(model)
     if model.provider_adapter == 'http_responses_json_v1':
-        return HttpResponsesJsonV1(model)
-    if not model.scripted_responses:
-        raise ConfigError('scripted adapter requires model.scripted_responses or an injected adapter')
-    scripts = json.loads(Path(model.scripted_responses).read_text())
-    turns = scripts.get(record.query_id, scripts.get(record.task_profile_id, scripts.get('default', [])))
-    def choose(request):
-        if scripts.get('fixture') == 'verifier':
-            from .evaluation.verifier import rule_decision
-            evidence = json.loads(request.messages[-1].content)['evidence']
-            return Turn(content=rule_decision(evidence).model_dump_json())
-        if scripts.get('fixture') == 'rubric':
-            # Explicit offline utility fixture; scores supplied data, never executes reward code.
-            from .evaluation.checkers import RationalArithmeticCheckerV1
-            data = json.loads(json.loads(request.messages[-1].content))
-            score = RationalArithmeticCheckerV1().check_answer(data)
-            return Turn(content=json.dumps({'score': score, 'feedback': 'Offline judge fixture result'}))
-        # A logical index survives physical retries and process restart.
-        index = int(request.logical_call_id.rsplit(':', 1)[1]) - 1
-        if index >= len(turns):
-            raise ConfigError(f'script has no logical turn {index + 1}')
-        data = dict(turns[index])
-        if 'actions' in data:
-            content = json.dumps({'actions': data.pop('actions')})
-            if config.is_v2:
-                content = content.replace('$JUDGE_CONFIG_DIGEST', digest(config.role_model('rubric_judge')))
-            return Turn(content=content, **data)
-        return Turn(**data)
-    return ScriptedLLM(on_exhausted=choose)
+        return HttpResponsesJsonAdapter(model)
+    from .llm.fixtures import fixture_adapter
+    return fixture_adapter(config, record, role)
 
 
 class RunDriver:
@@ -125,7 +99,10 @@ class RunDriver:
         if resume:
             if not mpath.exists():
                 raise ConfigError('run manifest missing')
-            self.manifest = RunManifest.model_validate_json(mpath.read_text())
+            from .config import require_current_manifest
+            raw_manifest = json.loads(mpath.read_text())
+            require_current_manifest(raw_manifest)
+            self.manifest = RunManifest.model_validate(raw_manifest)
             config = self.manifest.config
             if config.digest() != self.manifest.config_digest:
                 raise StorageError('manifest configuration digest mismatch')
@@ -140,17 +117,17 @@ class RunDriver:
             if config is None:
                 raise ConfigError('new run requires a config')
             require_preflight(preflight(config, self.root, runner_capabilities=self.runner.capabilities().model_dump()))
-            if any(m.provider_adapter != 'scripted' for m in (config.models.values() if config.is_v2 else [config.model])) and not config.execution.allow_untrusted_code:
+            if any(m.provider_adapter != 'scripted' for m in config.models.values()) and not config.execution.allow_untrusted_code:
                 raise ConfigError('model-generated code requires explicit prototype allow_untrusted_code=true')
             deadline = config.budget.absolute_deadline_utc
             if deadline is None and config.budget.wall_deadline_s is not None:
                 deadline = time.time() + config.budget.wall_deadline_s
-            self.manifest = RunManifest(schema_version="rlar.manifest.v2" if config.is_v2 else "rlar.manifest.v1", run_id=uuid.uuid4().hex, created_at=utc_now(), config=config,
+            self.manifest = RunManifest(schema_version='rlar.manifest.v2', run_id=uuid.uuid4().hex, created_at=utc_now(), config=config,
                 config_digest=config.digest(), input_path=str(Path(input_path).resolve()) if input_path else None,
                 input_digest=file_digest(Path(input_path)) if input_path else None,
                 input_record_count=sum(bool(line.strip()) for line in open(input_path, "rb")) if input_path else None,
                 split=config.data.split, seed=config.construction.seed, deadline_utc=deadline,
-                harness_version='0.1.0', platform=platform.platform(),
+                harness_version=__version__, platform=platform.platform(),
                 runner_capabilities=self.runner.capabilities().model_dump(mode='json'), profile_kind=config.profile_kind,
                 resource_fingerprints=resource_fingerprints(config),
                 resolved_paths={k: str(v) if v else None for k, v in resolve_paths(config, self.root).items()})
@@ -187,7 +164,7 @@ class RunDriver:
         for e in events:
             if e.type == 'budget_snapshot':
                 self.run_ledger = BudgetLedger.from_json(e.payload['run'])
-        self.packs, self.suites = TaskPackStore(Path(config.data.task_pack_root)), DevSuiteStore(Path(config.validation.dev_suite_root))
+        self.packs = TaskPackStore(Path(config.data.task_pack_root))
         self.journal.append('run_resumed' if resume else 'run_started', {'run_id': self.manifest.run_id,
                             'deadline_utc': self.manifest.deadline_utc, 'state': 'RUNNING'})
 
@@ -209,7 +186,7 @@ class RunDriver:
                 raise StorageError('library definition hash mismatch')
             seq = entry.published_by_result_seq
             r = self.results.results[seq - 1] if 0 < seq <= len(self.results.results) else None
-            published = r and r.status in ('success', 'unvalidated') and r.reward_key == entry.reward_key and r.validation_ref == entry.validation_ref and r.job_key == entry.provenance.get('job_key')
+            published = r and r.status == 'success' and r.reward_key == entry.reward_key and r.validation_ref == entry.validation_ref and r.job_key == entry.provenance.get('job_key')
             if published:
                 self.library._by_key[entry.reward_key] = entry
                 if r.status == 'success' and not any(e.reward_key == entry.reward_key for e in self.library._entries):
@@ -262,23 +239,22 @@ class RunDriver:
                 state, budget, dispatcher, llm = self._episode(item, pack)
                 context = EpisodeContext(state, self.config, dispatcher, llm, budget, self.journal, self.blobs, self.root, self.deadline)
                 try:
-                    if self.config.is_v2:
-                        synthesize_tests(item.record, context, dispatcher.role_clients['test_case_synthesizer'], dispatcher.snapshot)
-                        if state['state'] == 'REUSE_CHECK' and state.get('suite_ref') and self.config.construction.reuse_enabled:
-                            for entry in dispatcher.snapshot.entries:
-                                dref = self.blobs.put_json(entry.definition.model_dump(mode='json'))
-                                try:
-                                    dispatcher.finalize(dref, entry.validation_ref)
-                                except ValueError:
-                                    continue
-                                state.update(state='SELECTED', status='success', stop_reason='compatible_reuse', reused=True,
-                                    selected={'definition_ref': dref, 'validation_ref': entry.validation_ref, 'reward_key': entry.reward_key})
-                                context.save()
-                                break
+                    synthesize_tests(item.record, context, dispatcher.role_clients['test_case_synthesizer'], dispatcher.snapshot)
+                    if state['state'] == 'REUSE_CHECK' and state.get('suite_ref') and self.config.construction.reuse_enabled:
+                        for entry in self.library.compatible_entries(dispatcher.snapshot, pack, mode):
+                            dref = self.blobs.put_json(entry.definition.model_dump(mode='json'))
+                            try:
+                                dispatcher.finalize(dref, entry.validation_ref)
+                            except ValueError:
+                                continue
+                            state.update(state='SELECTED', status='success', stop_reason='compatible_reuse', reused=True,
+                                selected={'definition_ref': dref, 'validation_ref': entry.validation_ref, 'reward_key': entry.reward_key})
+                            context.save()
+                            break
                     final = construct_one(item.record, context)
                     result = self._commit(item, final, budget, dispatcher, pack)
                 finally:
-                    for client in getattr(dispatcher, 'role_clients', {'legacy': llm}).values():
+                    for client in dispatcher.role_clients.values():
                         client.adapter.close()
                 self.run_ledger = budget.run
                 yield result
@@ -322,6 +298,8 @@ class RunDriver:
             snapshot = LibrarySnapshot(state['library_snapshot'], tuple(entries))
         else:
             snapshot = self.library.snapshot() if self.config.construction.library_mode == 'continual' else LibrarySnapshot(digest({'count': 0, 'keys': []}), ())
+            entries = tuple(e for e in snapshot.entries if e.definition.runtime_contract.reward_logic_policy == 'self_contained_v1')
+            snapshot = LibrarySnapshot(digest({'count': len(entries), 'keys': [e.reward_key for e in entries]}), entries)
             if not self.config.construction.reuse_enabled:
                 snapshot = LibrarySnapshot(digest({'count': 0, 'keys': []}), ())
             state = dict(episode_id=eid, query_id=item.record.query_id, state='REUSE_CHECK', step=0, started_at=time.time(),
@@ -330,67 +308,38 @@ class RunDriver:
                 job_key=job_key(item.raw_digest, self.config.digest(), snapshot.snapshot_id), attempt_id=1,
                 eligible=[], current=None, pending=[], history=[], selected=None)
         budget = PersistentBudget(self.run_ledger, BudgetLedger(eid, dict(self.config.budget.episode)), self.journal, eid, events)
-        broker = ScoringBroker(self.config.rm, budget=budget, on_event=lambda t, p: self.journal.append(t, p, episode_id=eid))
-        if isinstance(self.runner, SubprocessRunner):
-            self.runner.scoring_service = broker
         limits = ExecutionLimits(**{k: getattr(self.config.execution, k) for k in ExecutionLimits.__dataclass_fields__})
-        evaluator = TrustedEvaluator(self.runner, limits=limits, integrity_secret=self.secret,
-                                     normalization_mappings=self.config.rm.normalization_mappings)
-        cards = broker.model_cards()
-        if self.config.is_v2:
-            cards = {ref: {'model': model.model, 'revision': model.revision, 'model_config_digest': digest(model)}
-                     for ref, model in self.config.models.items()}
-        resources = build_resource_index(item.record, pack, snapshot, model_cards=cards,
-                                         scoring_abi='v2' if self.config.is_v2 else 'v1')
+        evaluator = TrustedEvaluator(self.runner, limits=limits, integrity_secret=self.secret)
+        cards = {ref: {'model': model.model, 'revision': model.revision, 'model_config_digest': digest(model)}
+                 for ref, model in self.config.models.items()}
+        resources = build_resource_index(item.record, pack, snapshot, model_cards=cards)
         assert_not_controller_visible({r.resource_id: r.loader() for r in resources.resources.values()},
             Path(self.config.validation.audit_suite_root) if self.config.validation.audit_suite_root else None)
-        suite = self.suites.get(pack.dev_suite_ref) if pack.dev_suite_ref and not self.config.is_v2 else None
+        suite = None
         dispatcher = ToolDispatcher(episode_id=eid, config=self.config, pack=pack, suite=suite, evaluator=evaluator,
             resources=resources, budget=budget, journal=self.journal, blobs=self.blobs, deadline=self.deadline)
-        if self.config.is_v2:
-            from .evaluation.verifier import HarnessVerifier
-            from .llm.utility import JudgeUtility
-            clients = {}
-            for role, ref in self.config.roles.items():
-                model = self.config.models[ref]
-                adapter = (self.injected_llm.get(role) if isinstance(self.injected_llm, dict) else None) or adapter_for(self.config, item.record, role)
-                clients[role] = DurableLLMClient(adapter, model, budget=budget, journal=self.journal,
-                    blobs=self.blobs, episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id,
-                    split=self.manifest.split, actor_role=role, parent_job_id=state['job_key'],
-                    retry=self.config.budget.retry.model_copy(update={'max_transport_attempts': self.config.v2.model_transport_attempts}),
-                    deadline=self.deadline)
-            dispatcher.role_clients, dispatcher.snapshot = clients, snapshot
-            llm = clients['reward_synthesizer']
-            verifier_ref = self.config.roles.get('harness_verifier', 'rule_baseline')
-            evaluator.verifier = HarnessVerifier(self.config.v2, clients.get('harness_verifier'),
-                model_ref=verifier_ref, model_config=self.config.models.get(verifier_ref))
-            evaluator.persistence = (self.journal, self.blobs, eid)
-            evaluator.budget = budget
-            evaluator.execution_attempts = self.config.v2.model_transport_attempts
-            evaluator.query = item.record
-            if isinstance(self.runner, SubprocessRunner):
-                self.runner.scoring_service = JudgeUtility(clients['rubric_judge'], self.config.roles['rubric_judge'])
-        else:
-            if not saved:
-                state['history'] = initial_history(item.record, pack, snapshot, resources, self.config, budget)
-            adapter = self.injected_llm or adapter_for(self.config, item.record)
-            llm = DurableLLMClient(adapter, self.config.model, budget=budget, journal=self.journal, blobs=self.blobs,
-                episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id, split=self.manifest.split,
-                retry=self.config.budget.retry, deadline=self.deadline)
-        if not saved and not self.config.is_v2 and self.config.construction.reuse_enabled:
-            decision = self.library.decide_reuse(snapshot, pack, item.record.reward_mode or self.config.construction.reward_mode,
-                                                suite_version=suite.version if suite else None)
-            self.journal.append('reuse_decision', {'kind': decision.kind, 'reasons': decision.reasons}, episode_id=eid)
-            if decision.kind == 'reuse':
-                entry = decision.entry
-                dref = self.blobs.put_json(entry.definition.model_dump(mode='json'))
-                try:
-                    definition, report = dispatcher.finalize(dref, entry.validation_ref)
-                except ValueError:
-                    pass  # stale or inapplicable evidence enters the controller
-                else:
-                    state.update(state='SELECTED', status='success', stop_reason='compatible_reuse', reused=True,
-                        selected={'definition_ref': dref, 'validation_ref': entry.validation_ref, 'reward_key': entry.reward_key})
+        from .evaluation.verifier import HarnessVerifier
+        from .llm.utility import JudgeUtility
+        clients = {}
+        for role, ref in self.config.roles.items():
+            model = self.config.models[ref]
+            adapter = (self.injected_llm.get(role) if isinstance(self.injected_llm, dict) else self.injected_llm if role == 'reward_synthesizer' else None) or adapter_for(self.config, item.record, role)
+            clients[role] = DurableLLMClient(adapter, model, budget=budget, journal=self.journal,
+                blobs=self.blobs, episode_id=eid, run_id=self.manifest.run_id, task_id=item.record.query_id,
+                split=self.manifest.split, actor_role=role, parent_job_id=state['job_key'],
+                retry=self.config.budget.retry.model_copy(update={'max_transport_attempts': self.config.synthesis.model_transport_attempts}),
+                deadline=self.deadline)
+        dispatcher.role_clients, dispatcher.snapshot = clients, snapshot
+        llm = clients['reward_synthesizer']
+        verifier_ref = self.config.roles.get('harness_verifier', 'rule_baseline')
+        evaluator.verifier = HarnessVerifier(self.config.synthesis, clients.get('harness_verifier'),
+            model_ref=verifier_ref, model_config=self.config.models.get(verifier_ref))
+        evaluator.persistence = (self.journal, self.blobs, eid)
+        evaluator.budget = budget
+        evaluator.execution_attempts = self.config.synthesis.model_transport_attempts
+        evaluator.query = item.record
+        if isinstance(self.runner, SubprocessRunner):
+            self.runner.scoring_service = JudgeUtility(clients['rubric_judge'], self.config.roles['rubric_judge'])
         if not saved:
             EpisodeContext(state, self.config, dispatcher, llm, budget, self.journal, self.blobs, self.root, self.deadline).save()
         return state, budget, dispatcher, llm
@@ -404,13 +353,12 @@ class RunDriver:
             if state['status'] == 'success':
                 definition, report = dispatcher.finalize(selected['definition_ref'], selected['validation_ref'])
         usage = budget.usage()
-        if self.config.is_v2:
-            usage.controller_logical_calls = 0
-            usage.physical_requests = int(budget.episode.consumed['model_requests'] + budget.episode.reserved['model_requests'])
+        usage.controller_logical_calls = 0
+        usage.physical_requests = int(budget.episode.consumed['model_requests'] + budget.episode.reserved['model_requests'])
         usage.wall_seconds = max(0.0, time.time() - state.get('started_at', time.time()))
         attempts = [e for e in self.journal.scan().events if e.episode_id == state['episode_id'] and e.type == 'llm_dispatched']
         usage.transport_retries = len(attempts) - len({e.payload['logical_call_id'] for e in attempts})
-        result = ConstructionResult(schema_version="rlar.result.v2" if self.config.is_v2 else "rlar.result.v1", query_id=item.record.query_id, input_location=item.location,
+        result = ConstructionResult(schema_version='rlar.result.v2', query_id=item.record.query_id, input_location=item.location,
             input_digest=item.raw_digest, run_config_digest=self.config.digest(), library_snapshot=state['library_snapshot'],
             job_key=state['job_key'], episode_id=state['episode_id'], attempt_id=1, status=state['status'],
             stop_reason=state['stop_reason'], reward_key=reward_key_for(definition) if definition else None,

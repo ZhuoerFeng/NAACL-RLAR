@@ -80,25 +80,18 @@
           "type": "array"
         },
         "kind": {
-          "anyOf": [
-            {
-              "enum": [
-                "verifiable",
-                "rubric"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
+          "enum": [
+            "verifiable",
+            "rubric"
           ],
-          "default": null,
-          "title": "Kind"
+          "title": "Kind",
+          "type": "string"
         },
         "capability_ids": {
           "items": {
             "type": "string"
           },
+          "minItems": 1,
           "title": "Capability Ids",
           "type": "array"
         },
@@ -118,7 +111,9 @@
         "id",
         "criterion",
         "source",
-        "normalization"
+        "normalization",
+        "kind",
+        "capability_ids"
       ],
       "title": "Component",
       "type": "object"
@@ -213,12 +208,8 @@
       "description": "Backend-independent fingerprint of everything that can change scores.",
       "properties": {
         "scoring_abi": {
-          "default": "v1",
-          "enum": [
-            "v1",
-            "v1+bool",
-            "v2"
-          ],
+          "const": "v2",
+          "default": "v2",
           "title": "Scoring Abi",
           "type": "string"
         },
@@ -255,6 +246,12 @@
           "default": "configured_at_run_start",
           "title": "Environment Ref",
           "type": "string"
+        },
+        "reward_logic_policy": {
+          "const": "self_contained_v1",
+          "default": "self_contained_v1",
+          "title": "Reward Logic Policy",
+          "type": "string"
         }
       },
       "title": "RuntimeContract",
@@ -264,9 +261,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.reward.v2",
-      "default": "rlar.reward.v2"
+      "default": "rlar.reward.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "mode": {
       "enum": [
@@ -294,6 +292,7 @@
       "items": {
         "$ref": "#/$defs/Capability"
       },
+      "minItems": 1,
       "title": "Capabilities",
       "type": "array"
     }
@@ -301,7 +300,8 @@
   "required": [
     "mode",
     "components",
-    "aggregation"
+    "aggregation",
+    "capabilities"
   ],
   "title": "RewardDefinition",
   "type": "object",

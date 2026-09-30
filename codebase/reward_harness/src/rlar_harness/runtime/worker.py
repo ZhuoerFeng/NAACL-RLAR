@@ -11,7 +11,7 @@ The worker never sees oracle labels, API keys or the dataset. Reward model
 scoring is proxied back to the trusted parent over a dedicated pipe.
 
 This file must stay importable with the standard library plus
-``rlar_harness.evaluation.checkers``.
+the harness dependency policy.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import sys
 import traceback
 from typing import Any
 
-from ..evaluation.checkers import BUNDLE_METHODS, BUNDLES, CheckerError, ForbiddenAPI
+from .errors import ForbiddenAPI
 
 
 class ScoringUnavailable(Exception):
@@ -34,7 +34,7 @@ class ScoringUnavailable(Exception):
 
 
 class ScoringProxy:
-    """Sends ``score_model`` requests back to the parent over a pipe pair."""
+    """Sends raw judge requests back to the parent over a pipe pair."""
 
     def __init__(self, req_fd: int, resp_fd: int) -> None:
         self._req = os.fdopen(req_fd, "w", encoding="utf-8")
@@ -53,11 +53,10 @@ class ScoringProxy:
         return response
 
 
-class ScoringContext:
-    """The only capability surface reward code gets.
+class JudgeChannel:
+    """Trusted raw-judge IPC endpoint, hidden behind a restricted reward context.
 
-    Attribute access is restricted to methods of the bundles this profile
-    permits; everything else raises :class:`ForbiddenAPI`.
+    The policy exposes only judge_spec and call_llm_api for rubric components.
     """
 
     def __init__(
@@ -74,31 +73,6 @@ class ScoringContext:
         self._component_id = component_id
         self.judge_spec = judge_spec
         self._judge_calls = 0
-        self._method_owner: dict[str, str] = {}
-        self._instances: dict[str, Any] = {}
-        for api_id in self._permitted:
-            cls = BUNDLES.get(api_id)
-            if cls is None:
-                continue
-            self._instances[api_id] = cls()
-            for method in BUNDLE_METHODS.get(api_id, ()):
-                self._method_owner[method] = api_id
-
-    def __getattr__(self, name: str) -> Any:
-        if name.startswith("_"):
-            raise AttributeError(name)
-        owner = self._method_owner.get(name)
-        if owner is None:
-            raise ForbiddenAPI(
-                f"context.{name} is not available to this profile; "
-                f"permitted APIs: {sorted(self._permitted)}"
-            )
-        if owner not in self._required:
-            raise ForbiddenAPI(
-                f"context.{name} belongs to API {owner!r}, which component "
-                f"{self._component_id!r} did not declare in required_apis"
-            )
-        return getattr(self._instances[owner], name)
 
     def call_llm_api(self, message, model_name):
         if 'call_llm_api' not in self._permitted or 'call_llm_api' not in self._required:
@@ -116,37 +90,6 @@ class ScoringContext:
         if result.get('status') != 'ok':
             raise ScoringUnavailable(result.get('message', ''), code=result.get('code', 'scoring_service_error'))
         return result['raw_response']
-
-    def score_model(
-        self,
-        model_id: str,
-        query: str,
-        response: str,
-        allowed_metadata: dict[str, Any] | None = None,
-    ) -> float:
-        """Request a reward-model score through the trusted-side broker."""
-        if "reward_model_scoring_v1" not in self._permitted:
-            raise ForbiddenAPI("reward model scoring is not permitted by this profile")
-        if "reward_model_scoring_v1" not in self._required:
-            raise ForbiddenAPI(
-                "component did not declare 'reward_model_scoring_v1' in required_apis"
-            )
-        if self._proxy is None:
-            raise ScoringUnavailable("no scoring channel was provided to this worker")
-        result = self._proxy.call(
-            {
-                "kind": "score_model",
-                "model_id": model_id,
-                "query": query,
-                "response": response,
-                "allowed_metadata": allowed_metadata or {},
-            }
-        )
-        if result.get("status") != "ok":
-            raise ScoringUnavailable(
-                f"{result.get('message', '')}", code=result.get("code", "scoring_service_error")
-            )
-        return float(result["score"])
 
 
 def _error(code: str, message: str, *, detail: str | None = None) -> dict[str, Any]:
@@ -168,8 +111,20 @@ def run_component(request: dict[str, Any], proxy: ScoringProxy | None) -> list[d
     load_error: dict[str, Any] | None = None
     fn = None
     namespace: dict[str, Any] = {"__name__": f"rlar_component_{component_id}"}
+    guard = None
+    policy_component = None
     try:
+        if request.get('reward_logic_policy') != 'self_contained_v1':
+            raise ForbiddenAPI('unsupported historical execution contract')
+        from types import SimpleNamespace
+        from .policy import DependencyGuard, validate_component
+        policy_component = SimpleNamespace(**component)
+        validate_component(policy_component, dependencies=request.get('dependencies', []))
+        guard = DependencyGuard()
+        namespace.update(guard.namespace())
         compiled = compile(source, f"<component:{component_id}>", "exec")
+    except ForbiddenAPI as exc:
+        load_error = _error('forbidden_api', str(exc))
     except SyntaxError as exc:
         load_error = _error(
             "component_syntax_error",
@@ -179,6 +134,9 @@ def run_component(request: dict[str, Any], proxy: ScoringProxy | None) -> list[d
     else:
         try:
             exec(compiled, namespace)  # noqa: S102 - this is the controlled prototype worker
+            guard.check()
+        except ForbiddenAPI as exc:
+            load_error = _error('forbidden_api', str(exc))
         except ImportError as exc:
             load_error = _error(
                 "component_import_error", str(exc), detail=traceback.format_exc()
@@ -205,9 +163,12 @@ def run_component(request: dict[str, Any], proxy: ScoringProxy | None) -> list[d
             )
             continue
         # Fresh context per example: no state leaks between examples.
-        context = ScoringContext(permitted_apis, required_apis, proxy, component_id, component.get("judge_spec"))
+        context = JudgeChannel(permitted_apis, required_apis, proxy, component_id, component.get("judge_spec"))
+        from .policy import reward_context
+        context = reward_context(context, policy_component, guard)
         try:
             value = fn(example, context)
+            guard.check()
         except ForbiddenAPI as exc:
             results.append(
                 {
@@ -238,14 +199,6 @@ def run_component(request: dict[str, Any], proxy: ScoringProxy | None) -> list[d
                     "example_id": example_id,
                     "status": "error",
                     "error": _error(code, f"{type(exc).__name__}: {exc}"),
-                }
-            )
-        except CheckerError as exc:
-            results.append(
-                {
-                    "example_id": example_id,
-                    "status": "error",
-                    "error": _error("component_raised", f"CheckerError: {exc}"),
                 }
             )
         except BaseException as exc:  # noqa: BLE001

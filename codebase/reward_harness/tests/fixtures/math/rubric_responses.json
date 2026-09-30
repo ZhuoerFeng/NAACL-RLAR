@@ -1,0 +1,25 @@
+{
+  "fixture": "self_contained_rubric",
+  "responses": {
+    "\\boxed{5/6}": {
+      "score": 1,
+      "feedback": "Authored offline judge reply"
+    },
+    "\\boxed{1/6}": {
+      "score": 0,
+      "feedback": "Authored offline judge reply"
+    },
+    "\\boxed{2/6}": {
+      "score": 0,
+      "feedback": "Authored offline judge reply"
+    },
+    "\\boxed{3/6}": {
+      "score": 0,
+      "feedback": "Authored offline judge reply"
+    },
+    "\\boxed{7}": {
+      "score": 0,
+      "feedback": "Authored offline judge reply"
+    }
+  }
+}

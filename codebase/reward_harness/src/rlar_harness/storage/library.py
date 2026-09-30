@@ -17,31 +17,16 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
 
 from ..schemas import (
-    AGGREGATION_VERSION,
     LibraryEntry,
     RewardMode,
     TaskPack,
-    ValidationReport,
 )
 from .blobs import BlobStore, append_line_durable
 from .canonical import digest
 
 LIBRARY_NAME = "reward_library.jsonl"
-
-ReuseKind = Literal["reuse", "retest", "no_match"]
-
-
-@dataclass(frozen=True)
-class ReuseDecision:
-    kind: ReuseKind
-    entry: LibraryEntry | None
-    reasons: list[str]
-    #: Entries whose tags look related but which failed the trusted rule. Kept
-    #: so the report can show that a "same label" match was correctly refused.
-    rejected: list[tuple[str, list[str]]]
 
 
 @dataclass(frozen=True)
@@ -127,100 +112,16 @@ class RewardLibrary:
                 return
 
     # -- reuse ----------------------------------------------------------
-    def decide_reuse(
-        self,
-        snapshot: LibrarySnapshot,
-        pack: TaskPack,
-        mode: RewardMode,
-        *,
-        suite_version: str | None,
-    ) -> ReuseDecision:
-        rejected: list[tuple[str, list[str]]] = []
-        retest_candidate: LibraryEntry | None = None
-        retest_reasons: list[str] = []
-
-        for entry in snapshot.entries:
-            reasons: list[str] = []
-            rule = entry.applicability
-            pack_rule = pack.applicability_rule
-
-            if rule.task_contract_digest != pack_rule.task_contract_digest:
-                reasons.append("task_contract_digest mismatch")
-            if not set(rule.permitted_inputs).issubset(set(pack.permitted_inputs)):
-                reasons.append("entry requires inputs the current profile does not permit")
-            if entry.definition.mode != mode:
-                reasons.append("artifact mode differs from requested mode")
-            if mode not in rule.mode_constraints:
-                reasons.append(f"entry is not declared applicable to mode={mode}")
-            if mode not in pack.mode_constraints:
-                reasons.append(f"profile does not permit mode={mode}")
-            for api in _required_apis(entry):
-                if api not in pack.permitted_apis:
-                    reasons.append(f"entry uses API {api!r} not permitted by this profile")
-
-            evidence_reasons = self._evidence_reasons(entry, pack, suite_version)
-            runtime_mismatch = rule.runtime_fingerprint != pack_rule.runtime_fingerprint
-
-            if reasons:
-                rejected.append((entry.reward_key, reasons))
-                continue
-
-            if not runtime_mismatch and not evidence_reasons:
-                return ReuseDecision(
-                    kind="reuse",
-                    entry=entry,
-                    reasons=[
-                        "task contract, permitted inputs, mode, APIs and runtime "
-                        "fingerprint all match; stored validation evidence is current"
-                    ],
-                    rejected=rejected,
-                )
-
-            # Structurally applicable but the evidence is stale: a deterministic
-            # re-test settles it without asking the controller anything.
-            if retest_candidate is None:
-                retest_candidate = entry
-                retest_reasons = (
-                    (["runtime fingerprint changed"] if runtime_mismatch else [])
-                    + evidence_reasons
-                )
-            else:
-                rejected.append((entry.reward_key, evidence_reasons or ["runtime changed"]))
-
-        if retest_candidate is not None:
-            return ReuseDecision(
-                kind="retest",
-                entry=retest_candidate,
-                reasons=retest_reasons,
-                rejected=rejected,
-            )
-        return ReuseDecision(kind="no_match", entry=None, reasons=[], rejected=rejected)
-
-    def _evidence_reasons(
-        self, entry: LibraryEntry, pack: TaskPack, suite_version: str | None
-    ) -> list[str]:
-        reasons: list[str] = []
-        summary = entry.validation_summary or {}
-        if not summary.get("eligible"):
-            reasons.append("stored validation report is not eligible")
-        if summary.get("verifier_version") != pack.verifier_version:
-            reasons.append("verifier_version changed since validation")
-        if suite_version is not None and summary.get("suite_version") != suite_version:
-            reasons.append("dev suite version changed since validation")
-        if summary.get("aggregation_version") != AGGREGATION_VERSION:
-            reasons.append("aggregation version changed since validation")
-        if summary.get("profile_id") != pack.profile_id:
-            reasons.append("validation was produced under a different profile")
-        if not entry.validation_ref or not self.blobs.exists(entry.validation_ref):
-            reasons.append("validation report blob is missing")
-        return reasons
-
-    def load_report(self, entry: LibraryEntry) -> ValidationReport:
-        return ValidationReport.model_validate(self.blobs.get_json(entry.validation_ref))
 
 
-def _required_apis(entry: LibraryEntry) -> list[str]:
-    apis: list[str] = []
-    for component in entry.definition.components:
-        apis.extend(component.required_apis)
-    return sorted(set(apis))
+    def compatible_entries(self, snapshot: LibrarySnapshot, pack: TaskPack, mode: RewardMode):
+        """Filter task/runtime applicability. Only the finalizer can authorize reuse."""
+        rule = pack.applicability_rule
+        return tuple(entry for entry in snapshot.entries
+            if entry.definition.mode == mode and mode in pack.mode_constraints
+            and mode in entry.applicability.mode_constraints
+            and entry.applicability.task_contract_digest == rule.task_contract_digest
+            and entry.applicability.runtime_fingerprint == rule.runtime_fingerprint
+            and set(entry.applicability.permitted_inputs) <= set(pack.permitted_inputs)
+            and entry.definition.runtime_contract.reward_logic_policy == pack.reward_logic_policy
+            and all(set(c.required_apis) <= set(pack.permitted_apis) for c in entry.definition.components))

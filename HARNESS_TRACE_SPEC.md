@@ -1,140 +1,45 @@
-# LLM 请求快照与 Qwen3-8B 蒸馏数据协议
+# 完整调用留档、观察回放与定向训练导出
 
-> 更新入口（2026-09-28）：角色分类与监督目标以 [v2 更新需求第 9 节](PRD_REWARD_HARNESS_UPDATE.md#9-模型配置trace-与定向蒸馏) 为准。所有模型调用留档，但默认只监督两个 synthesizer；harness-verifier 与 rubric judge 的回复不作为 base 学生 target。以下保留 v1 采集与导出要求，不再用“所有 assistant”代替角色筛选。
+当前协议，2026-09-30；需求见 [统一 PRD](PRD_REWARD_HARNESS_CURRENT.md)，操作命令见 [README](codebase/reward_harness/README.md)。
 
-状态：P0 实现要求，尚未实现采集或生成真实训练数据。本文补充 [llm_call 协议](HARNESS_LLM_PROTOCOL.md) 和 [实现 PRD](PRD_REWARD_HARNESS.md)，明确记录 harness 实际发送的每一份完整 message list，不能只保存 prompt 摘要、hash 或最终 reward 代码。
+## 请求与响应权威
 
-## 1. 记录边界：最终组装后、请求派发前
+在 adapter 完成组装后、transport 派发前，保存完整模型可见输入：messages 或 Responses input、system、工具/schema、输出格式、模型与采样配置。不得只保存摘要/hash/最终代码。请求使用 wire 序列化与 wire digest，保留原字符串空白/换行/Unicode；reward/config 的 canonical hash 是另一种契约，不混用。
 
-所有 controller 请求经过统一 `llm_call`/transport 边界。在 adapter 完成角色映射、工具 schema 注入、预算状态追加和序列化后，冻结并持久化实际发送的请求 body，然后才允许派发。存储失败时停止请求，不能先消耗模型再补造日志。
+每个 logical_call 和 physical_attempt 记录 run/query/episode/role_episode_id、actor_role、training_target_eligible、model/revision/config_ref、adapter、prefix/history/request digest、cursor、派发状态和时间。响应关联实际请求，保存完整可观察原文、finish_reason、provider request ID、token/cache usage、耗时、错误及 unknown。凭据只传输时注入，不放入请求快照或日志。
 
-记录分为两种关联视图：
+`llm_dispatched` 后无确认响应是 unknown；完整、schema_valid、committed_to_history 和 actions_dispatched 分别记录。传输重试可有多个物理 attempt，一个逻辑调用只能接受一个响应。工具观察、verifier 证据和完整角色历史都落 blob/journal。
 
-| 视图 | 必须保存的内容 | 用途 |
+## 读取与回放
+
+`export-llm-calls` 展开所有可观测请求/响应，包括失败、重试和 unknown，不按训练成功筛选。`replay --mode observations` 校验 blob、消息/请求 hash、只追加历史及角色顺序，不执行组件或发送模型请求，`new_requests=0`。
+
+历史记录由 `compat/reading.py` 读取，不用当前模型填默认字段；保持原始 reward/config hash、报告标签和导出身份。旧数据缺少完整快照时计入 `legacy_trace_unavailable`，不补造上下文。派生输出不得覆盖输入、manifest、trace/results/library、blobs 或 checkpoint。
+
+执行回放是新执行，需当前契约、新证据目录及所需环境，不是观察回放的可读性承诺。旧 checker/scalar reward 只能在冻结原环境重现，当前代码不再执行。
+
+## 训练视图
+
+| actor | 筛选条件 | 监督范围 |
 |---|---|---|
-| 实际请求/响应 | 最终发送的 body，包含原样 messages、模型可见的顶层 system/instructions/tools/response schema 等字段，以及实际收到的可观察响应 | 检查模型当时收到什么、输出什么；核对 adapter，排查错误。 |
-| 规范化训练视图 | 完整历史、角色、tool call IDs、工具定义和本轮 assistant 输出，附带与原请求的映射版本 | 转换为 Qwen3 的 chat template 和监督样本。 |
+| test_case_synthesizer | train split 且自身 suite 已成功准入，即使 reward 随后失败 | 本角色合成消息 |
+| reward_synthesizer | train split、开发成功，非零调用复用结果 | 本角色合法尝试/修复与产物 |
+| harness_verifier / rubric_judge | 从不作为默认目标 | targets=0，必要观察可进入 prompt |
 
-不能只在较早的 controller 层记录 messages：adapter 后续可能加 system 信息或改变消息结构。也不能只记录 SDK 调用参数却忽略 SDK 内部重试；SDK 隐式重试须关闭或纳入同一个物理 attempt 日志。
+选择基于 actor，不能基于模型名、HTTP role 或工具文本中出现的 assistant 字样。Audit 不回流修订、不改变筛选。Split 在任务家族/run 层预先分配，同 episode 不跨 split，不随机按 call 切分。
 
-必须保留实际发送的消息内容、顺序、角色、内容块、工具名、工具参数原文、call IDs；不能只保存解析后的 dict，再丢失原参数字符串。若工具结果给模型前被限长，快照保存模型实际看到的限长版本；完整工具原结果另外保存，不在导出时偷偷替换进去。工具 schema 若在 messages 之外，也必须记录，不能仅凭 messages 声称完整保留输入。
+唯一 `export_sft()` 支持三种格式：
 
-鉴权 header、API key 不属于模型输入，不写入日志；凭据本来就不应进入 prompt。原始快照保持不可变；若未来需要对数据做脱敏，另存有版本和来源的派生视图，不能悄悄改动原记录并继续声称逐字一致。只能保证 harness 可观察/控制的请求与响应；不假设可以取得服务商隐含提示、未公开推理或内部 token 序列。
+- `per_call`：原请求为 prompt，仅当前被接受且 schema 有效的 assistant 为 target；历史 assistant、system、用户和工具消息不重复计算 loss。未来反馈不进入此前 prompt。
+- `full_trace`：每个角色独立完整历史，仅选中的 assistant 各监督一次；不拼接两角色会话。
+- `final_program_only`：仅 reward 角色，明确标为已验证 artifact 的派生视图，不能冒充实际模型原话。
 
-## 2. 记录对象与落盘
+不完整、非法、未提交响应及重试重复项不会成为 target。完整因果历史仍可保留失败观察。超过配置容量的样本整条排除并计因，不切断工具块或静默修改过去的 prompt。`--max-tokens` 历史参数目前按保守 UTF-8 字节上界筛选，尚未执行 Qwen tokenizer 级 mask 验收或训练。
 
-沿用单一 `trace.jsonl` journal 与内容寻址 `blobs/`，不再增加一个需要双重 commit 的数据库。
+`export-feedback` 单独输出语言反馈视图，不能改变原始 trace。旧 reward 默认排除，只有显式 `--include-legacy` 才导出，并在 manifest 保留历史策略/身份；该开关不恢复旧执行能力。当前输出保持当前 schema，历史单 controller 视图保持 v1 schema。
 
-```text
-trace.jsonl                       # 请求准备、派发、响应、历史提交事件
-blobs/<digest>.json               # 不可变的完整 request/response/messages
-exports/llm_calls.jsonl            # 可重建的逐物理请求完整视图
-exports/sft_per_call.jsonl         # 默认蒸馏视图
-exports/sft_full_trace.jsonl       # 可选：整段轨迹视图
-exports/export_manifest.json      # 选择规则、split、版本、排除计数
-```
+## 报告和版本
 
-首版可直接为每个不同请求 body 保存完整 blob，按内容 hash 去重。后续可以压缩或共享前缀存储，但必须无损恢复当时的完整 messages 和其他输入字段；不能以节省空间为由仅留摘要。日志空间不足按存储故障处理，不静默截断训练源数据。
+报告按全输入分母计已提交、失败、未处理、中断与复用，分别展示角色请求、token、unknown、部分失败 mask、测例/关系/能力分布、修订数及保证等级。费用不可获得时为 null/unknown，不能因离线 fixture 成功推断真实服务可用。
 
-每个物理请求的索引至少包含：
-
-```text
-schema_version, run_id, episode_id, task_id, split, step,
-logical_call_id, physical_attempt_id, expected_history_cursor,
-prefix_digest, history_digest, adapter_version,
-request_body_ref, request_digest, messages_ref,
-model_config_ref, tools_ref|null, generation_config_ref,
-dispatch_status, provider_request_id|null,
-response_ref|null, response_complete, finish_reason|null,
-committed_to_history, schema_valid|null, actions_dispatched,
-usage, latency, error|null
-```
-
-`response_complete`、`committed_to_history`、`schema_valid`、reward 验证是否成功是不同维度。完整但动作 JSON 非法的回复可能进入历史用于修复，却不能直接执行动作。一次逻辑请求最多一个返回被提交为该决策的 assistant 消息；重试、迟到或取消后的返回仍保留，但不能重复进入历史。
-
-写入顺序：
-
-1. 保存不可变请求 body/messages 和预算预留，持久化 `request_prepared`。
-2. 为物理 attempt 保存派发意图，再交给 transport。派发阶段崩溃可能导致是否真正送达未知，按 unknown 处理，不推断为未发送。
-3. 收到响应后先持久化可观察原文、完整性和用量，再解析/校验并提交历史。响应记录存在但历史未提交时，可以恢复消费它。
-4. 工具真实执行结果沿既有协议落盘；下一轮请求快照包含已确认 observation。
-
-流式调用可附存 chunk 顺序和时间；P0 非流式不需要人为生成 chunk。中途断流记录已收到的片段和 incomplete/unknown 状态，不能当成完整 assistant 样本。客户端未收到的服务端输出无法事后补造。
-
-## 3. 完整请求导出
-
-增加命令：
-
-```bash
-python -m rlar_harness export-llm-calls --run-dir runs/demo --output runs/demo/exports/llm_calls.jsonl
-```
-
-默认逐物理 attempt 导出，成功、失败、unknown 和没有响应的请求均保留。每行直接展开 `request.messages` 及其他模型输入字段、对应 response 和索引元数据，不能只有 blob 路径。引用缺失/hash 不匹配须报错；不能靠重新调用 LLM 或按当前模板重建“近似 prompt”。导出不发网络请求。
-
-一个逻辑调用发生两次物理重试时，原始导出保留全部 attempts；无损关联到同一 `logical_call_id`。provider prefix cache 或 continuation 优化不能导致丢失本地展开后的完整历史：同时保留实际 wire body 和已知有效的完整 logical context，区分二者。若无法完整重建某次有效 context，该记录标为不可用于默认蒸馏。
-
-## 4. 默认蒸馏单元：本轮输入 → 本轮输出
-
-对每个被选中且提交到历史的完整 controller 返回，构造：
-
-```text
-x_t = 本轮发送前的完整消息上下文 + 必需工具/输出 schema
-y_t = 本轮 assistant 输出（动作 JSON、源码或显式方案内容）
-```
-
-训练视图的最小结构：
-
-```json
-{
-  "schema_version": "rlar.sft.v1",
-  "sample_id": "episode_001:call_002",
-  "episode_id": "episode_001",
-  "logical_call_id": "call_002",
-  "split": "train",
-  "prompt_messages": [
-    {"role": "system", "content": "Illustrative fixed harness instructions."},
-    {"role": "user", "content": "Illustrative task and allowed resources."},
-    {"role": "assistant", "content": "Illustrative previous action."},
-    {"role": "user", "content": "Illustrative harness observation for that action."}
-  ],
-  "target_message": {"role": "assistant", "content": "Illustrative repair action."},
-  "tools": [],
-  "loss_scope": "target_assistant_only",
-  "provenance": {"request_digest": "illustrative", "response_digest": "illustrative"}
-}
-```
-
-这是字段示意，内容不是可执行 demo 或真实 trace。实际导出还须携带目标所需的 response schema、角色转换版本，以及教师/学生配置引用；没有工具时才允许空 tools。
-
-默认 `per_call` 模式仅对当前 `target_message` 计算 loss。历史中的 system/user/tool/旧 assistant 都是条件输入并被 mask，不能因完整历史在每轮重复出现而重复监督旧 assistant。当前 assistant 的多个工具动作属于同一个输出，保留批次顺序；不能拆成缺少前因的独立对话。
-
-`full_trace` 模式每个 episode 导出一份完整轨迹，对每个被选为目标的 assistant 输出计算一次 loss。它与 `per_call` 是两个可选训练视图，不默认混合训练以免重复加权。`final_program_only` 保留为既有消融，不能代替交互 trace。
-
-### 样本选择与因果边界
-
-- 全部原始请求/响应均归档；默认正向训练选 training split 中开发验证成功的 episode。
-- 其中合法动作产生的失败测试和后续修复按真实顺序保留；缺陷代码属于轨迹的一部分，选择是否对其监督的策略写入 export manifest，默认保留合法动作。
-- 默认不对非法 schema、截断、不曾提交到历史的重试/迟到返回做正向监督。已进入历史的非法回复可作为后续修复的输入，不从历史中抹掉。被排除的目标单独计数。
-- `x_t` 只能含本轮生成前已有的信息；之后的工具反馈、最终成功标签和 audit 结果都不能拼进它。验证 outcome 可作为选样元数据，不作为模型输入。
-- train/dev/test 按任务家族/基础问题划分，再展开调用样本。同一 episode 的各轮与同源变体不能跨 split；不按每次 call 随机切分。
-- 重试按逻辑 call 和已提交 response 去重；零调用复用没有 assistant 生成样本，不能伪造一个“复用决策”来训练。
-
-## 5. Qwen3-8B 的格式适配
-
-保存供应商原消息格式和规范化格式，训练前显式转换为目标 Qwen3 tokenizer/chat template，固定模型 revision、模板版本、工具序列化方式、thinking 配置和上下文上限。P0 保存配置与无损消息；未提供实际 tokenizer 时不宣称已验证 token 对齐。
-
-JSON action envelope 与原生 tool calls 不可在导出时无说明混用。角色或工具编码转换必须可追溯到原始事件，并在学生推理时使用同样 adapter。不得凭空补写 `<think>` 内容或依赖教师隐藏推理。
-
-loss mask 须在目标 chat template/tokenization 后核验，不能只用字符串角色判断就宣称 token 标签正确。检查 assistant 动作/源码的目标区间、特殊 token 边界及 EOS 策略；上下文超长则按已声明规则排除并计数，不静默截去公共前缀或失败—修复关联。
-
-适配实验应将 Qwen3-8B 接回同一 harness，使用真实工具反馈测量 schema 有效率、构造成功率、修复能力、独立 reward 质量与调用成本；仅离线复现教师文本不足以验证 harness 适配能力。模型训练本身仍不属于当前 P0。
-
-## 6. 必须增加的验收
-
-1. fake transport 实际收到的 messages 及工具/schema 输入，与请求导出逐项一致；覆盖 adapter 最后追加的字段和限长 observation。
-2. 正常响应、两次物理重试、截断、迟到返回都完整留档；默认训练只选择规定的逻辑返回，计数能对齐原始日志。
-3. 两轮修复轨迹导出时，第二轮 prompt 包含第一轮动作和真实反馈，但第一轮动作不在 per-call 第二条样本中再次计算 loss；未来 observation 不进入第一条 prompt。
-4. 按 task/episode 固定 split；成功条件只用于选样；无 audit 输入、无伪造自动提交目标、无零调用伪样本。
-5. 删除/损坏 blob 后导出明确失败；前缀去重/压缩后仍可无损展开完整 messages；导出不发任何模型请求。
-
-这些要求已加入 PRD 的 AT-33–AT-36，作为 Claude Code 的 P0 交付条件。
+本次生成报告的字段 `v2_statistics` 改名为 `synthesis_statistics`；消费该展示字段的脚本需迁移。历史报告文件不回写。协议/ABI/wire 标识保留真实版本，源码业务命名统一为职责名称。

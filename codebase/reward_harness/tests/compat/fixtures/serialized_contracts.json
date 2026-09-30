@@ -1,0 +1,161 @@
+{
+  "reward": {
+    "schema_version": "rlar.reward.v1",
+    "mode": "checklist",
+    "components": [
+      {
+        "id": "c0",
+        "criterion": "Declared correctness",
+        "source": "def score(example, context):\n    return context.check_answer(example)\n",
+        "entrypoint": "score",
+        "normalization": {
+          "kind": "identity",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "mapping_id": null
+        },
+        "required_apis": [
+          "rational_arithmetic_v1"
+        ]
+      }
+    ],
+    "aggregation": {
+      "kind": "mean"
+    },
+    "runtime_contract": {
+      "scoring_abi": "v1",
+      "python_version": "3.11+",
+      "dependencies": [],
+      "scoring_sdk": "rlar.scoring.v1",
+      "api_revisions": {},
+      "aggregator_version": "agg.v1",
+      "environment_ref": "python-stdlib-fixture-v1"
+    }
+  },
+  "reward_key": "c959347cbe26c0db6e109686fdc2cbe11abb97d537396fb68d9a9a1a33468d3a",
+  "config": {
+    "schema_version": "rlar.config.v1",
+    "run_label": "synthetic-offline-demo",
+    "data": {
+      "input_adapter": "jsonl",
+      "input_path": "../examples/queries.jsonl",
+      "column_mapping": {},
+      "batch_size": 256,
+      "task_pack_root": "../examples/task_packs",
+      "split": "train",
+      "output_layout": "reference",
+      "input_digest_policy": "strict"
+    },
+    "construction": {
+      "strategy": "agentic",
+      "reward_mode": "checklist",
+      "allow_row_mode_override": false,
+      "on_pass": "submit",
+      "candidate_selector": "best_metric_then_reward_key",
+      "selector_metric": "false_accept_rate",
+      "seed": 0,
+      "reuse_enabled": true,
+      "library_mode": "continual",
+      "max_components": 4
+    },
+    "model": {
+      "provider_adapter": "scripted",
+      "scripted_responses": "../examples/scripted_responses.json",
+      "endpoint": null,
+      "model": "offline-fixture",
+      "revision": "fixture-v1",
+      "api_key_env": null,
+      "temperature": 0.0,
+      "send_temperature": true,
+      "max_output_tokens": 4096,
+      "max_tokens_field": "max_tokens",
+      "reasoning_effort": null,
+      "enable_thinking": null,
+      "top_p": null,
+      "response_format": null,
+      "prompt_cache_key": null,
+      "context_limit_tokens": 131072,
+      "token_counter": "chars_div4_conservative",
+      "connect_timeout_s": 2.0,
+      "read_timeout_s": 5.0,
+      "total_timeout_s": 10.0,
+      "adapter_version": "http_chat_json_v1",
+      "context_reserve_tokens": 8000
+    },
+    "execution": {
+      "runner_type": "subprocess",
+      "runner_profile": "prototype",
+      "required_capabilities": [],
+      "runtime_fingerprint": "python-stdlib-fixture-v1",
+      "wall_timeout_s": 2.0,
+      "cpu_timeout_s": 2.0,
+      "memory_limit_mb": 512,
+      "max_processes": null,
+      "max_output_bytes": 16384,
+      "max_return_bytes": 131072,
+      "allow_untrusted_code": false,
+      "max_concurrent_actions": 4
+    },
+    "rm": {
+      "enabled": false,
+      "catalogue": [],
+      "normalization_mappings": {},
+      "max_scoring_requests_per_run": null
+    },
+    "budget": {
+      "run": {
+        "controller_steps": 20.0,
+        "revisions": 15.0,
+        "tool_calls": 40.0,
+        "test_cases": 200.0,
+        "component_executions": 500.0,
+        "model_requests": 40.0,
+        "scoring_requests": 20.0,
+        "input_tokens": 1000000.0,
+        "output_tokens": 200000.0
+      },
+      "episode": {
+        "controller_steps": 5.0,
+        "revisions": 4.0,
+        "tool_calls": 10.0,
+        "test_cases": 60.0,
+        "component_executions": 120.0,
+        "model_requests": 10.0,
+        "scoring_requests": 8.0,
+        "input_tokens": 300000.0,
+        "output_tokens": 50000.0
+      },
+      "retry": {
+        "max_transport_attempts": 3,
+        "backoff_initial_s": 0.01,
+        "backoff_multiplier": 2.0,
+        "backoff_max_s": 0.1,
+        "circuit_breaker_threshold": 3
+      },
+      "no_progress_threshold": 3,
+      "absolute_deadline_utc": null,
+      "wall_deadline_s": 300.0,
+      "max_attempts_per_query": 1,
+      "per_tool_timeout_s": 30.0
+    },
+    "validation": {
+      "dev_suite_root": "../examples/dev_suites",
+      "oracle_version": "fixture-oracle-v1",
+      "acceptance_policy_override": null,
+      "audit_suite_root": "../examples/audit_suites",
+      "audit_required_assurance": "isolated",
+      "evaluator_integrity_env": null
+    },
+    "logging": {
+      "max_observation_chars": 8000,
+      "max_blob_bytes": 4000000,
+      "message_format_version": "harness_observation.v1",
+      "single_writer_lock": true,
+      "truncation_marker": "\n...[truncated]..."
+    },
+    "profile_kind": "offline_demo"
+  },
+  "config_digest": "8fe5fad00873f09a76ef12ef54241fc14c9e2b6acc565ab06aa3ed1b4f30097c"
+}

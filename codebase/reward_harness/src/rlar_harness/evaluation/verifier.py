@@ -12,7 +12,7 @@ def tool_history(instructions, payload):
         (Message(role='user', actor='episode_prefix', content=json.dumps(payload, ensure_ascii=False)),))
 
 
-def evidence_for(case, suite, definition, scores, pack, verifier):
+def evidence_for(case, suite, definition, scores, pack, verifier, query=None):
     selected = [s.model_dump(mode='json') for s in scores if s.example_id in case.example_ids]
     evidence = {'task_contract': pack.task_contract, 'capabilities': [c.model_dump(mode='json') for c in suite.capabilities],
         'case': case.model_dump(mode='json'),
@@ -25,6 +25,12 @@ def evidence_for(case, suite, definition, scores, pack, verifier):
         'left': r.left, 'right': r.right,
         'components': {c.id: _difference(scores, r.left, r.right, c.id) for c in definition.components},
         'total': _difference(scores, r.left, r.right, None)} for r in case.relations]
+    if pack.reward_logic_policy:
+        if query is None:
+            raise ValueError('self-contained verification requires the original authorized task context')
+        from .suite import example_input
+        evidence['task_inputs'] = {e.id: example_input(e, query, pack) for e in suite.examples if e.id in case.example_ids}
+        evidence['label_assurance'] = 'No native objective checker; assess model-inferred labels against task inputs before accepting reward behavior.'
     evidence['evidence_digest'] = digest(evidence)
     evidence['available_evidence_refs'] = [f"{s['example_id']}/{c['id']}" for s in selected for c in s['component_results']]
     return evidence
@@ -76,7 +82,7 @@ def check_decision(decision, evidence):
 
 def rule_decision(evidence, threshold=0.5, tolerance=1e-9):
     case = evidence['case']
-    if case['evidence_source'] not in ('objective_verified', 'human_annotated'):
+    if case['evidence_source'] != 'human_annotated':
         return base_decision(evidence, status='insufficient_evidence', rationale='rule baseline requires independent labels')
     ids = {c['id'] for c in evidence['components'] if set(c['capability_ids']) & set(case['capability_ids'])}
     if case['scope'] == 'overall':
@@ -121,6 +127,13 @@ class HarnessVerifier:
             payload = {'evidence': evidence, 'output_schema': ValidationDecision.model_json_schema(),
                        'format_error': error}
             history = tool_history(self.config.verifier_instructions, payload)
+            if evidence.get('label_assurance'):
+                history = tool_history(self.config.verifier_instructions +
+                    '\nNo native checker certifies these labels. Check the frozen case intent against the original task inputs '
+                    'and authorized reference; do not assume a model-inferred label is true. If the case intent is wrong, '
+                    'return passed=false and explain the case defect; if evidence is insufficient return insufficient_evidence. '
+                    'Judge whether the reward numerical behavior supports the intent, not merely whether the candidate answer '
+                    'is correct. A recognized incorrect penalty must not be accepted just because the candidate should pass.', payload)
             self.client.budget.debit_once(logical + ':tool', {'tool_calls': 1.0})
             response = self.client.call(history, logical_call_id=logical)
             if response.status in ('failed', 'unknown'):

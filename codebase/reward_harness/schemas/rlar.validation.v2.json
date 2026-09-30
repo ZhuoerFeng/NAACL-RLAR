@@ -212,11 +212,8 @@
       "additionalProperties": false,
       "properties": {
         "schema_version": {
-          "default": "rlar.score.v1",
-          "enum": [
-            "rlar.score.v1",
-            "rlar.score.v2"
-          ],
+          "const": "rlar.score.v2",
+          "default": "rlar.score.v2",
           "title": "Schema Version",
           "type": "string"
         },
@@ -741,9 +738,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.validation.v2",
-      "default": "rlar.validation.v2"
+      "default": "rlar.validation.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "report_id": {
       "title": "Report Id",

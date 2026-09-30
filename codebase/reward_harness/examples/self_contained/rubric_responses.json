@@ -1,0 +1,29 @@
+{
+  "fixture": "self_contained_rubric",
+  "responses": {
+    "April is 48. May is 24. Altogether 48 + 24 = 72. #### 72": {
+      "score": 1,
+      "feedback": "Authored offline rubric result."
+    },
+    "Half of 48 is 24, so the total is 72. #### +72.0": {
+      "score": 1,
+      "feedback": "Authored offline rubric result."
+    },
+    "#### 72": {
+      "score": 1,
+      "feedback": "Authored offline rubric result."
+    },
+    "May sales are 48/2 = 24. #### 24": {
+      "score": 0,
+      "feedback": "Authored offline rubric result."
+    },
+    "The total is the April sales. #### 48": {
+      "score": 0,
+      "feedback": "Authored offline rubric result."
+    },
+    "May sales equal April sales. #### 96": {
+      "score": 0,
+      "feedback": "Authored offline rubric result."
+    }
+  }
+}

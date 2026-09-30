@@ -1,3 +1,0 @@
-{"query_id": "math_001", "response": "\\boxed{5/6}", "candidate_id": "positive"}
-{"query_id": "math_001", "response": "\\boxed{1}", "candidate_id": "negative"}
-{"query_id": "code_001", "response": "def abs_int(n):\n    return abs(n)\n", "candidate_id": "code"}

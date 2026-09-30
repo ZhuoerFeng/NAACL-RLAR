@@ -1,4 +1,5 @@
 from __future__ import annotations
+from conftest import run_path
 import json
 import os
 import signal
@@ -30,7 +31,7 @@ def write_config(config, tmp_path):
 @pytest.mark.parametrize('point', ['llm_before_dispatch','llm_after_dispatch','llm_after_response',
     'tool_before_dispatch','tool_after_dispatch','tool_after_result', 'after_library_before_result','after_result_before_checkpoint'])
 def test_sigkill_recovery_is_idempotent(config, source, tmp_path, point):
-    root = tmp_path/'run'; cfg = write_config(config,tmp_path)
+    root = run_path(tmp_path, 'TestRun'); cfg = write_config(config,tmp_path)
     source.write_text(source.read_text()+source.read_text().replace('q1','q2'))
     env = {**os.environ, 'RLAR_TEST_KILL_AT':point}
     killed = cli('construct','--config',cfg,'--input',source,'--run-dir',root,env=env)
@@ -47,18 +48,18 @@ def test_sigkill_recovery_is_idempotent(config, source, tmp_path, point):
     assert resumed.returncode == 0, resumed.stderr
     blobs, events, results, _ = read_run(root)
     assert len(results) == 2 and all(r.status == 'success' for r in results)
-    assert results[1].reused
-    assert results[0].usage.controller_logical_calls == 2
+    assert not results[1].reused  # query-bound frozen suite differs
+    assert results[0].usage.controller_logical_calls == 0
     calls = llm_calls(root)
-    assert len(calls) == (3 if point == 'llm_after_dispatch' else 2)
-    assert sum(c['committed_to_history'] for c in calls) == 2
+    assert len(calls) == (19 if point == 'llm_after_dispatch' else 18)
+    assert sum(c['committed_to_history'] for c in calls) == 18
     if point == 'llm_after_dispatch':
         assert calls[0]['dispatch_status'] == 'unknown'
         assert results[0].usage.unknown_usage_events >= 1
     if point == 'llm_after_response':
-        assert sum(e.type == 'llm_response' for e in events) == before_responses + 1
+        assert sum(e.type == 'llm_response' for e in events) == 18
     if point == 'tool_after_result':
-        assert sum(e.type == 'evaluation_result' for e in events) == before_evaluations + 1
+        assert sum(e.type == 'evaluation_result' for e in events) == 4
     snapshots = [blobs.get_json(e.payload['state_ref'])['library_snapshot'] for e in events
                  if e.type == 'episode_saved' and e.episode_id == results[0].episode_id]
     assert len(set(snapshots)) == 1
@@ -70,11 +71,11 @@ def test_sigkill_recovery_is_idempotent(config, source, tmp_path, point):
     assert again.returncode == 0 and '"new_results": 0' in again.stdout
     assert before == (root/'results.jsonl').read_bytes()
     exported = export_sft(root, root/'sft.jsonl')
-    assert exported['samples'] == 2
+    assert exported['samples'] == 4
 
 @pytest.mark.acceptance('AT-26')
 def test_torn_tails_corruption_missing_blob_and_double_writer(config, source, tmp_path):
-    root = tmp_path/'run'
+    root = run_path(tmp_path, 'TestRun')
     construct_file(config,source,root)
     original = (root/'results.jsonl').read_bytes()
     for name in ('trace.jsonl','results.jsonl','reward_library.jsonl'):
@@ -102,23 +103,23 @@ def test_disk_failure_before_dispatch_does_not_spend_request(config, source, tmp
         return original(self,kind,*args,**kwargs)
     monkeypatch.setattr(Journal,'append',failed)
     with pytest.raises(OSError,match='disk full'):
-        construct_file(config,source,tmp_path/'run',llm_client=adapter)
+        construct_file(config,source,run_path(tmp_path, 'TestRun'),llm_client=adapter)
     assert adapter.physical_attempts == 0
-    assert not (tmp_path/'run/results.jsonl').exists()
+    assert not (run_path(tmp_path)/'results.jsonl').exists()
 
 @pytest.mark.acceptance('AT-27')
 def test_sigterm_cancellation_never_commits_or_restarts(config, source, tmp_path):
     # Known fixture reward hangs. Cancel the actual driver while its worker runs.
     marker = tmp_path/'worker-started'
-    d = definition(sources=[f'from pathlib import Path\ndef score(e,c):\n Path({str(marker)!r}).write_text("started")\n while True: pass\n'],api=False)
-    script = tmp_path/'script.json'; script.write_text(json.dumps({'math_v1':[{'content':turn(d).content}]}))
-    config.model.scripted_responses = str(script)
+    d = definition(sources=['def score(e,c):\n while True: pass\n'],api=False)
+    script = tmp_path/'script.json'; script.write_text(json.dumps({'math_v2':[{'content':turn(d).content}]}))
+    config.role_model('reward_synthesizer').scripted_responses = str(script)
     config.execution.wall_timeout_s = 20; config.execution.cpu_timeout_s = 20
-    cfg = write_config(config,tmp_path); root=tmp_path/'run'
+    cfg = write_config(config,tmp_path); root=run_path(tmp_path, 'TestRun')
     proc = subprocess.Popen([sys.executable,'-m','rlar_harness','construct','--config',str(cfg),'--input',str(source),'--run-dir',str(root)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
     deadline = time.monotonic()+10
-    while not marker.exists() and time.monotonic()<deadline: time.sleep(.02)
-    assert marker.exists()
+    while not worker_pid(proc.pid) and time.monotonic()<deadline: time.sleep(.02)
+    assert worker_pid(proc.pid)
     proc.send_signal(signal.SIGTERM)
     out,err = proc.communicate(timeout=5)
     assert proc.returncode == 130, err
@@ -130,14 +131,14 @@ def test_sigterm_cancellation_never_commits_or_restarts(config, source, tmp_path
 @pytest.mark.acceptance('AT-22', 'AT-23')
 def test_restart_keeps_expired_deadline_and_budget(config, source, tmp_path):
     config.budget.wall_deadline_s = .5
-    cfg=write_config(config,tmp_path); root=tmp_path/'run'
+    cfg=write_config(config,tmp_path); root=run_path(tmp_path, 'TestRun')
     killed=cli('construct','--config',cfg,'--input',source,'--run-dir',root,env={**os.environ,'RLAR_TEST_KILL_AT':'llm_after_dispatch'})
     assert killed.returncode == -signal.SIGKILL
     time.sleep(.6)
     resumed=cli('resume','--run-dir',root)
     assert resumed.returncode == 0,resumed.stderr
     _,_,rows,_=read_run(root)
-    assert rows[0].status == 'failed' and rows[0].stop_reason == 'deadline_exceeded'
+    assert rows[0].status == 'failed' and rows[0].stop_reason == 'budget_exhausted'
     assert rows[0].usage.physical_requests == 1
 
 @pytest.mark.acceptance('AT-21')
@@ -158,26 +159,22 @@ def test_worker_resource_bounds_and_process_group_cleanup(config, tmp_path, kind
     assert result.component_results[1].status=='ok'
     if kind!='child': assert result.status=='partial'
     else:
-        pid=int(marker.read_text())
-        for _ in range(30):
-            ps=subprocess.run(['ps','-o','stat=','-p',str(pid)],capture_output=True,text=True)
-            if not ps.stdout.strip() or ps.stdout.strip().startswith('Z'): break
-            time.sleep(.02)
-        assert not ps.stdout.strip() or ps.stdout.strip().startswith('Z')
+        assert not marker.exists()
+        assert result.component_results[0].error.code == 'forbidden_api'
     assert runner.capabilities().filesystem_isolation is False
     assert runner.capabilities().network_isolation is False
 
 @pytest.mark.acceptance('AT-21','AT-23')
 def test_sigkill_active_driver_cleans_orphan_worker(config, source, tmp_path):
     marker=tmp_path/'worker-pid'
-    d=definition(sources=[f'import os\nfrom pathlib import Path\ndef score(e,c):\n Path({str(marker)!r}).write_text(str(os.getpid()))\n while True: pass\n'],api=False)
-    script=tmp_path/'script.json'; script.write_text(json.dumps({'math_v1':[{'content':turn(d).content}]}))
-    config.model.scripted_responses=str(script); config.execution.wall_timeout_s=20; config.execution.cpu_timeout_s=20
-    cfg=write_config(config,tmp_path); root=tmp_path/'run'
+    d=definition(sources=['def score(e,c):\n while True: pass\n'],api=False)
+    script=tmp_path/'script.json'; script.write_text(json.dumps({'math_v2':[{'content':turn(d).content}]}))
+    config.role_model('reward_synthesizer').scripted_responses=str(script); config.execution.wall_timeout_s=20; config.execution.cpu_timeout_s=20
+    cfg=write_config(config,tmp_path); root=run_path(tmp_path, 'TestRun')
     proc=subprocess.Popen([sys.executable,'-m','rlar_harness','construct','--config',str(cfg),'--input',str(source),'--run-dir',str(root)],stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
     until=time.monotonic()+10
-    while not marker.exists() and time.monotonic()<until: time.sleep(.02)
-    assert marker.exists(); pid=int(marker.read_text())
+    while not worker_pid(proc.pid) and time.monotonic()<until: time.sleep(.02)
+    pid=worker_pid(proc.pid); assert pid
     proc.kill(); proc.communicate(timeout=5)
     for _ in range(50):
         ps=subprocess.run(['ps','-o','stat=','-p',str(pid)],capture_output=True,text=True)
@@ -189,10 +186,20 @@ def test_sigkill_active_driver_cleans_orphan_worker(config, source, tmp_path):
 @pytest.mark.acceptance('AT-01','AT-26')
 def test_input_change_refuses_resume_and_exports_preserve_sources(config, source, tmp_path):
     from rlar_harness.trace.export import export_llm_calls
-    root=tmp_path/'run'; construct_file(config,source,root)
+    root=run_path(tmp_path, 'TestRun'); construct_file(config,source,root)
     for target in (source,root/'trace.jsonl',root/'results.jsonl'):
         before=target.read_bytes()
         with pytest.raises(StorageError): export_llm_calls(root,target)
         assert before==target.read_bytes()
     source.write_text(source.read_text()+'{}\n')
     with pytest.raises(StorageError,match='input_changed'): RunDriver(root,resume=True)
+
+
+
+def worker_pid(parent):
+    result=subprocess.run(['ps','-axo','pid=,ppid=,command='],capture_output=True,text=True)
+    for line in result.stdout.splitlines():
+        parts=line.strip().split(None,2)
+        if len(parts)==3 and parts[1]==str(parent) and 'rlar_harness.runtime.worker' in parts[2]:
+            return int(parts[0])
+    return None

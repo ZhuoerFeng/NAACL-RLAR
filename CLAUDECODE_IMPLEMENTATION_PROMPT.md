@@ -1,5 +1,7 @@
 # 交给 Claude Code 的实现任务
 
+> 历史启动任务单：当前代码已完成版本收敛。后续维护先读 [当前统一需求](PRD_REWARD_HARNESS_CURRENT.md) 和 [交付记录](codebase/reward_harness/UNIFICATION_DELIVERY.md)，沿现有唯一执行链修改。下文单 controller、checker、scalar 或 unvalidated 等旧要求不再生效，不应据此重建旧引擎。
+
 > 本文件是 v1 历史启动任务单。2026-09-28 之后的本次增量开发先阅读 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md)，按其 D1–D7、M1–M5 和 UAT-01–UAT-28 执行；不得重建已有项目，也不得把下文“单 controller／不引入 judge”等已被替代的限制用于阻止 v2 明确要求的功能。未冲突的基础约束继续适用。
 
 请在当前 RLAR 仓库实现 reward construction harness。先完整阅读根目录的 `PRD_REWARD_HARNESS.md`，以及它引用的 `HARNESS_DESIGN.md`、`HARNESS_RELIABILITY.md`、`HARNESS_LLM_PROTOCOL.md`、`HARNESS_TRACE_SPEC.md`。以 PRD 中的 INV 约束、M1–M5 和 AT-01–AT-36 为首轮交付标准。

@@ -1,58 +1,5 @@
 {
   "$defs": {
-    "AcceptancePolicy": {
-      "additionalProperties": false,
-      "description": "Pre-declared thresholds. Never inferred at runtime.",
-      "properties": {
-        "score_threshold": {
-          "default": 0.5,
-          "title": "Score Threshold",
-          "type": "number"
-        },
-        "tie_tolerance": {
-          "default": 1e-09,
-          "title": "Tie Tolerance",
-          "type": "number"
-        },
-        "max_false_accept_rate": {
-          "default": 0.0,
-          "title": "Max False Accept Rate",
-          "type": "number"
-        },
-        "max_false_reject_rate": {
-          "default": 0.0,
-          "title": "Max False Reject Rate",
-          "type": "number"
-        },
-        "max_execution_error_rate": {
-          "default": 0.0,
-          "title": "Max Execution Error Rate",
-          "type": "number"
-        },
-        "min_ranking_accuracy": {
-          "default": 1.0,
-          "title": "Min Ranking Accuracy",
-          "type": "number"
-        },
-        "max_invariance_violation_rate": {
-          "default": 0.0,
-          "title": "Max Invariance Violation Rate",
-          "type": "number"
-        },
-        "min_coverage": {
-          "default": 1.0,
-          "title": "Min Coverage",
-          "type": "number"
-        },
-        "allow_partial_component_mask": {
-          "default": false,
-          "title": "Allow Partial Component Mask",
-          "type": "boolean"
-        }
-      },
-      "title": "AcceptancePolicy",
-      "type": "object"
-    },
     "BudgetConfig": {
       "additionalProperties": false,
       "properties": {
@@ -610,114 +557,6 @@
       "title": "ModelConfig",
       "type": "object"
     },
-    "RMCatalogueEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "model_id": {
-          "title": "Model Id",
-          "type": "string"
-        },
-        "revision": {
-          "title": "Revision",
-          "type": "string"
-        },
-        "model_card_ref": {
-          "title": "Model Card Ref",
-          "type": "string"
-        },
-        "supported_inputs": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Supported Inputs",
-          "type": "array"
-        },
-        "score_semantics": {
-          "title": "Score Semantics",
-          "type": "string"
-        },
-        "normalization_id": {
-          "title": "Normalization Id",
-          "type": "string"
-        },
-        "endpoint_ref": {
-          "title": "Endpoint Ref",
-          "type": "string"
-        },
-        "api_key_env": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Api Key Env"
-        },
-        "timeout_s": {
-          "default": 30.0,
-          "title": "Timeout S",
-          "type": "number"
-        },
-        "max_calls_per_score": {
-          "default": 2,
-          "title": "Max Calls Per Score",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "model_id",
-        "revision",
-        "model_card_ref",
-        "supported_inputs",
-        "score_semantics",
-        "normalization_id",
-        "endpoint_ref"
-      ],
-      "title": "RMCatalogueEntry",
-      "type": "object"
-    },
-    "RMConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "enabled": {
-          "default": false,
-          "title": "Enabled",
-          "type": "boolean"
-        },
-        "catalogue": {
-          "items": {
-            "$ref": "#/$defs/RMCatalogueEntry"
-          },
-          "title": "Catalogue",
-          "type": "array"
-        },
-        "normalization_mappings": {
-          "additionalProperties": {
-            "additionalProperties": true,
-            "type": "object"
-          },
-          "title": "Normalization Mappings",
-          "type": "object"
-        },
-        "max_scoring_requests_per_run": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Max Scoring Requests Per Run"
-        }
-      },
-      "title": "RMConfig",
-      "type": "object"
-    },
     "RetryConfig": {
       "additionalProperties": false,
       "properties": {
@@ -750,9 +589,15 @@
       "title": "RetryConfig",
       "type": "object"
     },
-    "V2Config": {
+    "SynthesisConfig": {
       "additionalProperties": false,
       "properties": {
+        "reward_logic_policy": {
+          "const": "self_contained_v1",
+          "default": "self_contained_v1",
+          "title": "Reward Logic Policy",
+          "type": "string"
+        },
         "test_synthesis_attempts": {
           "default": 5,
           "minimum": 1,
@@ -831,7 +676,7 @@
           "type": "number"
         }
       },
-      "title": "V2Config",
+      "title": "SynthesisConfig",
       "type": "object"
     },
     "ValidationConfig": {
@@ -846,15 +691,9 @@
           "type": "string"
         },
         "acceptance_policy_override": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/AcceptancePolicy"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "default": null,
+          "title": "Acceptance Policy Override",
+          "type": "null"
         },
         "audit_suite_root": {
           "anyOf": [
@@ -902,9 +741,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.config.v2",
-      "default": "rlar.config.v2"
+      "default": "rlar.config.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "run_label": {
       "default": "run",
@@ -916,17 +756,6 @@
     },
     "construction": {
       "$ref": "#/$defs/ConstructionConfig"
-    },
-    "model": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/ModelConfig"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
     },
     "models": {
       "additionalProperties": {
@@ -942,14 +771,8 @@
       "title": "Roles",
       "type": "object"
     },
-    "v2": {
-      "$ref": "#/$defs/V2Config"
-    },
     "execution": {
       "$ref": "#/$defs/ExecutionConfig"
-    },
-    "rm": {
-      "$ref": "#/$defs/RMConfig"
     },
     "budget": {
       "$ref": "#/$defs/BudgetConfig"
@@ -968,6 +791,9 @@
       ],
       "title": "Profile Kind",
       "type": "string"
+    },
+    "v2": {
+      "$ref": "#/$defs/SynthesisConfig"
     }
   },
   "required": [

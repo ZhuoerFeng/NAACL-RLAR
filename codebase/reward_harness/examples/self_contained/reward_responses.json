@@ -1,0 +1,71 @@
+{
+  "default": [
+    {
+      "actions": [
+        {
+          "id": "test",
+          "tool": "test_reward",
+          "arguments": {
+            "definition": {
+              "schema_version": "rlar.reward.v2",
+              "mode": "checklist",
+              "aggregation": {
+                "kind": "mean"
+              },
+              "capabilities": [
+                {
+                  "id": "final_answer_correctness",
+                  "description": "Final numeric answer matches the authorized reference.",
+                  "task_requirement_ref": "gsm8k_self_contained"
+                }
+              ],
+              "runtime_contract": {
+                "scoring_abi": "v2",
+                "environment_ref": "python-stdlib-fixture-v1",
+                "reward_logic_policy": "self_contained_v1"
+              },
+              "components": [
+                {
+                  "id": "numeric",
+                  "kind": "verifiable",
+                  "capability_ids": [
+                    "final_answer_correctness"
+                  ],
+                  "criterion": "Exact final numeric correctness.",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [],
+                  "source": "\"\"\"Authored engineering fixture, never provided as a real synthesis prompt.\"\"\"\nimport re\nfrom fractions import Fraction\n\n\ndef numeric(text):\n    if not isinstance(text, str):\n        return None\n    value = text.strip()\n    if not re.fullmatch(r'[+-]?(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?', value):\n        return None\n    return Fraction(value.replace(',', ''))\n\n\ndef score(example, context):\n    reference = example.get('reference')\n    if not isinstance(reference, str):\n        raise ValueError('Reference must be the declared solution text or numeric string')\n    expected = numeric(reference.rsplit('####', 1)[-1])\n    if expected is None:\n        raise ValueError('Reference has no valid final numeric answer')\n    response = example.get('response')\n    answer = numeric(response.rsplit('####', 1)[-1]) if isinstance(response, str) and '####' in response else None\n    correct = answer is not None and answer == expected\n    return {'raw_score': float(correct), 'feedback': 'Final number matches.' if correct else 'Final answer is invalid or incorrect.',\n            'evidence': [{'kind': 'numeric_comparison', 'candidate': str(answer), 'reference': str(expected)}]}\n"
+                },
+                {
+                  "id": "rubric",
+                  "kind": "rubric",
+                  "capability_ids": [
+                    "final_answer_correctness"
+                  ],
+                  "criterion": "Reference-based final-answer correctness.",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [
+                    "call_llm_api"
+                  ],
+                  "source": "import json\nimport math\n\ndef parse_judge(raw):\n    data = json.loads(raw)\n    value = data['score']\n    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value not in (0, 1):\n        raise ValueError('Expected a finite binary numeric score')\n    if not isinstance(data['feedback'], str):\n        raise ValueError('Expected textual feedback')\n    return {'raw_score': float(value), 'feedback': data['feedback'], 'evidence': []}\n\ndef score(example, context):\n    message = json.dumps({**example, 'rubric': context.judge_spec['prompt_template']})\n    return parse_judge(context.call_llm_api(message, context.judge_spec['model_ref']))\n",
+                  "judge_spec": {
+                    "model_ref": "rubric",
+                    "model_config_digest": "$JUDGE_CONFIG_DIGEST",
+                    "prompt_template": "Check only final numeric correctness against the original reference. Require the declared #### format; equivalent signed decimals are correct. Return JSON with score 0 or 1 and textual feedback.",
+                    "output_contract": "JSON object with numeric score and textual feedback.",
+                    "parser_entrypoint": "parse_judge"
+                  }
+                }
+              ]
+            },
+            "dev_profile_id": "gsm8k_self_contained"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Reward harness v2 增量交付
 
+> 历史交付及实验证据：以下原日期、结果、失败与限制保持原样。当前代码、入口和本次验证以 [UNIFICATION_DELIVERY.md](UNIFICATION_DELIVERY.md) 与 [README](README.md) 为准；旧命令仅作历史记录。
+
 实现依据：[PRD_REWARD_HARNESS_UPDATE.md](../../PRD_REWARD_HARNESS_UPDATE.md)。2026-09-29；保留现有执行器、聚合器、finalizer、durable LLM、budget/journal/blob/result commit，没有引入通用多 agent 框架。没有修改训练源文件或执行训练。
 
 ## 实现范围
@@ -64,6 +66,19 @@
 - 最新版本仅完成 4/9 条 verifier 判断；第 5 条 `pointwise_fail_april_only` 的首次请求及四次重试均收到 AIHub `HTTP 500 / PlatformNoAvailableAccount / 1011`（暂无可用供应商账号），必测失败按设计终止。余下 4 条未执行验证，不能写成 9/9 通过。共 28 次真实物理请求：测例合成 2、reward 合成 5、rubric 12、verifier 9（含 5 次失败 attempt）；失败 attempt 的 usage 保留 unknown。
 - [按最新 evaluation 绑定的复核结果](runs/2026_09_29_19_46_Gsm8kNataliaRealTest/exports/postrun_analysis.json)与[完整代码、rubric、测例及分数](runs/2026_09_29_19_46_Gsm8kNataliaRealTest/exports/latest_executed_artifacts.md)。本次运行脚本的原始 `generated_reward.json` / `validation.json` 来自上一次完成的错误草稿：最新 evaluation 因外部故障中断，尚未更新 episode current。为保留证据未覆盖原导出，另以 `evaluation_dispatched` / `score_batch_result` 提取 `latest_*` 文件，明确其为已执行但未验收的草稿。
 - 观察回放新增请求 0，完成态恢复新增结果/请求均为 0，结果字节不变，输入指纹不变，运行时密钥扫描未发现泄漏。测例角色可导出 1 条成功训练视图，reward 角色成功训练视图为 0。此次只是单样本开发测试，未构成独立 GSM8K 基准或 verifier 质量验收。
+
+## 2026-09-30 自实现评分与删除新流程原生 checker
+
+按 [评分逻辑归属修订](../../PRD_REWARD_LOGIC_OWNERSHIP.md) 及用户追加要求，新模式同时移除了评分侧和验收侧的原生 checker。
+
+- 默认配置、task pack 和 reward runtime contract 使用 `self_contained_v1`。格式解析、答案提取、数值比较、raw_score 和反馈都在生成源码中；组件模板仅保留 ABI 骨架。Verifiable 不提供 context API；rubric 保留原始 LLM utility，由生成代码解析回复。
+- `runtime/policy.py` 在准入与执行两处校验依赖；执行 namespace 只提供指定通用标准库成员，context 不含 checker、代理或 worker 内部对象。覆盖直接调用、别名、内部导入、动态加载、反射和私有属性；捕获违规异常后返回 0 仍判 `forbidden_api`。只支持当前版本列出的 `re/json/math/decimal/fractions` 成员；不是任意依赖或正式生产沙箱。
+- 新模式拒绝 objective checker 配置与 `objective_verified`。测例准入仅校验结构、来源、引用、覆盖和关系一致性；报告 `structure_and_provenance_only / semantic_truth_proven=false`。现有 harness-verifier 获得原始任务、许可的参考解答及数值执行证据，检查标签依据和评分行为，没有新增 checker 或 judge 层。
+- 旧 checker 移至 `compat/legacy_checkers.py`，仅供显式历史兼容配置。新模式过滤旧 reward 检索与提交，SFT 默认排除旧 reward 训练视图，`--include-legacy` 可显式导出。旧配置/定义缺失新字段时不写入序列化；实际复核 2026-09-29 GSM8K 运行的配置 digest 与 reward key 均保持一致。历史执行仍受原有源码指纹约束，不隐式迁移旧运行。
+- 工程全量回归 **158 项通过、0 失败**：原有 134 项历史回归及 24 项新增检查，见 [最终日志](runs/2026_09_30_14_40_SelfContainedRewardValidation/final_pytest.log)、[SC-01–SC-05 验收矩阵](runs/2026_09_30_14_40_SelfContainedRewardValidation/final_acceptance.json)和[摘要](runs/2026_09_30_14_40_SelfContainedRewardValidation/verification_summary.json)。新增检查涵盖无 checker 的数值/格式行为、违规调用、原始 rubric 解析、错误模型标签交给 verifier 拒绝、全流程恢复/导出及历史训练数据隔离。
+- [无 checker 离线 demo](runs/2026_09_30_14_40_SelfContainedRewardValidation/2026_09_30_14_48_CheckerFreeDemo/demo_summary.json) 为 `done`，6 个候选、9 条案例、17 次明确标注的 fixture 模型调用；reward 为实际 Python 执行。工程 fixture 不计作真实 base-model 合成或 verifier 质量证据。
+- [真实 GSM8K 补测](runs/2026_09_30_14_46_SelfContainedGsm8kRealTest/integration_summary.json)：`gpt-6-sol` 经 4 次测例合成/格式修订后冻结 6 个候选、8 条案例，全部标记 `model_inferred`，原生 checker 执行数为 0。首个 reward 合成请求耗尽 5 次物理尝试：3 次 AIHub `HTTP 502 / PlatformInternalError / 1001`（上游网络异常），2 次读取超时。最终为 `failed / infrastructure_error`，未生成 reward，未调用 verifier/rubric；A3 的真实完整合成及另备的独立样本复核尚未通过。共 9 次真实请求，失败 attempt 的 unknown 使用量保留，输入未变，凭据模式扫描无匹配，观察回放新增请求 0。
+- 此真实补测的运行包装脚本将 `dev_suite_root` 误设为输出根目录，随后新建的 JSON 报告导致完成态恢复检查按设计拒绝（新增指纹文件 4 个，既有文件改动 0 个）；已在摘要单独记录，未改 manifest 或删除证据来绕过检查。默认产品配置使用独立的 examples 输入目录，158 项工程检查中的恢复验证已通过。后续真实补测需使用独立且固定的 suite 输入目录。
 
 ## 使用与剩余外部依赖
 

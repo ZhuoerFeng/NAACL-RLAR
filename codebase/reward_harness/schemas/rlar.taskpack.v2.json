@@ -154,7 +154,6 @@
         "required_sources": {
           "items": {
             "enum": [
-              "objective_verified",
               "human_annotated",
               "model_inferred"
             ],
@@ -182,16 +181,9 @@
           "type": "integer"
         },
         "objective_checker": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
           "default": null,
-          "title": "Objective Checker"
+          "title": "Objective Checker",
+          "type": "null"
         },
         "trusted_evidence": {
           "additionalProperties": {
@@ -208,9 +200,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.taskpack.v2",
-      "default": "rlar.taskpack.v2"
+      "default": "rlar.taskpack.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "profile_id": {
       "title": "Profile Id",
@@ -300,19 +293,18 @@
       "items": {
         "$ref": "#/$defs/Capability"
       },
+      "minItems": 1,
       "title": "Capabilities",
       "type": "array"
     },
     "suite_policy": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/SuitePolicy"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
+      "$ref": "#/$defs/SuitePolicy"
+    },
+    "reward_logic_policy": {
+      "const": "self_contained_v1",
+      "default": "self_contained_v1",
+      "title": "Reward Logic Policy",
+      "type": "string"
     }
   },
   "required": [
@@ -324,7 +316,9 @@
     "permitted_apis",
     "mode_constraints",
     "verifier_version",
-    "acceptance_policy"
+    "acceptance_policy",
+    "capabilities",
+    "suite_policy"
   ],
   "title": "TaskPack",
   "type": "object",

@@ -1,0 +1,265 @@
+{
+  "schema_version": "rlar.suite_draft.v2",
+  "id": "gsm8k_authored_fixture",
+  "version": "1",
+  "capabilities": [
+    {
+      "id": "final_answer_correctness",
+      "description": "Final numeric answer matches the authorized reference.",
+      "task_requirement_ref": "gsm8k_self_contained"
+    }
+  ],
+  "examples": [
+    {
+      "id": "worked",
+      "query_ref": "gsm8k_natalia",
+      "response": "April is 48. May is 24. Altogether 48 + 24 = 72. #### 72",
+      "provenance": "authored_offline_engineering_fixture"
+    },
+    {
+      "id": "decimal",
+      "query_ref": "gsm8k_natalia",
+      "response": "Half of 48 is 24, so the total is 72. #### +72.0",
+      "provenance": "authored_offline_engineering_fixture"
+    },
+    {
+      "id": "brief",
+      "query_ref": "gsm8k_natalia",
+      "response": "#### 72",
+      "provenance": "authored_offline_engineering_fixture"
+    },
+    {
+      "id": "may_only",
+      "query_ref": "gsm8k_natalia",
+      "response": "May sales are 48/2 = 24. #### 24",
+      "provenance": "authored_offline_engineering_fixture"
+    },
+    {
+      "id": "april_only",
+      "query_ref": "gsm8k_natalia",
+      "response": "The total is the April sales. #### 48",
+      "provenance": "authored_offline_engineering_fixture"
+    },
+    {
+      "id": "doubled",
+      "query_ref": "gsm8k_natalia",
+      "response": "May sales equal April sales. #### 96",
+      "provenance": "authored_offline_engineering_fixture"
+    }
+  ],
+  "cases": [
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_worked",
+      "kind": "pointwise",
+      "example_ids": [
+        "worked"
+      ],
+      "expected_label": "pass",
+      "discrimination_target": "Final numeric correctness: worked",
+      "expected_behavior": "Accept the correct final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_decimal",
+      "kind": "pointwise",
+      "example_ids": [
+        "decimal"
+      ],
+      "expected_label": "pass",
+      "discrimination_target": "Final numeric correctness: decimal",
+      "expected_behavior": "Accept the correct final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_brief",
+      "kind": "pointwise",
+      "example_ids": [
+        "brief"
+      ],
+      "expected_label": "pass",
+      "discrimination_target": "Final numeric correctness: brief",
+      "expected_behavior": "Accept the correct final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_may_only",
+      "kind": "pointwise",
+      "example_ids": [
+        "may_only"
+      ],
+      "expected_label": "fail",
+      "discrimination_target": "Final numeric correctness: may_only",
+      "expected_behavior": "Penalize the incorrect final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_april_only",
+      "kind": "pointwise",
+      "example_ids": [
+        "april_only"
+      ],
+      "expected_label": "fail",
+      "discrimination_target": "Final numeric correctness: april_only",
+      "expected_behavior": "Penalize the incorrect final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "point_doubled",
+      "kind": "pointwise",
+      "example_ids": [
+        "doubled"
+      ],
+      "expected_label": "fail",
+      "discrimination_target": "Final numeric correctness: doubled",
+      "expected_behavior": "Penalize the incorrect final number."
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "rank_worked",
+      "kind": "ranking",
+      "example_ids": [
+        "worked",
+        "may_only"
+      ],
+      "discrimination_target": "Correct final number versus incorrect final number.",
+      "expected_behavior": "Rank the correct answer higher.",
+      "relations": [
+        {
+          "left": "worked",
+          "right": "may_only",
+          "operator": ">",
+          "justification": "Proposed reference-based comparison.",
+          "evidence_refs": [
+            "gsm8k_natalia"
+          ]
+        }
+      ]
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "rank_decimal",
+      "kind": "ranking",
+      "example_ids": [
+        "decimal",
+        "april_only"
+      ],
+      "discrimination_target": "Correct final number versus incorrect final number.",
+      "expected_behavior": "Rank the correct answer higher.",
+      "relations": [
+        {
+          "left": "decimal",
+          "right": "april_only",
+          "operator": ">",
+          "justification": "Proposed reference-based comparison.",
+          "evidence_refs": [
+            "gsm8k_natalia"
+          ]
+        }
+      ]
+    },
+    {
+      "capability_ids": [
+        "final_answer_correctness"
+      ],
+      "scope": "capability",
+      "required": true,
+      "evidence_source": "model_inferred",
+      "evidence_refs": [
+        "gsm8k_natalia"
+      ],
+      "justification": "Authored engineering fixture; proposed numerical label, no native checker certification.",
+      "id": "rank_brief",
+      "kind": "ranking",
+      "example_ids": [
+        "brief",
+        "doubled"
+      ],
+      "discrimination_target": "Correct final number versus incorrect final number.",
+      "expected_behavior": "Rank the correct answer higher.",
+      "relations": [
+        {
+          "left": "brief",
+          "right": "doubled",
+          "operator": ">",
+          "justification": "Proposed reference-based comparison.",
+          "evidence_refs": [
+            "gsm8k_natalia"
+          ]
+        }
+      ]
+    }
+  ]
+}

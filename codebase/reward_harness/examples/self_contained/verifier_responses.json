@@ -1,0 +1,11 @@
+{
+  "fixture": "self_contained_verifier",
+  "expected_scores": {
+    "worked": 1,
+    "decimal": 1,
+    "brief": 1,
+    "may_only": 0,
+    "april_only": 0,
+    "doubled": 0
+  }
+}

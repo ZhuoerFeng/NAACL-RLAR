@@ -65,7 +65,7 @@ class ToolDispatcher:
                 lambda ref=r['validation_ref']: self.feedback_view(self.blobs.get_json(ref))))
 
     def feedback_view(self, value):
-        if not self.config.is_v2 or self.config.v2.feedback == 'full':
+        if self.config.synthesis.feedback == 'full':
             return value
         # Apply the same projection to observations AND read_resource reports.
         hidden = {'feedback', 'evidence', 'raw_value', 'rationale', 'repair_feedback', 'message',
@@ -143,24 +143,34 @@ class ToolDispatcher:
         return output
 
     def check_definition(self, definition):
-        if self.config.is_v2:
-            if definition.schema_version != 'rlar.reward.v2' or self.suite is None:
-                raise ValueError('v2 requires a frozen suite and v2 reward')
-            from ..evaluation.suite import assert_frozen
-            assert_frozen(self.suite)
-            # Reward may group capabilities differently, but may not alter task meaning.
-            if definition.capabilities != self.pack.capabilities:
-                raise ValueError('reward capability descriptions differ from the fixed task')
-            for component in definition.components:
-                if component.judge_spec:
-                    ref = self.config.roles['rubric_judge']
-                    if component.judge_spec.model_ref != ref or component.judge_spec.model_config_digest != digest(self.config.models[ref]):
-                        raise ValueError('rubric judge model/config not frozen to the run catalogue')
-                    tree = ast.parse(component.source)
-                    if component.judge_spec.prompt_template in [n.value for n in ast.walk(tree) if isinstance(n, ast.Constant)]:
-                        raise ValueError('rubric template has one authority: context.judge_spec')
-                    if not any(isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == component.judge_spec.parser_entrypoint for n in tree.body):
-                        raise ValueError('rubric parser entrypoint is missing')
+        from ..runtime.policy import SELF_CONTAINED, validate_component
+        from ..runtime.errors import ForbiddenAPI
+        if definition.runtime_contract.reward_logic_policy != SELF_CONTAINED:
+            raise ValueError('runtime_contract.reward_logic_policy must be self_contained_v1')
+        for component in definition.components:
+            try:
+                validate_component(component, dependencies=definition.runtime_contract.dependencies)
+            except SyntaxError:
+                pass  # Syntax errors remain explicit component execution failures.
+            except ForbiddenAPI as exc:
+                raise ValueError(str(exc)) from exc
+        if definition.schema_version != 'rlar.reward.v2' or self.suite is None:
+            raise ValueError('v2 requires a frozen suite and v2 reward')
+        from ..evaluation.suite import assert_frozen
+        assert_frozen(self.suite)
+        # Reward may group capabilities differently, but may not alter task meaning.
+        if definition.capabilities != self.pack.capabilities:
+            raise ValueError('reward capability descriptions differ from the fixed task')
+        for component in definition.components:
+            if component.judge_spec:
+                ref = self.config.roles['rubric_judge']
+                if component.judge_spec.model_ref != ref or component.judge_spec.model_config_digest != digest(self.config.models[ref]):
+                    raise ValueError('rubric judge model/config not frozen to the run catalogue')
+                tree = ast.parse(component.source)
+                if component.judge_spec.prompt_template in [n.value for n in ast.walk(tree) if isinstance(n, ast.Constant)]:
+                    raise ValueError('rubric template has one authority: context.judge_spec')
+                if not any(isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name == component.judge_spec.parser_entrypoint for n in tree.body):
+                    raise ValueError('rubric parser entrypoint is missing')
         if definition.mode not in self.pack.mode_constraints:
             raise ValueError('mode not permitted by profile')
         if len(definition.components) > min(self.pack.max_components, self.config.construction.max_components):
@@ -176,26 +186,12 @@ class ToolDispatcher:
         declared_python = definition.runtime_contract.python_version
         if declared_python != '3.11+' and declared_python != '.'.join(map(str, sys.version_info[:3])):
             raise ConfigError('pinned Python revision does not match the runner')
-        if any('reward_model_scoring_v1' in c.required_apis for c in definition.components):
-            revisions = {e.model_id: e.revision for e in self.config.rm.catalogue}
-            if definition.runtime_contract.api_revisions != revisions:
-                raise ValueError('RM revisions must match the frozen catalogue')
-        if definition.runtime_contract.dependencies:
-            import importlib.metadata
-            for dep in definition.runtime_contract.dependencies:
-                name, sep, version = dep.partition('==')
-                try:
-                    installed = importlib.metadata.version(name)
-                except importlib.metadata.PackageNotFoundError as exc:
-                    raise ConfigError(f'fixed dependency unavailable: {name}') from exc
-                if not sep or installed != version:
-                    raise ConfigError(f'fixed dependency mismatch: {dep}')
         if definition.runtime_contract.aggregator_version != 'agg.v1':
             raise ValueError('unsupported aggregation version')
         for component in definition.components:
             if not set(component.required_apis) <= set(self.pack.permitted_apis):
                 raise ValueError('required API is not permitted')
-            mappings = {**self.config.rm.normalization_mappings, **self.pack.normalization_mappings}
+            mappings = self.pack.normalization_mappings
             if component.normalization.kind == 'mapping' and component.normalization.mapping_id not in mappings:
                 raise ValueError('normalization mapping was not declared')
             # Conservative static screen for obvious per-query/sample lookups.
@@ -204,11 +200,10 @@ class ToolDispatcher:
                 tree = ast.parse(component.source)
             except SyntaxError:
                 continue
-            if self.config.is_v2:
-                forbidden = {e.id for e in self.suite.examples} | {c.id for c in self.suite.cases}
-                forbidden |= {e.response for e in self.suite.examples if isinstance(e.response, str) and len(e.response) >= 3}
-                if any(isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value in forbidden for n in ast.walk(tree)):
-                    raise ValueError('frozen candidate answer/ID lookup is not a reusable reward')
+            forbidden = {e.id for e in self.suite.examples} | {c.id for c in self.suite.cases}
+            forbidden |= {e.response for e in self.suite.examples if isinstance(e.response, str) and len(e.response) >= 3}
+            if any(isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value in forbidden for n in ast.walk(tree)):
+                raise ValueError('frozen candidate answer/ID lookup is not a reusable reward')
             if any(isinstance(n, ast.Constant) and n.value in ('query_id', 'case_id', 'is_correct', 'expected_label', 'suite_digest', 'admission_report_ref')
                    for n in ast.walk(tree)):
                 raise ValueError('sample ID/oracle lookup is not a reusable reward')
@@ -221,69 +216,40 @@ class ToolDispatcher:
         key = reward_key_for(definition)
         dref = self.blobs.put_json(definition.model_dump(mode='json'))
         report = None
-        if self.config.is_v2:
-            # A valid verdict for unchanged reward/suite/config is not a new lottery.
-            for event in self.journal.scan().events:
-                if event.episode_id != self.episode_id or event.type != 'evaluation_result':
-                    continue
-                prior = ValidationReport.model_validate(self.blobs.get_json(event.payload['validation_ref']))
-                if (prior.reward_key == key and prior.suite_digest == self.suite.suite_digest
-                    and prior.verifier_config_digest == self.evaluator.verifier.config_digest
-                    and self.evaluator.verify(prior)):
-                    report = prior
-                    break
-        if report is not None:
-            pass
-        elif self.suite is None:
-            for c in definition.components:
-                ast.parse(c.source)
-            report = self.evaluator.static_only_report(definition, self.pack, reward_key=key, reason='no_dev_suite')
-        else:
-            report = None
-            for attempt in range(self.config.budget.retry.max_transport_attempts):
-                eid = f'{aid}:evaluation:{attempt}'
-                events = [e for e in self.journal.scan().events if e.episode_id == self.episode_id
-                          and e.payload.get('evaluation_id') == eid]
-                done = next((e for e in events if e.type == 'evaluation_result'), None)
-                if done:
-                    report = ValidationReport.model_validate(self.blobs.get_json(done.payload['validation_ref']))
-                    if self.config.is_v2 or not done.payload['infrastructure_failures']:
-                        break
-                    continue
-                if not self.config.is_v2 and any(e.type == 'evaluation_dispatched' for e in events):
-                    self.emit('evaluation_unknown', evaluation_id=eid)
-                    continue  # safe repeat with a NEW charged attempt
-                count = len(self.suite.examples) if self.config.is_v2 else len(self.suite.cases)
-                self.budget.debit_once(eid, {'test_cases': float(len(self.suite.cases)),
-                    **({} if self.config.is_v2 else {'component_executions': float(count * len(definition.components))})})
-                self.emit('evaluation_dispatched', evaluation_id=eid, reward_key=key, definition_ref=dref)
-                with watchdog(self.deadline.bounded(self.config.budget.per_tool_timeout_s)):
-                    outcome = self.evaluator.validate(definition, self.pack, self.suite, reward_key=key, action_id=eid,
-                        policy=self.config.validation.acceptance_policy_override)
-                report = outcome.report
-                codes = {c.error.code for r in report.per_case for c in r.component_results if c.error}
-                if 'auth_failed' in codes:
-                    raise HarnessError('RM authentication failed', code='auth_failed')
-                if 'scoring_budget_exhausted' in codes:
-                    from ..errors import BudgetExhausted
-                    raise BudgetExhausted('shared scoring budget exhausted')
-                vref = self.blobs.put_json(report.model_dump(mode='json'))
-                self.emit('evaluation_result', evaluation_id=eid, validation_ref=vref,
-                          infrastructure_failures=outcome.infrastructure_failures)
-                if self.config.is_v2 or not outcome.infrastructure_failures:
-                    break
-            else:
-                raise HarnessError('environment_unavailable: validation retries exhausted', code='environment_unavailable')
+        for event in self.journal.scan().events:
+            if event.episode_id != self.episode_id or event.type != 'evaluation_result':
+                continue
+            prior = ValidationReport.model_validate(self.blobs.get_json(event.payload['validation_ref']))
+            if (prior.reward_key == key and prior.suite_digest == self.suite.suite_digest
+                and prior.verifier_config_digest == self.evaluator.verifier.config_digest
+                and self.evaluator.verify(prior)):
+                report = prior
+                break
+        if report is None:
+            eid = f'{aid}:evaluation:0'
+            self.budget.debit_once(eid, {'test_cases': float(len(self.suite.cases))})
+            self.emit('evaluation_dispatched', evaluation_id=eid, reward_key=key, definition_ref=dref)
+            with watchdog(self.deadline.bounded(self.config.budget.per_tool_timeout_s)):
+                outcome = self.evaluator.validate(definition, self.pack, self.suite, reward_key=key, action_id=eid)
+            report = outcome.report
+            codes = {c.error.code for r in report.per_case for c in r.component_results if c.error}
+            if 'auth_failed' in codes:
+                raise HarnessError('judge authentication failed', code='auth_failed')
+            if 'scoring_budget_exhausted' in codes:
+                from ..errors import BudgetExhausted
+                raise BudgetExhausted('shared scoring budget exhausted')
+            vref = self.blobs.put_json(report.model_dump(mode='json'))
+            self.emit('evaluation_result', evaluation_id=eid, validation_ref=vref,
+                      infrastructure_failures=outcome.infrastructure_failures)
         vref = self.blobs.put_json(report.model_dump(mode='json'))
-        if self.config.is_v2:
-            from ..evaluation.evaluator import INFRASTRUCTURE_CODES
-            for case, decision in zip(self.suite.cases, report.decisions):
-                if not case.required or decision.operation_status == 'completed':
-                    continue
-                relevant = {c.id for c in definition.components if case.scope == 'overall' or set(c.capability_ids) & set(case.capability_ids)}
-                if any(c.id in relevant and c.error and c.error.code in INFRASTRUCTURE_CODES
-                       for score in report.per_case if score.example_id in case.example_ids for c in score.component_results):
-                    raise HarnessError('required scoring service unavailable', code='environment_unavailable')
+        from ..evaluation.evaluator import INFRASTRUCTURE_CODES
+        for case, decision in zip(self.suite.cases, report.decisions):
+            if not case.required or decision.operation_status == 'completed':
+                continue
+            relevant = {c.id for c in definition.components if case.scope == 'overall' or set(c.capability_ids) & set(case.capability_ids)}
+            if any(c.id in relevant and c.error and c.error.code in INFRASTRUCTURE_CODES
+                   for score in report.per_case if score.example_id in case.example_ids for c in score.component_results):
+                raise HarnessError('required scoring service unavailable', code='environment_unavailable')
         return {'reward_key': key, 'definition_ref': dref, 'validation_ref': vref,
                 'validation_run_id': report.report_id, 'eligible': report.eligible,
                 'assurance': report.assurance, 'on_pass': args.on_pass,
@@ -292,34 +258,27 @@ class ToolDispatcher:
                 'complete_case_count': len(report.per_case),
                 'verification_unavailable': any(d.operation_status == 'error' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
                 'insufficient_evidence': any(d.operation_status == 'insufficient_evidence' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
-                **({'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions])} if self.config.is_v2 else {})}
+                'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions])}
 
     def finalize(self, dref, vref):
         definition = RewardDefinition.model_validate(self.blobs.get_json(dref))
         report = ValidationReport.model_validate(self.blobs.get_json(vref))
-        policy = self.config.validation.acceptance_policy_override or self.pack.acceptance_policy
+        policy = self.pack.acceptance_policy
         if not self.evaluator.verify(report) or not report.eligible:
             raise ValueError('report_not_trusted_or_eligible')
-        if (reward_key_for(definition) != report.reward_key
-            or report.task_contract_digest != self.pack.applicability_rule.task_contract_digest
-            or report.runtime_fingerprint != self.pack.applicability_rule.runtime_fingerprint
-            or report.profile_id != self.pack.profile_id or report.verifier_version != self.pack.verifier_version
-            or report.policy != policy or self.suite is None
-            or report.suite_version != self.suite.version or report.suite_id != self.suite.suite_id
-            or report.suite_digest != (self.suite.suite_digest if self.config.is_v2 else digest(self.suite))):
+        if (reward_key_for(definition) != report.reward_key or report.task_contract_digest != self.pack.applicability_rule.task_contract_digest or report.runtime_fingerprint != self.pack.applicability_rule.runtime_fingerprint or (report.profile_id != self.pack.profile_id) or (report.verifier_version != self.pack.verifier_version) or (report.policy != policy) or (self.suite is None) or (report.suite_version != self.suite.version) or (report.suite_id != self.suite.suite_id) or (report.suite_digest != (self.suite.suite_digest))):
             raise ValueError('report_mismatch: artifact, contract, suite, policy or runtime changed')
         self.check_definition(definition)
-        if self.config.is_v2:
-            from ..evaluation.verifier import evidence_for, check_decision
-            if report.schema_version != 'rlar.validation.v2' or report.verifier_config_digest != self.evaluator.verifier.config_digest:
-                raise ValueError('verifier configuration changed')
-            if report.evidence_digest != digest(report.per_case) or len(report.decisions) != len(self.suite.cases):
-                raise ValueError('missing or changed execution/decision evidence')
-            for case, decision in zip(self.suite.cases, report.decisions):
-                evidence = evidence_for(case, self.suite, definition, report.per_case, self.pack, self.evaluator.verifier)
-                check_decision(decision, evidence)
-                if case.required and (decision.operation_status != 'completed' or decision.passed is not True):
-                    raise ValueError('required case is not passed')
+        from ..evaluation.verifier import evidence_for, check_decision
+        if report.schema_version != 'rlar.validation.v2' or report.verifier_config_digest != self.evaluator.verifier.config_digest:
+            raise ValueError('verifier configuration changed')
+        if report.evidence_digest != digest(report.per_case) or len(report.decisions) != len(self.suite.cases):
+            raise ValueError('missing or changed execution/decision evidence')
+        for case, decision in zip(self.suite.cases, report.decisions):
+            evidence = evidence_for(case, self.suite, definition, report.per_case, self.pack, self.evaluator.verifier, query=self.evaluator.query)
+            check_decision(decision, evidence)
+            if case.required and (decision.operation_status != 'completed' or decision.passed is not True):
+                raise ValueError('required case is not passed')
         return definition, report
 
     def select(self, results, *, all_eligible=False):

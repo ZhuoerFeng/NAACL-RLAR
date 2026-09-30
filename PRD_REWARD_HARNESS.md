@@ -1,5 +1,7 @@
 # Reward Construction Harness：Claude Code 实现 PRD
 
+> 历史需求记录（2026-09-30 归档标记）：当前有效约定已合并至 [PRD_REWARD_HARNESS_CURRENT.md](PRD_REWARD_HARNESS_CURRENT.md)。下文保留修订背景与原验收编号，不作为另一套执行框架；冲突条款以当前统一需求为准。
+
 > 历史 v1 基线。新建运行默认使用 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md)；双合成角色、结构化 ABI、能力级验收与角色导出的实现/验收见 [v2 交付说明](codebase/reward_harness/V2_DELIVERY.md)。下表标记 superseded 的条目仅保留作 v1 回归标准。
 
 > 更新入口（2026-09-28）：以下保留为 v1 历史基线。当前增量开发以 [v2 更新需求](PRD_REWARD_HARNESS_UPDATE.md) 为准，尤其是双 synthesizer、harness-verifier、语义验收、角色训练边界和终止条件；v2 明确替代的条款不与本文件重复执行。实际已有实现见子项目 README。

@@ -1,0 +1,70 @@
+{
+  "schema_version": "rlar.taskpack.v2",
+  "profile_id": "gsm8k_self_contained",
+  "version": "2",
+  "task_contract": "GSM8K final-answer correctness. The last #### in the original reference solution gives the gold numeric answer. A candidate must end in #### followed by one signed integer or decimal; correctly grouped thousands commas are allowed. No units or trailing prose. Compare values exactly; +72.0 and 72 are equivalent numeric forms. Do not grade explanation length or claim to certify intermediate reasoning. Implement extraction, parsing, format validation, comparison and scoring in the generated source using general-purpose Python. There is no native checker, including during suite admission. Label generated cases model_inferred and cite the task/query. Verifiable components do not call context APIs. Rubric components may call the declared raw LLM utility and must parse it themselves. Use reusable logic, not hardcoded answers, question strings or case IDs.",
+  "applicability_rule": {
+    "task_contract_digest": "a3bd67d3047f4a372e871a0844a81c8af372d7a6832c041fc35b1ab2708fb223",
+    "permitted_inputs": [
+      "query",
+      "response",
+      "reference"
+    ],
+    "mode_constraints": [
+      "single",
+      "checklist"
+    ],
+    "runtime_fingerprint": "python-stdlib-fixture-v1"
+  },
+  "permitted_inputs": [
+    "query",
+    "response",
+    "reference"
+  ],
+  "permitted_apis": [
+    "call_llm_api"
+  ],
+  "mode_constraints": [
+    "single",
+    "checklist"
+  ],
+  "dev_suite_ref": null,
+  "verifier_version": "fixture-oracle-v1",
+  "acceptance_policy": {
+    "score_threshold": 0.5,
+    "tie_tolerance": 1e-09,
+    "max_false_accept_rate": 0.0,
+    "max_false_reject_rate": 0.0,
+    "max_execution_error_rate": 0.0,
+    "min_ranking_accuracy": 1.0,
+    "max_invariance_violation_rate": 0.0,
+    "min_coverage": 1.0,
+    "allow_partial_component_mask": false
+  },
+  "max_components": 4,
+  "resources": {},
+  "capabilities": [
+    {
+      "id": "final_answer_correctness",
+      "description": "Final numeric answer matches the authorized reference.",
+      "task_requirement_ref": "gsm8k_self_contained"
+    }
+  ],
+  "suite_policy": {
+    "ranking_layout": "pairwise",
+    "categories": [
+      "fail",
+      "pass",
+      "ranking"
+    ],
+    "required_sources": [
+      "model_inferred",
+      "human_annotated"
+    ],
+    "min_cases_per_category": 1,
+    "max_cases": 12,
+    "max_examples": 8,
+    "objective_checker": null
+  },
+  "reward_logic_policy": "self_contained_v1"
+}

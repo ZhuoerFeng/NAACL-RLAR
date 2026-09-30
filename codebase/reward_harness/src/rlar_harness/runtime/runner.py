@@ -215,6 +215,8 @@ class SubprocessRunner(Runner):
             "examples": request.examples,
             "example_ids": list(request.example_ids),
             "permitted_apis": list(request.permitted_apis),
+            "reward_logic_policy": request.definition.runtime_contract.reward_logic_policy,
+            "dependencies": request.definition.runtime_contract.dependencies,
             "cpu_timeout_s": request.cpu_timeout_s,
             "memory_limit_mb": request.memory_limit_mb,
             "max_output_bytes": request.max_output_bytes,

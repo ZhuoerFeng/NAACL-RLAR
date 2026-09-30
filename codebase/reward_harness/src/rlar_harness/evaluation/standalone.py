@@ -9,14 +9,14 @@ from zoneinfo import ZoneInfo
 
 from ..driver import RunDriver
 from ..inputs import InputItem, record_digest
-from ..schemas import InputLocation, SuiteDraft, StructuredError
-from ..storage.canonical import canonical_json, reward_key_for
+from ..schemas import InputLocation, SuiteDraft
+from ..storage.canonical import canonical_json
 from ..storage.blobs import atomic_write_bytes
 from .suite import admit_suite
 
 
-def new_run_dir(task):
-    parent = Path(__file__).resolve().parents[3] / 'runs'
+def new_run_dir(task, *, parent=None):
+    parent = Path(parent) if parent else Path(__file__).resolve().parents[3] / 'runs'
     stem = datetime.now(ZoneInfo('Asia/Shanghai')).strftime('%Y_%m_%d_%H_%M_') + task
     candidate, index = parent / stem, 2
     while candidate.exists():
@@ -27,7 +27,6 @@ def new_run_dir(task):
 
 def evaluate_frozen(config, queries, definitions, source, *, audit=False, allow_prototype=False, run_dir=None):
     from .taskpack import whitelist_example
-    from .verifier import base_decision
     cfg = config.model_copy(deep=True)
     cfg.data.split = 'audit' if audit else 'evaluation'
     cfg.construction.reuse_enabled = False
@@ -57,19 +56,7 @@ def evaluate_frozen(config, queries, definitions, source, *, audit=False, allow_
                         raise ValueError('audit mapping must contain a full independent SuiteDraft for every query')
                     pack.suite_policy.categories = ['fail', 'pass', 'ranking']
                     draft = SuiteDraft.model_validate(data[qid])
-                    from .suite import example_input
-                    def objective(bundle, method, selected):
-                        from ..schemas import RewardDefinition
-                        check = RewardDefinition.model_validate({'mode': 'single', 'aggregation': {'kind': 'identity'},
-                            'components': [{'id': 'check', 'criterion': 'Independent audit label checking',
-                              'source': f'def score(e,c): return c.{method}(e)', 'normalization': {'kind': 'identity'},
-                              'required_apis': [bundle]}]})
-                        scores = evaluator.durable_scores(check, pack, [example_input(e, query, pack) for e in draft.examples],
-                            [e.id for e in draft.examples], action_id=state['episode_id'] + ':audit_admission', reward_key=reward_key_for(check))
-                        if any(s.status != 'ok' for s in scores):
-                            raise ValueError('independent audit labels could not be checked')
-                        return {s.example_id: s.total_score for s in scores}
-                    suite = admit_suite(draft, query, pack, generation_config_ref='external_audit', blobs=driver.blobs, objective_validator=objective)
+                    suite = admit_suite(draft, query, pack, generation_config_ref='external_audit', blobs=driver.blobs)
                     evaluator.namespace = 'audit'
                     budget.debit_once(state['episode_id'] + ':cases', {'test_cases': float(len(suite.cases))})
                     outcome = evaluator.validate(definition, pack, suite, reward_key=construction.reward_key, action_id=state['episode_id'] + ':audit')

@@ -30,23 +30,6 @@ LIBRARY_INDEX = "library_index"
 MODEL_CATALOGUE = "model_catalogue"
 COMPONENT_TEMPLATE = "component_template"
 
-COMPONENT_TEMPLATE_TEXT = '''\
-# A reward component is a module that defines one function.
-#
-#   def score(example: dict, context) -> float
-#
-# `example` contains only the inputs this task profile permits.
-# `context` exposes only the APIs the profile permits AND the component
-# declares in `required_apis`; anything else raises ForbiddenAPI.
-#
-# Return a finite number. A bool is rejected unless the scoring ABI says
-# otherwise. Returning 0.0 is a valid score, not a failure. Raising means the
-# component failed for this example and is dropped from the average.
-
-def score(example, context):
-    return context.check_answer(example)
-'''
-
 
 @dataclass
 class Resource:
@@ -93,7 +76,6 @@ def build_resource_index(
     snapshot: LibrarySnapshot,
     *,
     model_cards: dict[str, dict[str, Any]] | None = None,
-    scoring_abi: str = "v1",
     max_chars: int = 4000,
 ) -> ResourceIndex:
     index = ResourceIndex()
@@ -118,46 +100,6 @@ def build_resource_index(
         )
     )
 
-    index.add(
-        Resource(
-            TASK_CONTRACT,
-            "json",
-            "What the reward must measure, and the inputs, APIs and modes it "
-            "may use.",
-            lambda: {
-                "profile_id": pack.profile_id,
-                "version": pack.version,
-                "task_contract": pack.task_contract,
-                "permitted_inputs": pack.permitted_inputs,
-                "permitted_apis": pack.permitted_apis,
-                "mode_constraints": pack.mode_constraints,
-                "max_components": pack.max_components,
-                "acceptance_policy": pack.acceptance_policy.model_dump(mode="json"),
-                "normalization_mappings": sorted(pack.normalization_mappings),
-            },
-            max_chars,
-        )
-    )
-
-    index.add(
-        Resource(
-            SCORING_ABI,
-            "json",
-            "The calling convention every component must satisfy.",
-            lambda: {
-                "scoring_abi": scoring_abi,
-                "entrypoint": "score",
-                "signature": "score(example: dict, context) -> float",
-                "return_type": "finite float in the component's declared range",
-                "bool_accepted": scoring_abi == "v1+bool",
-                "zero_is_a_valid_score": True,
-                "raising_drops_this_component_for_this_example": True,
-                "checklist_aggregation": "equal-weight mean over components that "
-                "executed successfully; no weights are supported",
-            },
-            max_chars,
-        )
-    )
 
     index.add(
         Resource(
@@ -183,24 +125,17 @@ def build_resource_index(
         Resource(
             MODEL_CATALOGUE,
             "json",
-            "Reward models callable via context.score_model. Ids and semantics "
+            "Frozen model catalogue for synthesis and raw rubric calls. Identities "
             "only; no endpoints.",
             lambda: model_cards or {},
             max_chars,
         )
     )
 
-    index.add(
-        Resource(
-            COMPONENT_TEMPLATE,
-            "text",
-            "A minimal, working component to start from.",
-            lambda: COMPONENT_TEMPLATE_TEXT,
-            max_chars,
-        )
-    )
 
     for entry in snapshot.entries:
+        if pack.reward_logic_policy and entry.definition.runtime_contract.reward_logic_policy != pack.reward_logic_policy:
+            continue
         if entry.applicability.task_contract_digest == pack.applicability_rule.task_contract_digest:
             index.add(Resource("reward:" + entry.reward_key, "json", "Committed reward definition",
                                lambda e=entry: e.definition.model_dump(mode="json"), max_chars))
@@ -218,17 +153,24 @@ def build_resource_index(
             )
         )
 
-    if scoring_abi == 'v2':
-        index.add(Resource(SCORING_ABI, 'json', 'Structured v2 component ABI', lambda: {
-            'scoring_abi': 'v2', 'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
-            'zero_is_valid': True, 'normalization': 'apply exactly once in the trusted aggregator'}))
-        index.add(Resource(COMPONENT_TEMPLATE, 'text', 'Structured component example', lambda:
-            'def score(example, context):\n    value = context.check_answer(example)\n    return {"raw_score": value, "feedback": "Checker result: " + str(value), "evidence": []}\n'))
-        index.add(Resource(TASK_CONTRACT, 'json', 'Frozen task requirements and capabilities', lambda: {
-            'profile_id': pack.profile_id, 'task_contract': pack.task_contract,
-            'capabilities': [c.model_dump(mode='json') for c in pack.capabilities],
-            'permitted_inputs': pack.permitted_inputs, 'permitted_apis': pack.permitted_apis,
-            'normalization_mappings': pack.normalization_mappings, 'max_components': pack.max_components}))
+    from ..runtime.policy import MODULE_EXPORTS
+    index.add(Resource(SCORING_ABI, 'json', 'Self-contained reward contract', lambda: {
+        'scoring_abi': 'v2', 'reward_logic_policy': pack.reward_logic_policy,
+        'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
+        'general_purpose_modules': MODULE_EXPORTS,
+        'dependency_policy': 'Only listed module members are available. No dynamic execution, imports or introspection.',
+        'verifiable_context_apis': [], 'rubric_context_apis': ['judge_spec', 'call_llm_api'],
+        'zero_is_valid': True, 'normalization': 'apply exactly once in the trusted aggregator'}))
+    index.add(Resource(COMPONENT_TEMPLATE, 'text', 'ABI skeleton without a task scoring implementation', lambda:
+        'def score(example, context):\n    # Implement parsing, validation, comparisons and raw scoring here.\n'
+        '    # You may define local helper functions in this source artifact.\n'
+        '    raise NotImplementedError("Implement the task criterion in generated source")\n'))
+    index.add(Resource(TASK_CONTRACT, 'json', 'Task requirements and reward dependency boundary', lambda: {
+        'profile_id': pack.profile_id, 'task_contract': pack.task_contract,
+        'capabilities': [c.model_dump(mode='json') for c in pack.capabilities],
+        'permitted_inputs': pack.permitted_inputs, 'permitted_apis': pack.permitted_apis,
+        'reward_logic_policy': pack.reward_logic_policy,
+        'normalization_mappings': pack.normalization_mappings, 'max_components': pack.max_components}))
     return index
 
 
@@ -241,6 +183,8 @@ def _public_examples(pack: TaskPack) -> list[dict[str, Any]]:
 def _library_view(snapshot: LibrarySnapshot, pack: TaskPack) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for entry in snapshot.entries:
+        if pack.reward_logic_policy and entry.definition.runtime_contract.reward_logic_policy != pack.reward_logic_policy:
+            continue
         if entry.applicability.task_contract_digest != pack.applicability_rule.task_contract_digest:
             continue
         out.append(

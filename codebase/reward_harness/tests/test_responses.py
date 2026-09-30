@@ -1,3 +1,4 @@
+from conftest import run_path
 import json
 from pathlib import Path
 
@@ -6,10 +7,9 @@ import pytest
 
 from rlar_harness.config import ModelConfig, load_config, preflight
 from rlar_harness.driver import construct_file, resolve_config
-from rlar_harness.evaluation.checkers import RationalArithmeticCheckerV1
-from rlar_harness.evaluation.verifier import rule_decision
+from conftest import fixture_decision as rule_decision
 from rlar_harness.llm.adapter import ProviderError
-from rlar_harness.llm.http_responses_json_v1 import HttpResponsesJsonV1
+from rlar_harness.llm.http_responses_json import HttpResponsesJsonAdapter
 from rlar_harness.storage.canonical import digest
 from rlar_harness.trace.export import export_llm_calls, export_sft, llm_calls, replay
 from rlar_harness.trace.report import report
@@ -34,10 +34,10 @@ def responses_model(**kwargs):
 
 @pytest.mark.acceptance('UAT-04', 'UAT-18', 'UAT-20', 'UAT-21', 'UAT-22', 'UAT-26')
 def test_responses_wire_retry_four_roles_exports_and_resume(tmp_path, monkeypatch):
-    config = resolve_config(load_config(ROOT / 'configs/offline_v2.yaml'), ROOT / 'configs')
+    config = resolve_config(load_config(ROOT / 'tests/fixtures/math/config.yaml'), ROOT / 'tests/fixtures/math')
     config.execution.allow_untrusted_code = True
-    suite = (ROOT / 'examples/v2/suite_draft.json').read_text()
-    action = json.loads((ROOT / 'examples/v2/reward_responses.json').read_text())['default'][0]
+    suite = (ROOT / 'tests/fixtures/math/suite_draft.json').read_text()
+    action = json.loads((ROOT / 'tests/fixtures/math/reward_responses.json').read_text())['default'][0]
     secret = 'responses-fixture-key-never-persist'
     monkeypatch.setenv('RESPONSES_TEST_KEY', secret)
 
@@ -52,7 +52,7 @@ def test_responses_wire_retry_four_roles_exports_and_resume(tmp_path, monkeypatc
             text = rule_decision(evidence).model_dump_json()
         else:
             example = json.loads(json.loads(body['input'][-1]['content']))
-            text = json.dumps({'score': RationalArithmeticCheckerV1().check_answer(example), 'feedback': 'fixture judge'})
+            text = json.dumps({'score': int(example['response']==r'\boxed{5/6}'), 'feedback': 'fixture judge'})
         return 200, response(text)
 
     with server([(503, {'error': 'temporary'}), answer]) as (url, observed):
@@ -63,7 +63,7 @@ def test_responses_wire_retry_four_roles_exports_and_resume(tmp_path, monkeypatc
                 'response_format': 'json_object', 'adapter_version': 'http_responses_json_v1',
                 'reasoning_effort': 'low', 'prompt_cache_key': 'responses-test', 'top_p': 1.0})
         action['actions'][0]['arguments']['definition']['components'][1]['judge_spec']['model_config_digest'] = digest(config.role_model('rubric_judge'))
-        root = tmp_path / '2026_09_29_00_00_Responses'
+        root = run_path(tmp_path, 'Responses')
         rows = construct_file(config, config.data.input_path, root)
         assert rows[0].status == 'success'
         calls = llm_calls(root)
@@ -109,7 +109,7 @@ def test_responses_rejects_unusable_results(mutation):
     elif mutation == 'partial_message': obj['output'][1]['status'] = 'incomplete'
     elif mutation == 'filter': obj.update(status='incomplete', incomplete_details={'reason': 'content_filter'})
     elif mutation == 'bad_incomplete': obj.update(status='incomplete', incomplete_details='bad')
-    adapter = HttpResponsesJsonV1(responses_model())
+    adapter = HttpResponsesJsonAdapter(responses_model())
     try:
         with pytest.raises(ProviderError): adapter.parse_response(httpx.Response(200, json=obj))
     finally:
@@ -121,7 +121,7 @@ def test_responses_truncation_and_missing_usage_stay_explicit():
     obj.update(status='incomplete', incomplete_details={'reason': 'max_output_tokens'})
     obj['output'][1]['status'] = 'incomplete'
     obj.pop('usage')
-    adapter = HttpResponsesJsonV1(responses_model())
+    adapter = HttpResponsesJsonAdapter(responses_model())
     try:
         result = adapter.parse_response(httpx.Response(200, json=obj))
         assert result.finish_reason == 'length' and result.text == 'partial'
@@ -134,7 +134,7 @@ def test_responses_preflight_and_legacy_model_serialization(monkeypatch):
     legacy = ModelConfig(model='fixture').model_dump(mode='json')
     assert 'auth_provider' not in legacy and 'responses_store' not in legacy
     assert ModelConfig.model_validate(legacy).model_dump(mode='json') == legacy
-    config = resolve_config(load_config(ROOT / 'configs/offline_v2.yaml'), ROOT / 'configs')
+    config = resolve_config(load_config(ROOT / 'tests/fixtures/math/config.yaml'), ROOT / 'tests/fixtures/math')
     ref = config.roles['rubric_judge']
     config.models[ref] = responses_model(api_key_env='RESPONSES_MISSING_KEY', auth_provider='azure')
     monkeypatch.delenv('RESPONSES_MISSING_KEY', raising=False)

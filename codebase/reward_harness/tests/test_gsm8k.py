@@ -1,7 +1,6 @@
 import pytest
 
-from rlar_harness.evaluation.checkers import CheckerError, Gsm8kNumericCheckerV1, RationalArithmeticCheckerV1
-from rlar_harness.runtime.worker import ScoringContext
+from test_self_contained import execute
 
 
 GOLD = ('Natalia sold 48/2 = <<48/2=24>>24 clips in May. '
@@ -21,22 +20,11 @@ GOLD = ('Natalia sold 48/2 = <<48/2=24>>24 clips in May. '
     (r'\boxed{72}', 0.0),
 ])
 def test_gsm8k_final_answer_contract(answer, expected):
-    assert Gsm8kNumericCheckerV1().check_answer({'reference': GOLD, 'response': answer}) == expected
+    assert execute(examples=[{'reference': GOLD, 'response': answer}])[0]['raw_value']['raw_score'] == expected
 
 
 def test_gsm8k_numeric_formats_and_reference_errors():
-    checker = Gsm8kNumericCheckerV1()
-    assert checker.check_answer({'reference': '1000', 'response': '#### 1,000.00'}) == 1
-    assert checker.check_answer({'reference': '-3.5', 'response': '#### -3.50'}) == 1
-    for reference in (None, 'not a reference', '#### unknown'):
-        with pytest.raises(CheckerError): checker.check_answer({'reference': reference, 'response': '#### 72'})
-    assert RationalArithmeticCheckerV1().check_answer({'reference': '72', 'response': '#### 72'}) == 0
-
-
-def test_gsm8k_bundle_is_available_only_when_declared():
-    from rlar_harness.evaluation.checkers import ForbiddenAPI
-    context = ScoringContext(['gsm8k_numeric_v1'], ['gsm8k_numeric_v1'], None, 'numeric')
-    assert context.check_answer({'reference': GOLD, 'response': '#### 72'}) == 1
-    assert context.extract_answer({'response': '#### 72'}) == '72'
-    forbidden = ScoringContext(['gsm8k_numeric_v1'], [], None, 'numeric')
-    with pytest.raises(ForbiddenAPI): forbidden.check_answer({'reference': GOLD, 'response': '#### 72'})
+    for reference, response in [('1000','#### 1,000.00'),('-3.5','#### -3.50')]:
+        assert execute(examples=[{'reference':reference,'response':response}])[0]['raw_value']['raw_score'] == 1
+    for reference in (None,'not a reference','#### unknown'):
+        assert execute(examples=[{'reference':reference,'response':'#### 72'}])[0]['status'] == 'error'

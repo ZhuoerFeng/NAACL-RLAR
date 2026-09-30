@@ -1,0 +1,124 @@
+schema_version: rlar.config.v2
+run_label: self-contained-offline-engineering-fixture
+profile_kind: offline_demo
+data:
+  input_path: queries.jsonl
+  task_pack_root: task_packs
+  split: train
+  output_layout: reference
+construction:
+  strategy: agentic
+  reward_mode: checklist
+  allow_row_mode_override: false
+  on_pass: submit
+  candidate_selector: best_metric_then_reward_key
+  selector_metric: false_accept_rate
+  seed: 0
+  reuse_enabled: true
+  library_mode: continual
+  max_components: 4
+execution:
+  runner_type: subprocess
+  runner_profile: prototype
+  runtime_fingerprint: python-stdlib-fixture-v1
+  wall_timeout_s: 10
+  cpu_timeout_s: 2
+  memory_limit_mb: 512
+  max_processes: null
+  max_output_bytes: 16384
+  max_return_bytes: 131072
+  allow_untrusted_code: false
+  max_concurrent_actions: 4
+budget:
+  run:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  episode:
+    controller_steps: 30
+    revisions: 20
+    tool_calls: 100
+    test_cases: 200
+    component_executions: 500
+    model_requests: 100
+    scoring_requests: 50
+    input_tokens: 3000000
+    output_tokens: 500000
+  retry:
+    max_transport_attempts: 3
+    backoff_initial_s: 0.01
+    backoff_multiplier: 2
+    backoff_max_s: 0.1
+    circuit_breaker_threshold: 3
+  no_progress_threshold: 3
+  wall_deadline_s: 300
+  per_tool_timeout_s: 120
+validation:
+  dev_suite_root: .
+  audit_suite_root: null
+  oracle_version: fixture-oracle-v1
+  audit_required_assurance: isolated
+logging:
+  max_observation_chars: 8000
+  max_blob_bytes: 4000000
+  single_writer_lock: true
+models:
+  base_tests:
+    provider_adapter: scripted
+    model: offline-base_tests
+    revision: fixture-v1
+    scripted_responses: test_responses.json
+    max_output_tokens: 8000
+    context_limit_tokens: 131072
+    context_reserve_tokens: 8000
+    connect_timeout_s: 2
+    read_timeout_s: 5
+    total_timeout_s: 10
+  base_rewards:
+    provider_adapter: scripted
+    model: offline-base_rewards
+    revision: fixture-v1
+    scripted_responses: reward_responses.json
+    max_output_tokens: 8000
+    context_limit_tokens: 131072
+    context_reserve_tokens: 8000
+    connect_timeout_s: 2
+    read_timeout_s: 5
+    total_timeout_s: 10
+  verifier:
+    provider_adapter: scripted
+    model: offline-verifier
+    revision: fixture-v1
+    scripted_responses: verifier_responses.json
+    max_output_tokens: 8000
+    context_limit_tokens: 131072
+    context_reserve_tokens: 8000
+    connect_timeout_s: 2
+    read_timeout_s: 5
+    total_timeout_s: 10
+  rubric:
+    provider_adapter: scripted
+    model: offline-rubric
+    revision: fixture-v1
+    scripted_responses: rubric_responses.json
+    max_output_tokens: 8000
+    context_limit_tokens: 131072
+    context_reserve_tokens: 8000
+    connect_timeout_s: 2
+    read_timeout_s: 5
+    total_timeout_s: 10
+roles:
+  test_case_synthesizer: base_tests
+  reward_synthesizer: base_rewards
+  harness_verifier: verifier
+  rubric_judge: rubric
+synthesis:
+  reward_logic_policy: self_contained_v1
+  backend: semantic_verifier
+  feedback: full

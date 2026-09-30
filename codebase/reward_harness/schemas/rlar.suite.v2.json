@@ -189,7 +189,6 @@
         },
         "evidence_source": {
           "enum": [
-            "objective_verified",
             "human_annotated",
             "model_inferred"
           ],
@@ -225,9 +224,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.suite.v2",
-      "default": "rlar.suite.v2"
+      "default": "rlar.suite.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "id": {
       "title": "Id",

@@ -1,0 +1,9 @@
+{
+  "fixture": "self_contained_verifier",
+  "expected_scores": {
+    "good": 1,
+    "bad": 0,
+    "bad2": 0,
+    "unavailable_bad": 0
+  }
+}

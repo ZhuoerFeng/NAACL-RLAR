@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rlar-harness"
-version = "0.1.0"
-description = "RLAR streaming reward-construction harness (offline P0)"
+dynamic = ["version"]
+description = "RLAR dual-synthesis reward construction and verification harness"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Proprietary" }
@@ -35,7 +35,10 @@ testpaths = ["tests"]
 addopts = "-q --strict-markers"
 timeout = 300
 markers = [
-  "acceptance: maps to a P0 acceptance-matrix ID (AT-xx)",
+  "acceptance: maps to a historical AT, current UAT, or self-contained SC requirement",
   "slow: spawns real subprocesses / kills processes",
   "requires_real_service: needs an operator-supplied endpoint; skipped offline and never counted as passing",
 ]
+
+[tool.hatch.version]
+path = "src/rlar_harness/__init__.py"

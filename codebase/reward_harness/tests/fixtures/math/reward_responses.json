@@ -1,0 +1,71 @@
+{
+  "default": [
+    {
+      "actions": [
+        {
+          "id": "test",
+          "tool": "test_reward",
+          "arguments": {
+            "definition": {
+              "schema_version": "rlar.reward.v2",
+              "mode": "checklist",
+              "capabilities": [
+                {
+                  "id": "correctness",
+                  "description": "Exact rational answer correctness",
+                  "task_requirement_ref": "math_v2"
+                }
+              ],
+              "aggregation": {
+                "kind": "mean"
+              },
+              "runtime_contract": {
+                "scoring_abi": "v2",
+                "environment_ref": "python-stdlib-fixture-v1",
+                "reward_logic_policy": "self_contained_v1"
+              },
+              "components": [
+                {
+                  "id": "exact",
+                  "kind": "verifiable",
+                  "capability_ids": [
+                    "correctness"
+                  ],
+                  "criterion": "Exact arithmetic correctness",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [],
+                  "source": "import re\nfrom fractions import Fraction\n\ndef score(example, context):\n    matches = re.findall(r\"\\\\boxed\\{([^{}]+)\\}\", example['response'])\n    try:\n        value = float(bool(matches) and Fraction(matches[-1]) == Fraction(example['reference']))\n    except (ValueError, ZeroDivisionError):\n        value = 0.0\n    return {'raw_score': value, 'feedback': 'Authored source checks the final rational answer.', 'evidence': []}\n"
+                },
+                {
+                  "id": "rubric",
+                  "kind": "rubric",
+                  "capability_ids": [
+                    "correctness"
+                  ],
+                  "criterion": "Rubric assesses correctness",
+                  "normalization": {
+                    "kind": "identity"
+                  },
+                  "required_apis": [
+                    "call_llm_api"
+                  ],
+                  "judge_spec": {
+                    "model_ref": "rubric",
+                    "model_config_digest": "$JUDGE_CONFIG_DIGEST",
+                    "prompt_template": "Judge exact arithmetic correctness. Respond with JSON score in [0,1] and feedback.",
+                    "output_contract": "{\"score\": float, \"feedback\": string}",
+                    "parser_entrypoint": "parse_judge"
+                  },
+                  "source": "import json\ndef parse_judge(raw):\n    obj = json.loads(raw)\n    return {\"raw_score\": obj[\"score\"], \"feedback\": obj[\"feedback\"], \"evidence\": []}\ndef score(example, context):\n    message = json.dumps({**example, \"rubric\": context.judge_spec[\"prompt_template\"]})\n    return parse_judge(context.call_llm_api(message, context.judge_spec[\"model_ref\"]))\n"
+                }
+              ]
+            },
+            "dev_profile_id": "math_v2"
+          }
+        }
+      ]
+    }
+  ]
+}

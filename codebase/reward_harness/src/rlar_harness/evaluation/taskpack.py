@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from ..errors import ConfigError
-from ..schemas import DevSuite, TaskPack
+from ..schemas import TaskPack
 
 
 class TaskPackStore:
@@ -45,34 +45,6 @@ class TaskPackStore:
 
     def available(self) -> list[str]:
         return sorted(p.stem for p in self.root.glob("*.json"))
-
-
-class DevSuiteStore:
-    """Holds oracle labels. Nothing here is ever passed into a worker."""
-
-    def __init__(self, root: Path) -> None:
-        self.root = Path(root)
-        self._cache: dict[str, DevSuite] = {}
-
-    def get(self, suite_ref: str) -> DevSuite:
-        if suite_ref in self._cache:
-            return self._cache[suite_ref]
-        if not suite_ref or Path(suite_ref).name != suite_ref or suite_ref in (".", ".."):
-            raise ConfigError("suite reference must be a resource ID, not a path")
-        path = self.root / f"{suite_ref}.json"
-        if not path.exists():
-            raise ConfigError(f"dev suite {suite_ref!r} not found at {path}")
-        suite = DevSuite.model_validate(json.loads(path.read_text(encoding="utf-8")))
-        self._cache[suite_ref] = suite
-        return suite
-
-    def try_get(self, suite_ref: str | None) -> DevSuite | None:
-        if not suite_ref:
-            return None
-        try:
-            return self.get(suite_ref)
-        except ConfigError:
-            return None
 
 
 def whitelist_example(

@@ -1,4 +1,4 @@
-"""One explicit, serial controller state machine per query."""
+"""Bounded test-case and reward synthesis state machines per query."""
 from __future__ import annotations
 
 import json
@@ -23,7 +23,7 @@ configured_at_run_start. runtime_contract.python_version is a Python version (us
 not the runtime_fingerprint. Use the field names and enum values in the tool schemas.
 Each test_reward supplies the COMPLETE definition: components in planned order, each with
 id, criterion, all Python source, normalization and required_apis. Generate plan and code
-in this single decision. score(example, context) returns a finite scalar; errors are not
+in this single decision. score(example, context) returns {raw_score: finite number, feedback: string, evidence: list}; errors are not
 zero. checklist is the equal mean of successfully executed components. Never embed query
 answers, sample IDs or labels in source. Use only declared APIs and normalization maps.
 All observations use a user-role JSON envelope from the harness. test_reward(on_pass=submit)
@@ -57,13 +57,16 @@ class EpisodeContext:
 
 def initial_history(query, pack, snapshot, resources, config, budget):
     instructions = RUN_INSTRUCTIONS
-    if config.is_v2:
-        instructions = instructions.replace('returns a finite scalar', 'returns {raw_score: finite number, feedback: string, evidence: list}')
-        instructions += ('\nYou are the reward synthesizer. Use rlar.reward.v2 and scoring_abi=v2. '
-            'Capabilities are fixed by the task pack. Read frozen_suite before designing the reward. '
-            'Components require kind and capability_ids. For rubric use context.judge_spec as the single rubric authority; '
-            'call context.call_llm_api(message, context.judge_spec["model_ref"]) once, then parse the raw string in the declared parser. '
-            'Frozen suite labels, required flags and relations cannot be edited. Never embed candidate answers or IDs in source.')
+    instructions += ('\nSet runtime_contract.reward_logic_policy="self_contained_v1". '
+        'Implement all task-specific parsing, extraction, validation, comparison and raw scoring in your source. '
+        'There are no native task checkers. Use only the general-purpose dependencies listed in scoring_abi. '
+        'Verifiable components require no context APIs. Rubric alone may call the raw judge utility; '
+        'implement its response parser yourself. Local helper functions are allowed. Do not hardcode sample answers.')
+    instructions += ('\nYou are the reward synthesizer. Use rlar.reward.v2 and scoring_abi=v2. '
+        'Capabilities are fixed by the task pack. Read frozen_suite before designing the reward. '
+        'Components require kind and capability_ids. For rubric use context.judge_spec as the single rubric authority; '
+        'call context.call_llm_api(message, context.judge_spec["model_ref"]) once, then parse the raw string in the declared parser. '
+        'Frozen suite labels, required flags and relations cannot be edited. Never embed candidate answers or IDs in source.')
     prefix = Message(role='system', actor='run_prefix', content=instructions + '\n' + json.dumps({
         'tools': TOOL_SCHEMAS, 'reward_abi': 'score(example, context)',
         'runtime_fingerprint': config.execution.runtime_fingerprint,
@@ -81,7 +84,7 @@ def initial_history(query, pack, snapshot, resources, config, budget):
 
 def construct_one(record, context: EpisodeContext):
     c, s = context, context.state
-    if s['state'] in ('SELECTED', 'UNVALIDATED', 'FAILED'):
+    if s['state'] in ('SELECTED', 'FAILED'):
         return s
     history = EpisodeHistory.restore((Message.model_validate(s['history'][0]),),
         (Message.model_validate(s['history'][1]),), [Message.model_validate(m) for m in s['history'][2:]])
@@ -102,7 +105,7 @@ def construct_one(record, context: EpisodeContext):
 
     def finish(status, reason, selected=None):
         s.update(status=status, stop_reason=reason, selected=selected)
-        save({'success': 'SELECTED', 'unvalidated': 'UNVALIDATED', 'failed': 'FAILED'}[status])
+        save({'success': 'SELECTED', 'failed': 'FAILED'}[status])
         return s
 
     def budget_finish(reason):
@@ -110,31 +113,30 @@ def construct_one(record, context: EpisodeContext):
         selected = c.dispatcher.select(candidates, all_eligible=True)
         return finish('success' if selected else 'failed', reason, selected)
 
-    if s['state'] in ('SELECTED', 'UNVALIDATED', 'FAILED'):
+    if s['state'] in ('SELECTED', 'FAILED'):
         return s
     try:
         while True:
             c.deadline.check('episode')
             if s['state'] in ('REUSE_CHECK', 'OBSERVATIONS_READY', 'INPUT_VALIDATED'):
                 if s.get('repeats', 0) >= c.config.budget.no_progress_threshold:
-                    return budget_finish('quality_not_met' if c.config.is_v2 else 'no_progress')
-                if c.config.is_v2:
-                    if s['step'] >= c.config.v2.max_reward_decisions:
-                        return budget_finish('budget_exhausted')
-                    if s.get('reward_attempts', 0) >= c.config.v2.reward_synthesis_attempts:
-                        return budget_finish('verification_unavailable' if (s.get('current') or {}).get('insufficient_evidence') else 'quality_not_met')
+                    return budget_finish('quality_not_met')
+                if s['step'] >= c.config.synthesis.max_reward_decisions:
+                    return budget_finish('budget_exhausted')
+                if s.get('reward_attempts', 0) >= c.config.synthesis.reward_synthesis_attempts:
+                    return budget_finish('verification_unavailable' if (s.get('current') or {}).get('insufficient_evidence') else 'quality_not_met')
                 s['step'] += 1
                 if s['step'] > 1:
                     c.budget.debit_once(f"{s['episode_id']}:revision:{s['step']}", {'revisions': 1.0})
-                s['logical_call_id'] = f"{s['episode_id']}:{'reward_synthesizer' if c.config.is_v2 else 'call'}:{s['step']}"
+                s['logical_call_id'] = f"{s['episode_id']}:reward_synthesizer:{s['step']}"
                 save('LLM_PENDING')
             logical = s['logical_call_id']
             if s['state'] == 'LLM_PENDING':
                 result = c.llm.call(history, logical_call_id=logical)
                 if result.status in ('failed', 'unknown'):
-                    if result.error.category == 'transport' or c.config.is_v2:
-                        return finish('failed', 'infrastructure_error' if c.config.is_v2 else 'environment_unavailable')
-                    raise HarnessError(result.error.message, code=result.error.code)
+                    if result.error.category == 'auth':
+                        raise HarnessError(result.error.message, code=result.error.code)
+                    return finish('failed', 'infrastructure_error')
                 error = result.parse_error
                 if error is None:
                     try:
@@ -148,9 +150,9 @@ def construct_one(record, context: EpisodeContext):
                         from .schemas import StructuredError
                         error = StructuredError(category='protocol', code='invalid_action_schema',
                             phase='dispatch', retry_owner='agent', message=str(exc))
-                if c.config.is_v2 and (error is not None or any(a.tool == 'test_reward' for a in result.proposed_actions)):
+                if error is not None or any((a.tool == 'test_reward' for a in result.proposed_actions)):
                     s['reward_attempts'] = s.get('reward_attempts', 0) + max(1, sum(a.tool == 'test_reward' for a in result.proposed_actions))
-                    if s['reward_attempts'] > c.config.v2.reward_synthesis_attempts:
+                    if s['reward_attempts'] > c.config.synthesis.reward_synthesis_attempts:
                         return budget_finish('quality_not_met')
                 if not c.llm.accept(history, result, logical, schema_valid=error is None):
                     return budget_finish('stale_history_cursor')
@@ -181,13 +183,11 @@ def construct_one(record, context: EpisodeContext):
                 # No finalization event is ever represented as assistant text.
                 observe({'type': 'harness_observation.v1', 'results': [r.model_dump(mode='json') for r in results],
                          'remaining_budget': c.budget.remaining_all()})
-                if c.config.is_v2 and any((r.result or {}).get('verification_unavailable') for r in results):
+                if any(((r.result or {}).get('verification_unavailable') for r in results)):
                     return finish('failed', 'verification_unavailable')
                 if selected:
                     c.journal.append('automatic_finalization', {'reward_key': selected['reward_key']}, episode_id=s['episode_id'])
                     return finish('success', 'validated', selected)
-                if drafts and drafts[-1].get('assurance') == 'static':
-                    return finish('unvalidated', 'no_dev_suite', drafts[-1])
                 if c.config.construction.strategy == 'single_completion':
                     return finish('failed', 'single_completion_validation_failed')
                 signature = digest([{'tool': r.tool, 'key': (r.result or {}).get('reward_key'),
@@ -198,10 +198,10 @@ def construct_one(record, context: EpisodeContext):
                 s['signature'] = signature
                 save('OBSERVATIONS_READY')
     except (BudgetExhausted, DeadlineExceeded) as exc:
-        return budget_finish('budget_exhausted' if c.config.is_v2 else exc.code)
+        return budget_finish('budget_exhausted')
     except HarnessError as exc:
         if exc.code == 'environment_unavailable':
-            return finish('failed', 'infrastructure_error' if c.config.is_v2 else 'environment_unavailable')
+            return finish('failed', 'infrastructure_error')
         raise
 
 
@@ -243,7 +243,7 @@ def synthesize_tests(record, context, client, snapshot):
                 # Pending call number is persisted before dispatch, never reset on resume.
                 if s['state'] != 'TEST_LLM_PENDING':
                     attempt = s.get('test_attempt', 0) + 1
-                    if attempt > c.config.v2.test_synthesis_attempts:
+                    if attempt > c.config.synthesis.test_synthesis_attempts:
                         s.update(state='FAILED', status='failed', stop_reason='test_suite_unavailable')
                         save()
                         return
@@ -251,6 +251,8 @@ def synthesize_tests(record, context, client, snapshot):
                     save()
                 logical = f"{s['episode_id']}:test_case_synthesizer:{s['test_attempt']}"
                 result = client.call(history, logical_call_id=logical)
+                if result.status in ('failed', 'unknown') and result.error.category == 'auth':
+                    raise HarnessError(result.error.message, code=result.error.code)
                 if result.status in ('failed', 'unknown'):
                     s.update(state='FAILED', status='failed', stop_reason='infrastructure_error')
                     save()
@@ -260,26 +262,9 @@ def synthesize_tests(record, context, client, snapshot):
                     if result.status != 'complete':
                         raise ValueError('suite output truncated')
                     draft = SuiteDraft.model_validate_json(result.assistant_text)
-                    def objective_validator(bundle, method, selected):
-                        from .schemas import RewardDefinition
-                        from .storage.canonical import reward_key_for
-                        definition = RewardDefinition.model_validate({'mode': 'single', 'components': [{
-                            'id': 'admission_check', 'criterion': 'Independent configured label checker',
-                            'source': f'def score(example, context):\n    return context.{method}(example)\n',
-                            'normalization': {'kind': 'identity'}, 'required_apis': [bundle]}],
-                            'aggregation': {'kind': 'identity'}})
-                        # All candidates once; repeated case references reuse this evidence.
-                        c.budget.debit_once(logical + ':admission_cases', {'test_cases': float(len(draft.examples))})
-                        scores = c.dispatcher.evaluator.durable_scores(definition, c.dispatcher.pack,
-                            [example_input(e, record, c.dispatcher.pack) for e in draft.examples], [e.id for e in draft.examples],
-                            action_id=logical + ':admission', reward_key=reward_key_for(definition))
-                        if any(r.status != 'ok' for r in scores):
-                            raise ValueError('objective label checking did not complete')
-                        return {r.example_id: r.total_score for r in scores}
                     suite = admit_suite(draft, record, c.dispatcher.pack,
                         generation_config_ref=digest({'model': client.model_config, 'prompt': TEST_INSTRUCTIONS,
-                                                      'policy': c.dispatcher.pack.suite_policy}), blobs=c.blobs,
-                        objective_validator=objective_validator)
+                                                      'policy': c.dispatcher.pack.suite_policy}), blobs=c.blobs)
                 except (ValueError, TypeError) as exc:
                     error = str(exc)[:c.config.logging.max_observation_chars]
                 client.accept(history, result, logical, schema_valid=error is None)

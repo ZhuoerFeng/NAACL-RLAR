@@ -367,9 +367,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "type": "string",
       "const": "rlar.score.v2",
-      "default": "rlar.score.v2"
+      "default": "rlar.score.v2",
+      "title": "Schema Version",
+      "type": "string"
     },
     "status": {
       "enum": [

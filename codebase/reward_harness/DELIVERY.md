@@ -1,5 +1,7 @@
 # v1 历史离线交付记录
 
+> 历史交付及实验证据：以下原日期、结果、失败与限制保持原样。当前代码、入口和本次验证以 [UNIFICATION_DELIVERY.md](UNIFICATION_DELIVERY.md) 与 [README](README.md) 为准；旧命令仅作历史记录。
+
 当前 v2 增量交付见 [V2_DELIVERY.md](V2_DELIVERY.md)；本文保留当时的证据，不作为 v2 的默认验收标准。
 
 2026-09-26；Python 3.12.14，macOS 26.6 / arm64（runner 报告 Darwin 25.6.0）。实现范围为 `codebase/reward_harness/`；未执行 Git commit、PR 或部署。

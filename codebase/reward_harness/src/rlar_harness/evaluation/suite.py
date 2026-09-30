@@ -3,7 +3,6 @@ from itertools import combinations
 
 from ..schemas import FrozenSuite, SuiteDraft
 from ..storage.canonical import digest
-from .checkers import BUNDLES, BUNDLE_METHODS
 
 
 def suite_body(suite):
@@ -26,7 +25,10 @@ def admission_binding(case, examples):
     return digest({'case': case, 'examples': examples})
 
 
-def admit_suite(draft, query, pack, *, generation_config_ref, blobs, objective_validator=None):
+def admit_suite(draft, query, pack, *, generation_config_ref, blobs):
+    if pack.reward_logic_policy:
+        from ..runtime.policy import validate_pack
+        validate_pack(pack)
     policy = pack.suite_policy
     if policy is None or not pack.capabilities:
         raise ValueError('task pack needs capabilities and suite_policy')
@@ -88,31 +90,7 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs, objective_v
                 relations.setdefault((case.scope, cap), []).extend(case.relations)
         selected = [examples[i] for i in case.example_ids]
         refs = case.evidence_refs + [ref for r in case.relations for ref in r.evidence_refs]
-        if case.evidence_source == 'objective_verified':
-            if not policy.objective_checker:
-                raise ValueError('no independent objective checker configured')
-            bundle, method = policy.objective_checker.split(':', 1)
-            if bundle not in pack.permitted_apis or method not in BUNDLE_METHODS.get(bundle, ()):
-                raise ValueError('objective checker not authorized')
-            # An objective checker proves only its declared task capability.
-            if len(pack.capabilities) != 1 or case.capability_ids != [pack.capabilities[0].id]:
-                raise ValueError('single objective checker cannot certify unrelated capabilities')
-            if any(ref != 'checker:' + policy.objective_checker for ref in refs):
-                raise ValueError('objective evidence must reference its actual checker')
-            if objective_validator is not None:
-                scores = objective_validator(bundle, method, selected)
-            else:
-                if bundle != 'rational_arithmetic_v1':
-                    raise ValueError('executable candidates require the bounded evaluation engine for admission')
-                check = getattr(BUNDLES[bundle](), method)
-                scores = {e.id: check(example_input(e, query, pack)) for e in selected}
-            if case.kind == 'pointwise':
-                value = scores[selected[0].id]
-                if value not in (0, 1) or bool(value) != (case.expected_label == 'pass'):
-                    raise ValueError('objective checker contradicts pointwise label')
-            elif any(not (scores[r.left] > scores[r.right] if r.operator == '>' else scores[r.left] == scores[r.right]) for r in case.relations):
-                raise ValueError('objective checker contradicts relation')
-        elif case.evidence_source == 'human_annotated':
+        if case.evidence_source == 'human_annotated':
             binding = admission_binding(case, selected)
             if any(policy.trusted_evidence.get(ref) != binding for ref in refs):
                 raise ValueError('human evidence lacks an externally pinned annotation binding')
@@ -127,7 +105,10 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs, objective_v
     report = {'admitted': True, 'draft_digest': digest(draft), 'policy_digest': digest(policy),
               'task_digest': digest(pack), 'query_digest': digest(query),
               'source_levels': sorted({c.evidence_source for c in draft.cases}),
-              'semantic_truth_proven': all(c.evidence_source == 'objective_verified' for c in draft.cases)}
+              'semantic_truth_proven': False}
+    if pack.reward_logic_policy:
+        report['admission_scope'] = 'structure_and_provenance_only'
+        report['semantic_truth_proven'] = False
     body = {**draft.model_dump(mode='json'), 'schema_version': 'rlar.suite.v2',
             'generation_config_ref': generation_config_ref, 'admission_report_ref': blobs.put_json(report)}
     return FrozenSuite(**body, suite_digest=digest(body))
