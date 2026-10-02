@@ -83,6 +83,12 @@ def extract_envelope(text: str) -> tuple[dict[str, Any] | None, str | None]:
             candidates.append(obj)
 
     if not candidates:
+        # An outer object that fails to decode would otherwise be reported via
+        # whichever inner object does decode ("no 'actions' key"), hiding the
+        # real mistake. Report the outermost decode failure instead.
+        broken = _outer_decode_problem(stripped)
+        if broken is not None:
+            return None, broken
         # Distinguish "no JSON at all" from "JSON, but not an envelope" so the
         # observation can tell the model which mistake it made.
         for start in _object_starts(stripped):
@@ -102,6 +108,77 @@ def extract_envelope(text: str) -> tuple[dict[str, Any] | None, str | None]:
 
 def _object_starts(text: str) -> list[int]:
     return [i for i, ch in enumerate(text) if ch == "{"]
+
+
+_EXCERPT_CHARS = 60
+_CLOSERS = {"}": "{", "]": "["}
+
+
+def _outer_decode_problem(text: str) -> str | None:
+    """Describe why the intended envelope does not decode, or None if it does.
+
+    The intended envelope is the first object that opens with the envelope key;
+    without one, the first object if it starts like a JSON object (``{"``).
+    Braces in surrounding prose are therefore not reported as JSON errors.
+    """
+    starts = _object_starts(text)
+    if not starts:
+        return None
+    marked = [s for s in starts if text[s + 1:].lstrip().startswith(f'"{ENVELOPE_KEY}"')]
+    if marked:
+        start = marked[0]
+    elif text[starts[0] + 1:].lstrip().startswith('"'):
+        start = starts[0]
+    else:
+        return None
+    try:
+        json.JSONDecoder().raw_decode(text, start)
+        return None
+    except json.JSONDecodeError as exc:
+        pos = exc.pos
+        where = f"{exc.msg} at line {exc.lineno} column {exc.colno} (char {pos})"
+    lo, hi = max(0, pos - _EXCERPT_CHARS), pos + _EXCERPT_CHARS
+    excerpt = json.dumps(text[lo:pos]) + " <HERE> " + json.dumps(text[pos:hi])
+    message = (f"the JSON object starting at char {start} is not valid JSON: {where}; "
+               f"text around the error: {excerpt}")
+    brackets = _bracket_problem(text, start)
+    if brackets:
+        message += f"; {brackets}"
+    return message + ". Fix the JSON syntax and resend the complete envelope"
+
+
+def _bracket_problem(text: str, start: int) -> str | None:
+    """First bracket mismatch outside JSON strings, scanning from ``start``."""
+    stack: list[tuple[str, int]] = []
+    in_string = escaped = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+        elif ch == '"':
+            in_string = True
+        elif ch in "{[":
+            stack.append((ch, i))
+        elif ch in _CLOSERS:
+            if not stack:
+                return f"unmatched {ch!r} at char {i}"
+            opener, at = stack.pop()
+            if opener != _CLOSERS[ch]:
+                return (f"bracket mismatch: {ch!r} at char {i} closes the {opener!r} "
+                        f"opened at char {at}; a closing bracket is missing or extra")
+            if not stack:
+                return None
+    if in_string:
+        return "a string literal is not terminated"
+    if stack:
+        return (f"{len(stack)} bracket(s) never closed: "
+                + ", ".join(f"{o!r} at char {at}" for o, at in stack[-5:]))
+    return None
 
 
 def _try_object_at(text: str, start: int) -> dict[str, Any] | None:
