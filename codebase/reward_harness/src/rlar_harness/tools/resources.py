@@ -154,13 +154,22 @@ def build_resource_index(
         )
 
     from ..runtime.policy import MODULE_EXPORTS
-    index.add(Resource(SCORING_ABI, 'json', 'Self-contained reward contract', lambda: {
-        'scoring_abi': 'v2', 'reward_logic_policy': pack.reward_logic_policy,
-        'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
-        'general_purpose_modules': MODULE_EXPORTS,
-        'dependency_policy': 'Only listed module members are available. No dynamic execution, imports or introspection.',
-        'verifiable_context_apis': [], 'rubric_context_apis': ['judge_spec', 'call_llm_api'],
-        'zero_is_valid': True, 'normalization': 'apply exactly once in the trusted aggregator'}))
+
+    def scoring_abi():
+        abi = {
+            'scoring_abi': 'v2', 'reward_logic_policy': pack.reward_logic_policy,
+            'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
+            'general_purpose_modules': MODULE_EXPORTS,
+            'dependency_policy': 'Only listed module members are available. No dynamic execution, imports or introspection.',
+            'verifiable_context_apis': [], 'rubric_context_apis': ['judge_spec', 'call_llm_api'],
+            'zero_is_valid': True, 'normalization': 'apply exactly once in the trusted aggregator'}
+        if pack.code_execution is not None:
+            abi['verifiable_context_apis'] = ['run_code']
+            abi['rubric_context_apis'] = ['judge_spec', 'call_llm_api', 'run_code']
+            abi['run_code'] = run_code_contract(pack.code_execution)
+        return abi
+
+    index.add(Resource(SCORING_ABI, 'json', 'Self-contained reward contract', scoring_abi))
     index.add(Resource(COMPONENT_TEMPLATE, 'text', 'ABI skeleton without a task scoring implementation', lambda:
         'def score(example, context):\n    # Implement parsing, validation, comparisons and raw scoring here.\n'
         '    # You may define local helper functions in this source artifact.\n'
@@ -170,8 +179,26 @@ def build_resource_index(
         'capabilities': [c.model_dump(mode='json') for c in pack.capabilities],
         'permitted_inputs': pack.permitted_inputs, 'permitted_apis': pack.permitted_apis,
         'reward_logic_policy': pack.reward_logic_policy,
-        'normalization_mappings': pack.normalization_mappings, 'max_components': pack.max_components}))
+        'normalization_mappings': pack.normalization_mappings, 'max_components': pack.max_components,
+        **({'code_execution': run_code_contract(pack.code_execution)} if pack.code_execution else {})}))
     return index
+
+
+def run_code_contract(spec):
+    return {
+        'declare': 'required_apis must include "run_code"',
+        'signature': 'context.run_code(source: str, stdin: str = "", timeout_s: float | None = None) -> dict',
+        'returns': {'status': 'ok | error | timeout | output_limit', 'exit_code': 'int | None',
+                    'stdout': 'str', 'stderr': 'str', 'stdout_truncated': 'bool',
+                    'stderr_truncated': 'bool', 'wall_seconds': 'float'},
+        'semantics': ('Runs source as main.py in a fresh interpreter of the declared environment, in an empty '
+                      'temporary directory without network credentials. A non-zero exit, an exception or a timeout '
+                      'is an observation for your own scoring logic, not an error. Compose the whole program '
+                      '(test harness plus candidate) yourself and parse its output yourself.'),
+        'env_id': spec.env_id, 'packages': spec.packages, 'timeout_s': spec.timeout_s,
+        'max_output_bytes': spec.max_output_bytes, 'max_source_chars': spec.max_source_chars,
+        'max_calls_per_component_example': spec.max_calls_per_example,
+    }
 
 
 def _public_examples(pack: TaskPack) -> list[dict[str, Any]]:

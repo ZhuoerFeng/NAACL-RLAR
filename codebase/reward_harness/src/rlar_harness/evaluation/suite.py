@@ -86,8 +86,9 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs):
                 or len(case.relations) != n * (n - 1) // 2
                 or pairs != {frozenset(p) for p in combinations(case.example_ids, 2)}):
                 raise ValueError('ranking requires all distinct pairwise relations for its layout')
+            edges = [(r.left, r.operator, r.right, f'case {case.id}: {r.justification}') for r in case.relations]
             for cap in case.capability_ids:
-                relations.setdefault((case.scope, cap), []).extend(case.relations)
+                relations.setdefault((case.scope, cap), []).extend(edges)
         selected = [examples[i] for i in case.example_ids]
         refs = case.evidence_refs + [ref for r in case.relations for ref in r.evidence_refs]
         if case.evidence_source == 'human_annotated':
@@ -100,8 +101,14 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs):
         raise ValueError('unused candidate answers')
     if any(n < policy.min_cases_per_category for n in counts.values()):
         raise ValueError('required capability/category coverage missing')
-    for edges in relations.values():
-        _consistent_relations(edges)
+    implied = _implied_edges(relations, labels, caps)
+    for (scope, cap), edges in relations.items():
+        if scope == 'overall':
+            continue
+        _check_order(edges + implied[scope, cap], f'capability {cap!r}')
+    overall = [e for (scope, _), edges in relations.items() if scope == 'overall' for e in edges]
+    if overall:
+        _check_order(list({id(e): e for e in overall}.values()) + implied['overall', None], 'overall ranking')
     report = {'admitted': True, 'draft_digest': digest(draft), 'policy_digest': digest(policy),
               'task_digest': digest(pack), 'query_digest': digest(query),
               'source_levels': sorted({c.evidence_source for c in draft.cases}),
@@ -115,28 +122,78 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs):
 
 
 def _consistent_relations(relations):
-    parent = {v: v for r in relations for v in (r.left, r.right)}
+    """Explicit relations alone must not form a strict cycle."""
+    _check_order([(r.left, r.operator, r.right, 'explicit relation') for r in relations], 'ranking relations')
+
+
+def _implied_edges(case_edges, labels, caps):
+    """Orders implied by pointwise labels, keyed like ``case_edges``.
+
+    Capability scope: a candidate passing capability c ranks above one failing c.
+    Overall scope: overall pass ranks above overall fail, and a candidate whose
+    capability labels Pareto-dominate another's (all labelled, >= everywhere,
+    > somewhere) ranks above it under any monotone aggregation.
+    """
+    implied = {}
+    for (scope, cap) in case_edges:
+        if scope == 'overall':
+            continue
+        passed = [e for (sc, c, e), v in labels.items() if sc == 'capability' and c == cap and v == 'pass']
+        failed = [e for (sc, c, e), v in labels.items() if sc == 'capability' and c == cap and v == 'fail']
+        implied[scope, cap] = [(p, '>', f, f'implied by labels: {p} passes {cap}, {f} fails it') for p in passed for f in failed]
+    overall = []
+    passed = {e for (sc, _, e), v in labels.items() if sc == 'overall' and v == 'pass'}
+    failed = {e for (sc, _, e), v in labels.items() if sc == 'overall' and v == 'fail'}
+    overall += [(p, '>', f, f'implied by labels: {p} is an overall pass, {f} an overall fail') for p in sorted(passed) for f in sorted(failed)]
+    profiles = {}
+    for (sc, cap, e), v in labels.items():
+        if sc == 'capability':
+            profiles.setdefault(e, {})[cap] = 1 if v == 'pass' else 0
+    complete = {e: p for e, p in profiles.items() if set(p) == caps}
+    for a, pa in sorted(complete.items()):
+        for b, pb in sorted(complete.items()):
+            if a != b and all(pa[c] >= pb[c] for c in caps) and any(pa[c] > pb[c] for c in caps):
+                better = sorted(c for c in caps if pa[c] > pb[c])
+                overall.append((a, '>', b, f'implied by labels: {a} passes {better} where {b} fails and is no worse elsewhere'))
+    implied['overall', None] = overall
+    return implied
+
+
+def _check_order(edges, where):
+    """Reject strict cycles over explicit and implied edges, naming the chain."""
+    parent = {v: v for left, _, right, _ in edges for v in (left, right)}
     def root(x):
         while parent[x] != x:
             x = parent[x]
         return x
-    for r in relations:
-        if r.operator == '=':
-            parent[root(r.left)] = root(r.right)
-    graph = {root(x): set() for x in parent}
-    for r in relations:
-        if r.operator == '>':
-            graph[root(r.left)].add(root(r.right))
-    visiting, done = set(), set()
+    equal = [e for e in edges if e[1] == '=']
+    for left, _, right, _ in equal:
+        parent[root(left)] = root(right)
+    graph = {}
+    for edge in edges:
+        left, op, right, _ = edge
+        if op != '>':
+            continue
+        if root(left) == root(right):
+            chain = '; '.join(f'{a} = {b} ({why})' for a, _, b, why in equal if root(a) == root(left))
+            raise ValueError(f'contradictory partial order in {where}: strict preference cycle {left} > {right} '
+                             f'({edge[3]}) but they are declared equivalent via {chain}. '
+                             'Make every pointwise label and ranking relation agree.')
+        graph.setdefault(root(left), []).append((root(right), edge))
+    state, path = {}, []
     def visit(x):
-        if x in visiting:
-            raise ValueError('strict preference cycle, including equivalence classes')
-        if x in done:
-            return
-        visiting.add(x)
-        for y in graph[x]:
-            visit(y)
-        visiting.remove(x)
-        done.add(x)
-    for x in graph:
-        visit(x)
+        state[x] = 'open'
+        for y, edge in graph.get(x, []):
+            path.append(edge)
+            if state.get(y) == 'open':
+                cycle = path[next(i for i, e in enumerate(path) if root(e[0]) == y):]
+                raise ValueError(f'contradictory partial order in {where}: strict preference cycle '
+                                 + ' -> '.join(f'{a} > {b} ({why})' for a, _, b, why in cycle)
+                                 + '. Make every pointwise label and ranking relation agree.')
+            if y not in state:
+                visit(y)
+            path.pop()
+        state[x] = 'done'
+    for x in list(graph):
+        if x not in state:
+            visit(x)

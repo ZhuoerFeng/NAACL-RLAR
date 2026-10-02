@@ -39,8 +39,12 @@ FRAME_ATTRIBUTES = {'gi_frame', 'gi_code', 'gi_yieldfrom', 'cr_frame', 'cr_code'
 def validate_pack(pack):
     if pack.reward_logic_policy != SELF_CONTAINED:
         raise ValueError('self_contained_v1 requires a task pack with the same reward_logic_policy')
-    if set(pack.permitted_apis) - {'call_llm_api'}:
-        raise ValueError('self-contained rewards may only declare the raw rubric call_llm_api utility')
+    allowed = {'call_llm_api'} | ({'run_code'} if pack.code_execution is not None else set())
+    if set(pack.permitted_apis) - allowed:
+        raise ValueError('self-contained rewards may only declare the raw rubric call_llm_api utility'
+                         ' and, with a declared code_execution environment, run_code')
+    if 'run_code' in pack.permitted_apis and pack.code_execution is None:
+        raise ValueError('run_code requires a declared code_execution environment')
     policy = pack.suite_policy
     if policy and (policy.objective_checker or 'objective_verified' in policy.required_sources):
         raise ValueError('self_contained_v1 has no objective checker; use model_inferred or externally bound human_annotated evidence')
@@ -48,8 +52,12 @@ def validate_pack(pack):
 
 def validate_component(component, *, dependencies=()):
     if dependencies:
-        raise ForbiddenAPI('self_contained_v1 supports only its versioned standard-library allowlist')
-    allowed = {'call_llm_api'} if component.kind == 'rubric' else set()
+        raise ForbiddenAPI('self_contained_v1 supports only its versioned standard-library allowlist: '
+                           f'runtime_contract.dependencies must be [] (got {list(dependencies)!r}); allowlisted '
+                           'modules are imported directly in source and are not declared as dependencies')
+    # run_code is a brokered capability, not a dependency: the reward process
+    # still has only the allowlist below; the task pack decides availability.
+    allowed = ({'call_llm_api'} if component.kind == 'rubric' else set()) | {'run_code'}
     if set(component.required_apis) - allowed:
         raise ForbiddenAPI('task-level checker/scoring APIs are unavailable to self-contained reward code')
     tree = ast.parse(component.source)
@@ -65,7 +73,9 @@ def validate_component(component, *, dependencies=()):
         elif isinstance(node, ast.Attribute):
             if node.attr.startswith('_') or node.attr in FRAME_ATTRIBUTES:
                 raise ForbiddenAPI('private/introspection attributes are unavailable: ' + node.attr)
-            if isinstance(node.value, ast.Name) and node.value.id == 'context' and node.attr not in ({'judge_spec', 'call_llm_api'} if component.kind == 'rubric' else set()):
+            exposed = ({'judge_spec', 'call_llm_api'} if component.kind == 'rubric' else set()) | (
+                {'run_code'} if 'run_code' in component.required_apis else set())
+            if isinstance(node.value, ast.Name) and node.value.id == 'context' and node.attr not in exposed:
                 raise ForbiddenAPI('context does not expose ' + node.attr)
     return tree
 
@@ -109,6 +119,15 @@ def reward_context(judge_channel, component, guard):
                 guard.deny(str(exc))
 
         public['call_llm_api'] = call
+
+    if 'run_code' in component.required_apis:
+        def run_code(source, stdin='', timeout_s=None):
+            try:
+                return judge_channel.run_code(source, stdin=stdin, timeout_s=timeout_s)
+            except ForbiddenAPI as exc:
+                guard.deny(str(exc))
+
+        public['run_code'] = run_code
 
     class Context:
         def __getattribute__(self, name):

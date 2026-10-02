@@ -1,0 +1,5 @@
+[project]
+name = "rlar-code-env-ds1000"
+version = "0"
+requires-python = ">=3.11,<3.13"
+dependencies = ["pandas==2.2.3", "numpy==2.1.3"]

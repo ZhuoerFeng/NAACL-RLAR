@@ -1,6 +1,6 @@
-# 增量需求：轻量 code 执行环境（草案，未实现）
+# 增量需求：轻量 code 执行环境
 
-状态：待评审。本文只描述需求与改动范围；评审通过前不修改代码。
+状态：已实现（2026-10-02，未提交）。与草案的差异见第 7 节。
 
 ## 1. 背景
 
@@ -86,3 +86,15 @@ out = context.run_code(source: str, *, stdin: str = "", timeout_s: float | None 
 1. 首批 code env 的包与版本（建议：DS-1000 所需 pandas/numpy，其余按需追加）。
 2. `run_code` 默认每组件/候选 1 次是否足够。
 3. 是否需要 Linux 上的网络隔离作为该能力的启用前提，还是 macOS 原型即可先行。
+
+## 7. 实现记录与差异
+
+- 实现：`runtime/code_exec.py`（`CodeExecutor`、`ScoringRouter`、`probe_environment`），`schemas.CodeExecutionSpec` / `TaskPack.code_execution`，`execution.code_envs`（env_id → 绝对解释器路径），policy/worker/resources/提示词/driver 接线。未声明 `code_execution` 的 pack、config 与提示词字节不变，历史 digest 不变。
+- 预算：未新增 `code_executions` 计数（会改变配置 digest）。上限由 `max_calls_per_example`（默认 1）× 已计预算的 component execution 约束；每次调用写入 `code_exec_result` 事件（源码/输出 blob）。
+- 环境固定：task pack 写明包版本；preflight 和首次调用均探测解释器实际版本，不一致即 `scoring_service_error`，不静默运行。另检查 `timeout_s × max_calls` 小于 worker `wall_timeout_s`。
+- 程序目录与输出日志分离，候选代码看不到自己的日志；Python 忽略 SIGXFSZ，超限写入记为 `output_limit`。
+- 首个环境：`examples/code_envs/ds1000/`（pyproject + uv.lock，pandas 2.2.3 / numpy 2.1.3），构建到 `.code_envs/ds1000`（已 gitignore）：
+  `UV_PROJECT_ENVIRONMENT="$PWD/.code_envs/ds1000" uv sync --locked --project examples/code_envs/ds1000`
+- 待确认第 6 节问题均按默认处理：首批包为 DS-1000 所需；默认 1 次；macOS 原型先行，不提供网络隔离。
+- 真实联调：`runs/2026_10_02_15_29_Ds1000PandasCodeExecSynthesis/`（success，16 次真实执行）。
+- verl 文件入口（`examples/verl_reward.py`）尚未支持 code env；需要时在 runner 上设置 `ScoringRouter(code=CodeExecutor(...))`。

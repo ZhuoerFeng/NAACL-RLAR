@@ -63,13 +63,17 @@ class ToolDispatcher:
             self.validations[report.report_id] = (r['definition_ref'], r['validation_ref'])
             self.resources.add(Resource('report:' + report.report_id, 'json', 'Development report',
                 lambda ref=r['validation_ref']: self.feedback_view(self.blobs.get_json(ref))))
+            self.resources.add(Resource('unmet_cases:' + report.report_id, 'json',
+                'Intent, expected behavior and actual scores of every case this reward did not pass',
+                lambda d=r['definition_ref'], v=report: self.feedback_view(self.unmet_cases(
+                    RewardDefinition.model_validate(self.blobs.get_json(d)), v))))
 
     def feedback_view(self, value):
         if self.config.synthesis.feedback == 'full':
             return value
         # Apply the same projection to observations AND read_resource reports.
         hidden = {'feedback', 'evidence', 'raw_value', 'rationale', 'repair_feedback', 'message',
-                  'detail_ref', 'suggested_recovery', 'error_categories'}
+                  'detail_ref', 'suggested_recovery', 'error_categories', 'violation_feedback'}
         if isinstance(value, dict):
             return {k: self.feedback_view(v) for k, v in value.items() if k not in hidden}
         if isinstance(value, list):
@@ -165,7 +169,9 @@ class ToolDispatcher:
             if component.judge_spec:
                 ref = self.config.roles['rubric_judge']
                 if component.judge_spec.model_ref != ref or component.judge_spec.model_config_digest != digest(self.config.models[ref]):
-                    raise ValueError('rubric judge model/config not frozen to the run catalogue')
+                    raise ValueError('rubric judge model/config not frozen to the run catalogue: judge_spec.model_ref must be '
+                                     f'the catalogue key {ref!r} (got {component.judge_spec.model_ref!r}) and model_config_digest '
+                                     f'must be {digest(self.config.models[ref])!r}; see the model_catalogue resource')
                 tree = ast.parse(component.source)
                 if component.judge_spec.prompt_template in [n.value for n in ast.walk(tree) if isinstance(n, ast.Constant)]:
                     raise ValueError('rubric template has one authority: context.judge_spec')
@@ -258,7 +264,43 @@ class ToolDispatcher:
                 'complete_case_count': len(report.per_case),
                 'verification_unavailable': any(d.operation_status == 'error' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
                 'insufficient_evidence': any(d.operation_status == 'insufficient_evidence' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
-                'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions])}
+                'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions]),
+                'unmet_cases_resource': 'unmet_cases:' + report.report_id,
+                'unmet_cases': self.feedback_view(self.unmet_cases(definition, report))}
+
+    def unmet_cases(self, definition, report):
+        """Case intent next to the actual scores, for every case the reward did not pass."""
+        from ..evaluation.verifier import _difference
+        scores = {s.example_id: s for s in report.per_case}
+        examples = {e.id: e for e in self.suite.examples}
+        out = []
+        for case, decision in zip(self.suite.cases, report.decisions):
+            if decision.operation_status == 'completed' and decision.passed is True:
+                continue
+            relevant = [c.id for c in definition.components
+                        if case.scope == 'overall' or set(c.capability_ids) & set(case.capability_ids)]
+            observed = {}
+            for eid in case.example_ids:
+                s = scores.get(eid)
+                observed[eid] = {
+                    'response': examples[eid].response,
+                    'total_score': s.total_score if s else None,
+                    'components': {c.id: {'score': c.score, 'status': c.status, 'feedback': c.feedback,
+                                          'error': c.error.code if c.error else None}
+                                   for c in (s.component_results if s else []) if c.id in relevant}}
+            out.append({
+                'case_id': case.id, 'required': case.required, 'kind': case.kind, 'scope': case.scope,
+                'capability_ids': case.capability_ids, 'expected_label': case.expected_label,
+                'relations': [{'left': r.left, 'operator': r.operator, 'right': r.right,
+                               'justification': r.justification,
+                               'observed_total_difference': _difference(report.per_case, r.left, r.right, None)
+                               if r.left in scores and r.right in scores else None} for r in case.relations],
+                'discrimination_target': case.discrimination_target, 'expected_behavior': case.expected_behavior,
+                'justification': case.justification, 'violation_feedback': case.violation_feedback,
+                'observed': observed, 'relevant_component_ids': relevant,
+                'operation_status': decision.operation_status, 'passed': decision.passed,
+                'rationale': decision.rationale, 'repair_feedback': decision.repair_feedback})
+        return out
 
     def finalize(self, dref, vref):
         definition = RewardDefinition.model_validate(self.blobs.get_json(dref))

@@ -127,6 +127,69 @@
       "title": "Capability",
       "type": "object"
     },
+    "CodeExecutionSpec": {
+      "additionalProperties": false,
+      "description": "Declared program-execution environment reachable through ``context.run_code``.\n\nThe reward process itself keeps the standard-library allowlist; programs run\nin a separate interpreter whose package versions are pinned here.",
+      "properties": {
+        "env_id": {
+          "minLength": 1,
+          "title": "Env Id",
+          "type": "string"
+        },
+        "packages": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Packages",
+          "type": "object"
+        },
+        "timeout_s": {
+          "default": 10.0,
+          "exclusiveMinimum": 0,
+          "maximum": 120,
+          "title": "Timeout S",
+          "type": "number"
+        },
+        "memory_limit_mb": {
+          "anyOf": [
+            {
+              "minimum": 64,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 1024,
+          "title": "Memory Limit Mb"
+        },
+        "max_output_bytes": {
+          "default": 65536,
+          "maximum": 1000000,
+          "minimum": 1024,
+          "title": "Max Output Bytes",
+          "type": "integer"
+        },
+        "max_source_chars": {
+          "default": 200000,
+          "minimum": 1000,
+          "title": "Max Source Chars",
+          "type": "integer"
+        },
+        "max_calls_per_example": {
+          "default": 1,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Max Calls Per Example",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "env_id"
+      ],
+      "title": "CodeExecutionSpec",
+      "type": "object"
+    },
     "SuitePolicy": {
       "additionalProperties": false,
       "properties": {
@@ -305,6 +368,17 @@
       "default": "self_contained_v1",
       "title": "Reward Logic Policy",
       "type": "string"
+    },
+    "code_execution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CodeExecutionSpec"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [

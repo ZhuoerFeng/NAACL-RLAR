@@ -92,6 +92,21 @@ class JudgeChannel:
         return result['raw_response']
 
 
+    def run_code(self, source, *, stdin='', timeout_s=None):
+        if 'run_code' not in self._permitted or 'run_code' not in self._required:
+            raise ForbiddenAPI('run_code is not declared and permitted')
+        if not isinstance(source, str) or not isinstance(stdin, str):
+            raise ForbiddenAPI('run_code source and stdin must be text')
+        if self._proxy is None:
+            raise ScoringUnavailable('no code environment was configured')
+        result = self._proxy.call({'kind': 'run_code', 'source': source, 'stdin': stdin, 'timeout_s': timeout_s})
+        if result.get('status') != 'ok':
+            if result.get('code') == 'forbidden_api':
+                raise ForbiddenAPI(result.get('message', 'run_code rejected'))
+            raise ScoringUnavailable(result.get('message', ''), code=result.get('code', 'scoring_service_error'))
+        return result['result']
+
+
 def _error(code: str, message: str, *, detail: str | None = None) -> dict[str, Any]:
     return {"code": code, "message": message, "detail": detail}
 

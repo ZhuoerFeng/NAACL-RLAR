@@ -79,6 +79,23 @@ def adapter_for(config, record, role):
     return fixture_adapter(config, record, role)
 
 
+def scoring_service(config, pack, journal, blobs, episode_id, judge):
+    """Route worker requests to the judge and, when the pack declares one, the code environment."""
+    from .runtime.code_exec import CodeExecutor, ScoringRouter
+    if pack.code_execution is None:
+        return judge
+    env = config.execution.code_envs.get(pack.code_execution.env_id)
+    if env is None:
+        raise ConfigError(f'code environment {pack.code_execution.env_id!r} is not configured')
+
+    def record(call_id, request, outcome):
+        journal.append('code_exec_result', {'call_id': call_id, 'env_id': pack.code_execution.env_id,
+            'request_ref': blobs.put_json(request), 'result_ref': blobs.put_json(outcome),
+            'status': outcome['status'], 'exit_code': outcome['exit_code']}, episode_id=episode_id)
+
+    return ScoringRouter(judge=judge, code=CodeExecutor(env.python, pack.code_execution, recorder=record))
+
+
 class RunDriver:
     def __init__(self, run_dir, *, config=None, input_path=None, resume=False, runner=None, llm_client=None):
         self.root = Path(run_dir).resolve()
@@ -339,7 +356,8 @@ class RunDriver:
         evaluator.execution_attempts = self.config.synthesis.model_transport_attempts
         evaluator.query = item.record
         if isinstance(self.runner, SubprocessRunner):
-            self.runner.scoring_service = JudgeUtility(clients['rubric_judge'], self.config.roles['rubric_judge'])
+            self.runner.scoring_service = scoring_service(self.config, pack, self.journal, self.blobs, eid,
+                JudgeUtility(clients['rubric_judge'], self.config.roles['rubric_judge']))
         if not saved:
             EpisodeContext(state, self.config, dispatcher, llm, budget, self.journal, self.blobs, self.root, self.deadline).save()
         return state, budget, dispatcher, llm

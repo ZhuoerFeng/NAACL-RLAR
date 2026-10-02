@@ -504,6 +504,17 @@ class TestCase(Frozen):
     justification: str = Field(min_length=1)
     evidence_source: EvidenceSource
     evidence_refs: list[str] = Field(min_length=1)
+    #: What a reward that violates this case gets wrong, shown to the reward
+    #: synthesizer only when its reward fails the case.
+    violation_feedback: str | None = Field(default=None, min_length=1)
+
+    @model_serializer(mode='wrap')
+    def omit_absent_feedback(self, handler):
+        # Optional field: historical suites keep their digests.
+        data = handler(self)
+        if data.get('violation_feedback') is None:
+            data.pop('violation_feedback', None)
+        return data
 
 
 class SuiteDraft(Frozen):
@@ -547,6 +558,22 @@ class ValidationDecision(Strict):
         return self
 
 
+class CodeExecutionSpec(Strict):
+    """Declared program-execution environment reachable through ``context.run_code``.
+
+    The reward process itself keeps the standard-library allowlist; programs run
+    in a separate interpreter whose package versions are pinned here.
+    """
+    env_id: str = Field(min_length=1)
+    #: Exact distribution versions the interpreter must provide, e.g. {"pandas": "2.2.3"}.
+    packages: dict[str, str] = Field(default_factory=dict)
+    timeout_s: float = Field(default=10.0, gt=0, le=120)
+    memory_limit_mb: int | None = Field(default=1024, ge=64)
+    max_output_bytes: int = Field(default=65536, ge=1024, le=1_000_000)
+    max_source_chars: int = Field(default=200_000, ge=1000)
+    max_calls_per_example: int = Field(default=1, ge=1, le=5)
+
+
 class TaskPack(Strict):
     schema_version: Literal["rlar.taskpack.v2"] = TASKPACK_SCHEMA_VERSION
     profile_id: str
@@ -569,7 +596,15 @@ class TaskPack(Strict):
     capabilities: list[Capability] = Field(min_length=1)
     suite_policy: SuitePolicy
     reward_logic_policy: Literal['self_contained_v1'] = 'self_contained_v1'
+    code_execution: CodeExecutionSpec | None = None
 
+    @model_serializer(mode='wrap')
+    def omit_absent_code_execution(self, handler):
+        # Optional capability: packs without it keep their historical digests.
+        data = handler(self)
+        if data.get('code_execution') is None:
+            data.pop('code_execution', None)
+        return data
 
     @model_validator(mode="after")
     def check_applicability(self):

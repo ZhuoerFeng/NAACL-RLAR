@@ -66,7 +66,16 @@ def initial_history(query, pack, snapshot, resources, config, budget):
         'Capabilities are fixed by the task pack. Read frozen_suite before designing the reward. '
         'Components require kind and capability_ids. For rubric use context.judge_spec as the single rubric authority; '
         'call context.call_llm_api(message, context.judge_spec["model_ref"]) once, then parse the raw string in the declared parser. '
-        'Frozen suite labels, required flags and relations cannot be edited. Never embed candidate answers or IDs in source.')
+        'Frozen suite labels, required flags and relations cannot be edited. Never embed candidate answers or IDs in source. '
+        'After test_reward, unmet_cases lists each case the reward did not pass with its intent, violation_feedback, '
+        'the candidates and the actual component scores; fix those behaviors (also readable via unmet_cases_resource).')
+    if pack.code_execution is not None:
+        instructions += ('\nThis task pack declares a code execution environment. Any component that lists "run_code" '
+            'in required_apis may call context.run_code(source, stdin="", timeout_s=None) and receives '
+            '{status, exit_code, stdout, stderr, stdout_truncated, stderr_truncated, wall_seconds}. '
+            'Your source composes the complete program and parses its output; a failing program is an observation '
+            'to score, not an error. See scoring_abi.run_code for limits. The reward source itself still uses only '
+            'the listed general-purpose modules.')
     prefix = Message(role='system', actor='run_prefix', content=instructions + '\n' + json.dumps({
         'tools': TOOL_SCHEMAS, 'reward_abi': 'score(example, context)',
         'runtime_fingerprint': config.execution.runtime_fingerprint,
@@ -211,6 +220,13 @@ Pointwise pass/fail labels describe the candidate answer in the declared capabil
 Ranking relations must explicitly state all comparisons, with a basis for each relation.
 Only the program admits and freezes a suite. Do not output digests, signatures, or admission status.
 Model-inferred relations must be labelled model_inferred. Do not claim human/objective evidence without its configured source.
+Labels and relations form one partial order and must not contradict each other: a candidate that passes a capability
+ranks above one that fails it there, and an overall ranking must not put a candidate above another whose capability
+labels are all at least as good and strictly better somewhere. If the task ranks capabilities by importance (for
+example correctness over formatting), state that ordering explicitly with overall-scope cases instead of leaving it
+implicit. The program rejects contradictory suites and names the conflicting chain.
+For every case also write violation_feedback: one or two sentences telling a reward author what a reward that fails
+this case gets wrong and which behavior would satisfy it. It is shown to the reward synthesizer only on violation.
 '''
 
 

@@ -77,6 +77,20 @@
       "title": "BudgetConfig",
       "type": "object"
     },
+    "CodeEnvConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "python": {
+          "title": "Python",
+          "type": "string"
+        }
+      },
+      "required": [
+        "python"
+      ],
+      "title": "CodeEnvConfig",
+      "type": "object"
+    },
     "ConstructionConfig": {
       "additionalProperties": false,
       "properties": {
@@ -301,6 +315,13 @@
           "default": 4,
           "title": "Max Concurrent Actions",
           "type": "integer"
+        },
+        "code_envs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/CodeEnvConfig"
+          },
+          "title": "Code Envs",
+          "type": "object"
         }
       },
       "title": "ExecutionConfig",

@@ -51,6 +51,14 @@ Responses adapter 与 Chat adapter 共享传输、预算和持久化底座；原
 - Verifier 接收原始任务、许可的参考答案、固定意图、候选和实际分项证据，先判断测例意图是否有依据，再判断实际数值行为；校验 reward/suite/evidence/model/prompt 绑定及引用。有效 false 不会重抽；格式错误最多修复 5 次。缺所需评分证据为非 completed，不能充当“成功拦截”。无关项 partial 不自动阻断能力级验收。
 - 所有判断落盘后由唯一 finalizer 校验签名和全部 required 决策。语言描述不能取代评分。默认语义提示检查真实分项行为；其判断质量仍需要独立标注集评估，HMAC 只证明完整性。
 
+## 代码执行环境（run_code）
+
+Task pack 可声明 `code_execution`（env_id、固定包版本、超时/输出/次数上限），config 在 `execution.code_envs` 中把 env_id 映射到独立 venv 的绝对解释器路径。声明后组件可在 `required_apis` 写入 `run_code` 并调用 `context.run_code(source, stdin="", timeout_s=None)`，得到 `{status, exit_code, stdout, stderr, ...}`；程序失败是组件自行打分的观测，环境不可用才是 `scoring_service_error`。Reward 进程本身的白名单不变。保证等级仍为 `behavioral_prototype`。详见 [CODE_EXECUTION_PROPOSAL.md](CODE_EXECUTION_PROPOSAL.md)。
+
+## 测例一致性与失败反馈
+
+准入时 pointwise 标签被转为隐含偏序（能力内 pass > fail；overall 下 overall pass > fail 及完整能力标签的 Pareto 支配），与显式关系一起检查严格环，拒绝时列出冲突链。测例可附 `violation_feedback`；`test_reward` 结果的 `unmet_cases`（亦可经 `unmet_cases:<report_id>` 资源分页读取）列出每个未通过测例的意图、关系依据、候选、实际分项得分和 verifier 依据。`scores_only` 消融同样隐藏 `violation_feedback`。该检查只能发现矛盾，不能补出缺失的测例。
+
 ## 预算、消融与导出
 
 `synthesis.test_synthesis_attempts/reward_synthesis_attempts/model_transport_attempts/verification_format_attempts` 默认均为 5（含首次）；`max_reward_decisions` 约束连续读工具。所有角色共享有限 run/episode 请求、token、工具、组件、测例和 deadline 预算。历史字段 `controller_steps` 在当前账本中承担合成决策总上限；报告单独列四种角色，不改写历史 `controller_logical_calls` 的含义。每次派发先持久化预留；未知费用保留 unknown；恢复不免费重置额度。

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
-from pydantic import Field, model_validator, model_serializer
+from pydantic import Field, field_validator, model_validator, model_serializer
 
 from .errors import ConfigError, PreflightError
 from .schemas import (
@@ -120,6 +120,19 @@ class ModelConfig(Strict):
         return data
 
 
+class CodeEnvConfig(Strict):
+    #: Absolute path of the interpreter that runs ``context.run_code`` programs.
+    #: It is a separate environment; the harness itself never imports its packages.
+    python: str
+
+    @field_validator('python')
+    @classmethod
+    def _absolute(cls, value):
+        if not Path(value).is_absolute():
+            raise ValueError('code environment interpreter must be an absolute path')
+        return value
+
+
 class ExecutionConfig(Strict):
     runner_type: Literal["subprocess"] = "subprocess"
     runner_profile: Literal["prototype", "formal"] = "prototype"
@@ -138,6 +151,16 @@ class ExecutionConfig(Strict):
     #: isolated runner. Bundled fixtures run without it.
     allow_untrusted_code: bool = False
     max_concurrent_actions: int = 4
+    #: env_id -> interpreter for task packs that declare ``code_execution``.
+    code_envs: dict[str, CodeEnvConfig] = Field(default_factory=dict)
+
+    @model_serializer(mode='wrap')
+    def omit_absent_code_envs(self, handler):
+        # Configs without code environments keep their historical digests.
+        data = handler(self)
+        if not data.get('code_envs'):
+            data.pop('code_envs', None)
+        return data
 
 
 class RetryConfig(Strict):
@@ -393,6 +416,17 @@ def preflight(
                     problems.append(f'{profile}: current task packs require capabilities and suite_policy')
                 from .runtime.policy import validate_pack
                 validate_pack(pack)
+                if pack.code_execution is not None:
+                    from .runtime.code_exec import probe_environment
+                    spec = pack.code_execution
+                    if spec.timeout_s * spec.max_calls_per_example >= config.execution.wall_timeout_s:
+                        problems.append(f"{profile}: run_code time budget ({spec.max_calls_per_example} x {spec.timeout_s}s) "
+                                        f"must be below execution.wall_timeout_s ({config.execution.wall_timeout_s}s)")
+                    env = config.execution.code_envs.get(pack.code_execution.env_id)
+                    if env is None:
+                        problems.append(f"{profile}: code environment {pack.code_execution.env_id!r} is not configured in execution.code_envs")
+                    else:
+                        problems.extend(f"{profile}: {p}" for p in probe_environment(env.python, pack.code_execution))
                 if config.construction.reward_mode not in pack.mode_constraints:
                     problems.append(f"{profile}: configured reward mode is not permitted")
             except (ConfigError, ValueError) as exc:
