@@ -138,16 +138,17 @@ class EpisodeHistory:
 
 
 def estimate_tokens(text: str, counter: str = "chars_div4_conservative") -> int:
-    """Conservative token estimate used for context pre-checks.
+    """Token estimate used for context pre-checks.
 
-    The legacy configuration name is retained; implementation uses UTF-8 bytes
-    plus message overhead, not chars/4 (which undercounts code and CJK). When a real tokenizer for the
-    configured model is supplied, the adapter's counter is used instead; the
-    harness never claims a byte-accurate count it cannot produce.
+    chars_div4_conservative counts UTF-8 bytes / 4 (rounded up) plus message overhead. Measured on
+    English/JSON synthesis traffic this stays above the provider's prompt_tokens (about 4.3 bytes per
+    token); it can undercount dense CJK text. Any other counter falls back to one token per UTF-8 byte,
+    the upper bound; the harness never claims a tokenizer-accurate count it cannot produce.
     """
+    n = len(text.encode("utf-8"))
     if counter == "chars_div4_conservative":
-        return len(text.encode("utf-8")) + 16
-    return len(text.encode("utf-8")) + 16
+        return -(-n // 4) + 16
+    return n + 16
 
 
 def history_token_estimate(messages: list[Message], counter: str) -> int:

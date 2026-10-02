@@ -1,0 +1,38 @@
+version: 1
+seed: 20261002
+# First 1,000 tasks: near-equal quotas per source, configurable before prepare.
+targets:
+  helpsteer2: 167
+  no_robots: 167
+  ultrafeedback: 166
+  kodcode: 167
+  taco: 167
+  mathqa: 166
+candidate_multiplier: 3
+max_requests: 4000
+concurrency: 6
+classifier_max_input_chars: 150000
+near_duplicate_threshold: 0.9
+ultrafeedback_holdout_fraction: 0.2
+general_sources_only: true
+policy_thinking: false
+policy_max_new_tokens: 8000
+classifier:
+  provider_adapter: http_responses_json_v1
+  endpoint: http://api.aihub.woa.com/openai/v1/responses
+  model: us.openai.gpt-6.1-sol
+  api_key_env: RLAR_AIHUB_API_KEY
+  auth_provider: aws_third
+  responses_store: false
+  send_temperature: false
+  temperature: 0.0
+  max_output_tokens: 4096
+  max_tokens_field: max_completion_tokens
+  reasoning_effort: low
+  response_format: null
+  prompt_cache_key: rlar-dataset-selection-gpt61sol-v1
+  connect_timeout_s: 15
+  read_timeout_s: 180
+  total_timeout_s: 240
+  context_limit_tokens: 131072
+  context_reserve_tokens: 12000

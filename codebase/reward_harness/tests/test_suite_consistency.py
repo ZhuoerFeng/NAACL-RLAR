@@ -57,3 +57,36 @@ def test_failed_cases_are_returned_with_intent_and_actual_scores(tmp_path, synth
     (observed,) = case['observed'].values()
     assert observed['total_score'] == 1.0 and observed['response']
     assert all(c['passed'] is not True for c in unmet)
+
+
+def test_unavailable_model_evidence_ref_names_offending_and_allowed_ids(tmp_path, synthesis, suite_data):
+    case = next(c for c in suite_data['cases'] if c['evidence_source'] == 'model_inferred')
+    case['evidence_refs'] = ['query:not-a-ref']
+    with pytest.raises(ValueError, match='unavailable task evidence') as info:
+        admission(tmp_path, suite_data, synthesis)
+    assert "['query:not-a-ref']" in str(info.value) and 'must be exact ids from' in str(info.value)
+
+
+@pytest.mark.parametrize('feedback', ['full', 'scores_only'])
+def test_component_return_errors_are_reported_ahead_of_decisions(tmp_path, synthesis, feedback):
+    synthesis.synthesis.reward_synthesis_attempts = 1
+    synthesis.synthesis.feedback = feedback
+    d = reward(synthesis)
+    d['components'] = [d['components'][0]]
+    d['components'][0]['source'] = 'def score(example, context):\n    return {"raw_score": 1.0, "feedback": "x", "evidence": ["text"]}'
+    root, _ = run(tmp_path, synthesis, {'reward_synthesizer': ScriptedLLM([reward_turn(d)])})
+    blobs, events, _, _ = read_run(root)
+    outputs = [ToolResult.model_validate(blobs.get_json(e.payload['result_ref'])) for e in events if e.type == 'tool_result']
+    tested = next(o.result for o in outputs if o.tool == 'test_reward')
+    (errors,) = tested['component_errors'].values()
+    entry = errors['component_return_type']
+    assert entry['count'] == tested['complete_case_count']
+    (observed,) = tested['unmet_cases'][0]['observed'].values()
+    (component,) = observed['components'].values()
+    assert component['error'] == 'component_return_type'
+    if feedback == 'full':
+        assert 'object list' in entry['message'] and 'object list' in component['message']
+    else:
+        assert 'message' not in entry and 'message' not in component
+    rendered = json.dumps(tested, sort_keys=True)
+    assert rendered.index('"component_errors"') < rendered.index('"decisions"')

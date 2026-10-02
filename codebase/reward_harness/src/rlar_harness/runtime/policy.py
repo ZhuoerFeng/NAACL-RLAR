@@ -61,6 +61,9 @@ def validate_component(component, *, dependencies=()):
     if set(component.required_apis) - allowed:
         raise ForbiddenAPI('task-level checker/scoring APIs are unavailable to self-contained reward code')
     tree = ast.parse(component.source)
+    # Names bound by `import re` / `import re as rx`; their attributes must be exported members.
+    module_aliases = {n.asname or n.name: n.name for node in ast.walk(tree) if isinstance(node, ast.Import)
+                      for n in node.names if n.name in MODULE_EXPORTS}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             if any(n.name not in MODULE_EXPORTS for n in node.names):
@@ -77,6 +80,10 @@ def validate_component(component, *, dependencies=()):
                 {'run_code'} if 'run_code' in component.required_apis else set())
             if isinstance(node.value, ast.Name) and node.value.id == 'context' and node.attr not in exposed:
                 raise ForbiddenAPI('context does not expose ' + node.attr)
+            module = module_aliases.get(node.value.id) if isinstance(node.value, ast.Name) else None
+            if module and node.attr not in MODULE_EXPORTS[module]:
+                raise ForbiddenAPI(f'{module}.{node.attr} is outside the general-purpose allowlist; '
+                                   f'{module} exports only {list(MODULE_EXPORTS[module])}')
     return tree
 
 

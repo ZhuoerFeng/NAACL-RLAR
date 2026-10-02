@@ -71,6 +71,8 @@ def test_own_source_checks_numbers_and_format_without_native_checker(monkeypatch
     'from json import os\ndef score(e,c): return 0',
     'def score(e,c): return eval("1")',
     'def score(e,c): return c.call_llm_api("score", "rubric")',
+    'import re\ndef score(e,c): return re.I',
+    'import re as rx\ndef score(e,c): return rx.search("a", "a", rx.I)',
 ])
 def test_forbidden_dependencies_are_errors_even_if_caught(source):
     result = execute(source)[0]

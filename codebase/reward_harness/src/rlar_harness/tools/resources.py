@@ -159,6 +159,10 @@ def build_resource_index(
         abi = {
             'scoring_abi': 'v2', 'reward_logic_policy': pack.reward_logic_policy,
             'signature': 'score(example, context) -> {raw_score, feedback, evidence}',
+            'example': 'dict holding only the permitted inputs as top-level keys, e.g. example["response"]',
+            'return_types': {'raw_score': 'finite int or float', 'feedback': 'str, at most 8000 characters',
+                             'evidence': 'list of JSON objects (dicts), e.g. [{"check": "diagram", "found": true}]; '
+                                         'a list of strings is rejected as component_return_type'},
             'general_purpose_modules': MODULE_EXPORTS,
             'dependency_policy': 'Only listed module members are available. No dynamic execution, imports or introspection.',
             'verifiable_context_apis': [], 'rubric_context_apis': ['judge_spec', 'call_llm_api'],

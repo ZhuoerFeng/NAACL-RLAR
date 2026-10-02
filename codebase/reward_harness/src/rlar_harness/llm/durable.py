@@ -16,6 +16,7 @@ from ..errors import BudgetExhausted, Code, DeadlineExceeded, StorageError
 from ..schemas import LLMRequest, LLMResult, StructuredError, Usage
 from ..storage.canonical import digest, wire_digest
 from .adapter import ProviderError, ProviderResponse, wire_messages
+from .history import estimate_tokens
 from .protocol import parse_actions, ParseOutcome
 
 TOOLS = frozenset({'read_resource', 'test_reward', 'submit_reward'})
@@ -74,7 +75,7 @@ class DurableLLMClient:
                 temperature=self.model_config.temperature, messages=history.messages())
             # Freeze AFTER every adapter-added field, BEFORE the transport.
             body = json.loads(json.dumps(self.adapter.build_body(request), allow_nan=False))
-            tokens = len(json.dumps(body, ensure_ascii=False).encode('utf-8')) + 64
+            tokens = estimate_tokens(json.dumps(body, ensure_ascii=False), self.model_config.token_counter) + 64
             if tokens + self.model_config.max_output_tokens + self.model_config.context_reserve_tokens > self.model_config.context_limit_tokens:
                 raise BudgetExhausted('context budget exhausted', code=Code.CONTEXT_BUDGET_EXHAUSTED)
             if self.actor_role in (None, 'test_case_synthesizer', 'reward_synthesizer'):

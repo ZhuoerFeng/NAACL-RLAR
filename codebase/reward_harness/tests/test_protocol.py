@@ -28,3 +28,10 @@ def test_prose_braces_and_valid_envelopes_keep_previous_behaviour():
     assert parse_actions('Plan {draft} first.\n' + valid, known_tools=TOOLS).ok
     assert "no 'actions' key" in parse_actions('{"tool": "test_reward"}', known_tools=TOOLS).error.message
     assert 'no parseable JSON' in parse_actions('use {x} here', known_tools=TOOLS).error.message
+
+
+def test_context_estimate_follows_configured_counter():
+    from rlar_harness.llm.history import estimate_tokens
+    text = 'x' * 4001
+    assert estimate_tokens(text, 'chars_div4_conservative') == 1001 + 16
+    assert estimate_tokens(text, 'adapter') == 4001 + 16

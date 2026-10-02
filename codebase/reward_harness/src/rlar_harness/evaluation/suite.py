@@ -95,8 +95,12 @@ def admit_suite(draft, query, pack, *, generation_config_ref, blobs):
             binding = admission_binding(case, selected)
             if any(policy.trusted_evidence.get(ref) != binding for ref in refs):
                 raise ValueError('human evidence lacks an externally pinned annotation binding')
-        elif any(ref not in {query.query_id, pack.profile_id, *caps} for ref in refs):
-            raise ValueError('model_inferred basis references unavailable task evidence')
+        else:
+            allowed = [query.query_id, pack.profile_id, *caps]
+            bad = sorted({ref for ref in refs if ref not in allowed})
+            if bad:
+                raise ValueError(f'model_inferred basis references unavailable task evidence in case {case.id!r}: '
+                                 f'{bad}; evidence_refs must be exact ids from {allowed}')
     if used != examples.keys():
         raise ValueError('unused candidate answers')
     if any(n < policy.min_cases_per_category for n in counts.values()):

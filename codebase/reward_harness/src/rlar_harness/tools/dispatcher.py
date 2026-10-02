@@ -262,11 +262,23 @@ class ToolDispatcher:
                 'metrics': report.metrics.model_dump(mode='json'), 'reasons': report.ineligibility_reasons,
                 'displayed_cases': self.feedback_view([r.model_dump(mode='json') for r in report.per_case[:args.display_limit]]),
                 'complete_case_count': len(report.per_case),
+                'component_errors': self.feedback_view(self.component_errors(report)),
                 'verification_unavailable': any(d.operation_status == 'error' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
                 'insufficient_evidence': any(d.operation_status == 'insufficient_evidence' for d in report.decisions if any(c.id == d.case_id and c.required for c in self.suite.cases)),
                 'decisions': self.feedback_view([d.model_dump(mode='json') for d in report.decisions]),
                 'unmet_cases_resource': 'unmet_cases:' + report.report_id,
                 'unmet_cases': self.feedback_view(self.unmet_cases(definition, report))}
+
+    @staticmethod
+    def component_errors(report):
+        """Compact per-component execution errors, first message per code; sorts ahead of decisions."""
+        out = {}
+        for score in report.per_case:
+            for c in score.component_results:
+                if c.error:
+                    entry = out.setdefault(c.id, {}).setdefault(c.error.code, {'message': c.error.message, 'count': 0})
+                    entry['count'] += 1
+        return out
 
     def unmet_cases(self, definition, report):
         """Case intent next to the actual scores, for every case the reward did not pass."""
@@ -286,7 +298,8 @@ class ToolDispatcher:
                     'response': examples[eid].response,
                     'total_score': s.total_score if s else None,
                     'components': {c.id: {'score': c.score, 'status': c.status, 'feedback': c.feedback,
-                                          'error': c.error.code if c.error else None}
+                                          'error': c.error.code if c.error else None,
+                                          'message': c.error.message if c.error else None}
                                    for c in (s.component_results if s else []) if c.id in relevant}}
             out.append({
                 'case_id': case.id, 'required': case.required, 'kind': case.kind, 'scope': case.scope,
