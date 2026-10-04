@@ -3,6 +3,12 @@
 入口：`python -m rlar_harness.data_selection`。实现独立于 reward 合成和 policy rollout。
 示例配置：[configs/dataset_selection.yaml](configs/dataset_selection.yaml)。
 
+## 已发布数据与后续实验入口
+
+首批 1,000 条已发布到 [`codebase/data/datasets/rlar_train_1000_v1/`](../data/datasets/rlar_train_1000_v1/README.md)。后续实验统一读取该目录中的 `train_prompts.jsonl` 或 `train_prompts.parquet`，并在自己的运行 manifest 中记录 `dataset_manifest.json` 的数据集版本和输入文件 SHA-256。
+
+该目录集中保存训练输入、独立参考信息、分类结果、筛选/验证报告和来源配置。历史 runs 中的 exports 作为过程快照保留，不再作为后续实验的数据入口。已发布版本只读；重新筛选或改动样本时发布新版本，并更新数据目录索引。
+
 ## 当前规则
 
 - 保留具有实质任务内容、指令可理解、必要上下文完整的样本。
@@ -93,7 +99,7 @@ codebase/reward_harness/.venv/bin/python -m rlar_harness.data_selection replay -
 
 ## 产物
 
-所有运行产物放在本次 runs 目录：
+筛选过程产物先放在本次 runs 目录；确认用于后续实验的数据及随附报告发布到上述数据目录，完整请求 trace 仍留在 runs：
 
 - `source_fingerprints.json`：源文件、split、大小和 SHA-256。
 - `selection.sqlite`：来源记录、任务组、评测隔离库、候选状态和请求缓存。

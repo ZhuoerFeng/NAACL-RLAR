@@ -1,0 +1,28 @@
+# Paths are relative to this config. No credential values belong here.
+dataset: ../../data/datasets/rlar_train_1000_v1
+expected_rows: 1000
+model: Qwen3.5-9B_inference
+model_revision: null
+endpoint: http://infer-api.taiji.woa.com/api/v1/chat/completions
+api_key_env: TMP_TOKEN
+
+thinking: disabled
+max_tokens: 8000
+temperature: 0.7
+top_p: 0.6
+top_k: 20
+beam_size: 1
+repetition_penalty: 1.05
+samples_per_prompt: 1
+order_seed: 20261004
+# null means do not send seed; backend seed support has not been verified.
+generation_seed: null
+
+concurrency: 32
+# Client dispatch ceiling: 32 starts/second, still at most 32 in-flight requests.
+# This is not a statement of the platform's quota; HTTP 429 follows retry policy.
+requests_per_minute: 1920
+request_timeout_seconds: 600
+max_attempts: 3
+max_requests: 3000
+retry_backoff_seconds: 2

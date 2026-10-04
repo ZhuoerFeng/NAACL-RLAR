@@ -1,0 +1,27 @@
+# Matches the frozen QwenNineBFourSampleResampling decoding configuration.
+# The 27B service returned HTTP 429 at 32 concurrent requests; use 16.
+# Paths are relative to this config. Credentials are injected at runtime.
+dataset: ../../data/datasets/rlar_train_1000_v1
+expected_rows: 1000
+model: Qwen3.5-27B_inference
+model_revision: null
+endpoint: http://infer-api.taiji.woa.com/api/v1/chat/completions
+api_key_env: TMP_TOKEN
+
+thinking: disabled
+max_tokens: 20000
+temperature: 0.95
+top_p: 0.7
+top_k: 20
+beam_size: 1
+repetition_penalty: 1.2
+samples_per_prompt: 4
+order_seed: 20261004
+generation_seed: null
+
+concurrency: 16
+requests_per_minute: 1920
+request_timeout_seconds: 1800
+max_attempts: 3
+max_requests: 12000
+retry_backoff_seconds: 2

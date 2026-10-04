@@ -2,6 +2,8 @@
 
 当前唯一执行流程由 [统一需求](../../PRD_REWARD_HARNESS_CURRENT.md) 定义：test case synthesizer 生成测例 → 确定性准入/冻结 → reward synthesizer 生成组件 → 同一 Python runner/聚合器 → harness-verifier → 同一 finalizer。默认采用能力级语义验收；执行、预算、持久化与提交各使用一套实现。迁移及本次验证见 [UNIFICATION_DELIVERY.md](UNIFICATION_DELIVERY.md)。
 
+Policy 回答采样使用独立入口 `scripts/sample_rollouts.py`，支持太极流式 API、1,000 条正式训练 prompt、断点恢复、逐请求证据和跨模型合并导出。Qwen3.5-9B 默认关闭 thinking、最多 8,000 tokens；操作与目录规范见 [ROLLOUTS.md](ROLLOUTS.md)。
+
 ## 运行
 
 Python 3.11+；在本子项目目录执行：

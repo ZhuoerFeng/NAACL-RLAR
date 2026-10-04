@@ -59,13 +59,19 @@ cc_start.sh
 .claude/
 
 .parquet
-codebase/data/
 .json
 .pdf
 .jsonl
 codebase/analysis/results
 __pycache__
 
-data
-
-
+# ===== codebase/data: ignore all data, keep code =====
+codebase/data/**
+!codebase/data/**/
+!codebase/data/**/*.py
+!codebase/data/**/*.sh
+!codebase/data/**/*.yml
+!codebase/data/**/*.yaml
+!codebase/data/**/*.toml
+!codebase/data/**/*.ipynb
+codebase/data/**/.cache/
